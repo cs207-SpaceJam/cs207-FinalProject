@@ -1,6 +1,8 @@
 # cs207-FinalProject
 
-Members:
+**Group Name:** SpaceJam
+
+**Members:**
 
 Ian Weaver<br>
 Sherif Gerges<br>
