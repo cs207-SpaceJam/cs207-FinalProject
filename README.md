@@ -2,7 +2,7 @@
 
 Members:
 
-Ian Weaver
+Ian Weaver<br>
 Sherif Gerges
 Lauren Yoo
 Tamilyn Chen
