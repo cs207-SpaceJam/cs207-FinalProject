@@ -3,8 +3,8 @@
 Members:
 
 Ian Weaver<br>
-Sherif Gerges
-Lauren Yoo
+Sherif Gerges<br>
+Lauren Yoo<br>
 Tamilyn Chen
 
 https://travis-ci.org/cs207-SpaceJam/cs207-FinalProject.svg?branch=master
