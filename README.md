@@ -1,5 +1,12 @@
 # cs207-FinalProject
 
+Members:
+
+Ian Weaver<br>
+Sherif Gerges<br>
+Lauren Yoo<br>
+Tamilyn Chen
+
 https://travis-ci.org/cs207-SpaceJam/cs207-FinalProject.svg?branch=master
 [![Build Status](https://travis-ci.org/cs207-SpaceJam/cs207-FinalProject.svg?branch=master)](https://travis-ci.org/cs207-SpaceJam/cs207-FinalProject)
 
