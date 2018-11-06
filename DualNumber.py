@@ -312,8 +312,9 @@ class Dual():
         #return Dual(tan(self.r), self.d / np.cos(self.r)**2)
         
     def __repr__(self):
-        """ Prints self in the form a + bi, where self = Dual(a, b),
-        where a and b are automatically rounded to two decimal places
+        """ Prints self in the form a_r + e a_d, where self = Dual(a_r, a_d),
+        a_r and a_d are the real and dual part of self, respectively,
+        and both terms are automatically rounded to two decimal places
         
         RETURNS
         ========
