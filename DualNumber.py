@@ -5,28 +5,14 @@ class Dual():
         operations.
     """
 
-#    def __init__(self, real, dual=0):
-#        """ Initializes the components of Dual object. If only real part
-#            given, dual part is automatically set to zero.
-#        
-#        INPUTS
-#        =======
-#        a_r: int or float
-#           real part of Dual object 
-#        a_d: int or float, optional, default value is 0
-#           dual part of Dual object   
-#        """
-#        self.r = float(real)
-#        self.d = float(dual)
-
-    def __init__(self, real, dual=0, idx=None, x=None):
+    def __init__(self, real, dual=1.00, idx=None, x=np.array(1)):
         self.r = float(real)
-        if idx is not None:
-            self.d = np.zeros(len(x))
-            self.d[idx] = 1.0
-        else:
-            self.d = np.array(dual)
 
+        if idx is not None: # dual basis vector
+            self.d = np.zeros(x.size)
+            self.d[idx] = 1.00
+        else: # regular dual vector
+            self.d = np.array(dual)
 
     def __add__(self, other):
         """ Returns the addition of self and other
@@ -43,11 +29,11 @@ class Dual():
         EXAMPLES
         =========
         >>> z = Dual(1, 2) + Dual(3, 4)
-        >>> print(z.r, z.d)
-        4 6
+        >>> print(z)
+        4.00 + e 6.00
         >>> z = 2 + Dual(1, 2)
-        >>> print(z.r, z.d)
-        3 2
+        >>> print(z)
+        3.00 + e 2.00
         """
         # Recast other as Dual object if not created already
         try:
@@ -84,11 +70,11 @@ class Dual():
         EXAMPLES
         =========
         >>> z = Dual(1, 2) - Dual(3, 4)
-        >>> print(z.r, z.d)
-        -2 -2
+        >>> print(z)
+        -2.00 - e 2.00
         >>> z = Dual(1, 2) - 2
-        >>> print(z.r, z.d)
-        -1 2
+        >>> print(z)
+        -1.00 + e 2.00
         """
         try:
             real = self.r - other.r
@@ -116,8 +102,8 @@ class Dual():
         EXAMPLES
         =========
         >>> z = 2 - Dual(1, 2)
-        >>> print(z.r, z.d)
-        1 -2
+        >>> print(z)
+        1.00 - e 2.00
         """
         real = other - self.r
         dual = -self.d
@@ -139,11 +125,11 @@ class Dual():
         EXAMPLES
         =========
         >>> z = Dual(1, 2) * Dual(3, 4)
-        >>> print(z.r, z.d)
-        3 10
+        >>> print(z)
+        3.00 + e 10.00
         >>> z = 2 * Dual(1, 2)
-        >>> print(z.r, z.d)
-        2 4
+        >>> print(z)
+        2.00 + e 4.00
         """
         try:
             real = self.r*other.r 
@@ -172,11 +158,11 @@ class Dual():
         EXAMPLES
         =========
         >>> z = Dual(1, 2) / 2
-        >>> print(z.r, z.d)
-        0.5 1.0
+        >>> print(z)
+        0.50 + e 1.00
         >>> z = Dual(3, 4) / Dual(1, 2)
-        >>> print(z.r, z.d)
-        3.0 -2.0
+        >>> print(z)
+        3.00 - e 2.00
         """
         try:
             real = (self.r*other.r)/other.r**2
@@ -203,8 +189,8 @@ class Dual():
         EXAMPLES
         =========
         >>> z = 2 / Dual(1, 2)
-        >>> print(z.r, z.d)
-        2.0 -4.0
+        >>> print(z)
+        2.00 - e 4.00
         """
         real = (other*self.r)/self.r**2
         dual = -(other*self.d)/self.r**2
@@ -227,8 +213,8 @@ class Dual():
         EXAMPLES
         =========
         >>> z = Dual(1, 2) ** Dual(3, 4)
-        >>> print(z.r, z.d)
-        1.0 6.0
+        >>> print(z)
+        1.00 + e 6.00
         """
         # Recast other as Dual object if not created already
         try:
@@ -243,8 +229,30 @@ class Dual():
         z = Dual(real, dual)
         return z
             
-    #Trigonometric functions
-    def __sin__(a):
+    def __pos__(self):
+        """ Returns self
+
+        EXAMPLES
+        =========
+        >>> z = Dual(1, 2)
+        >>> print(+z)
+        1.00 + e 2.00
+        """
+        return Dual(self.r, self.d)
+
+    def __neg__(self):
+        """ Returns negation of self
+
+        EXAMPLES
+        =========
+        >>> z = Dual(1, 2)
+        >>> print(-z)
+        -1.00 - e 2.00
+        """
+        return Dual(-self.r, -self.d)
+
+    #Trigonometric functions that numpy looks for
+    def sin(self):
         """ Returns the sine of a
         
         INPUTS
@@ -257,13 +265,13 @@ class Dual():
         
         EXAMPLES
         =========
-        >>> z = sin(Dual(0,1))
-        >>> print(z.r, z.d)
-        0, 1
+        >>> z = np.sin(Dual(0, 1))
+        >>> print(z)
+        0.00 + e 1.00
         """
-        return Dual(sin(a.real), a.dual * cos(a.real))
+        return Dual(np.sin(self.r), self.d*np.cos(self.r))
         
-    def __cos__(a):
+    def cos(self):
         """ Returns the cosine of a
         
         INPUTS
@@ -276,13 +284,13 @@ class Dual():
         
         EXAMPLES
         =========
-        >>> z = cosine(Dual(0,1))
-        >>> print(z.r, z.d)
-        1, 0
+        >>> z = np.cos(Dual(0, 1))
+        >>> print(z)
+        1.00 + e -0.00
         """
-        return Dual(cos(a.real), -a.dual * sin(a.real));
+        return Dual(np.cos(self.r), -self.d*np.sin(self.r))
 
-    def __tan__(a):
+    def tan(self):
         """ Returns the tangent of a
         
         INPUTS
@@ -295,12 +303,13 @@ class Dual():
         
         EXAMPLES
         =========
-        >>> z = tan(Dual(0,1))
-        >>> print(z.r, z.d)
-        0, 1
+        >>> z = np.tan(Dual(0,1))
+        >>> print(z)
+        0.00 + e 1.00
         """
-    
-        return Dual(tan(a.real), a.dual * sec(a.real)^2);
+        z = self.sin() / self.cos()
+        return Dual(z.r, z.d)
+        #return Dual(tan(self.r), self.d / np.cos(self.r)**2)
         
     def __repr__(self):
         """ Prints self in the form a + bi, where self = Dual(a, b),
@@ -314,7 +323,7 @@ class Dual():
         =========
         >>> z = Dual(1, 2)
         >>> print(z)
-        1 + e 2
+        1.00 + e 2.00
         """
         if self.d.size == 1:
             if self.d >= 0:
