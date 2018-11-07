@@ -30,10 +30,10 @@ class Dual():
         =========
         >>> z = Dual(1, 2) + Dual(3, 4)
         >>> print(z)
-        4.00 + e 6.00
+        4.00 + eps 6.00
         >>> z = 2 + Dual(1, 2)
         >>> print(z)
-        3.00 + e 2.00
+        3.00 + eps 2.00
         """
         # Recast other as Dual object if not created already
         try:
@@ -71,10 +71,10 @@ class Dual():
         =========
         >>> z = Dual(1, 2) - Dual(3, 4)
         >>> print(z)
-        -2.00 - e 2.00
+        -2.00 - eps 2.00
         >>> z = Dual(1, 2) - 2
         >>> print(z)
-        -1.00 + e 2.00
+        -1.00 + eps 2.00
         """
         try:
             real = self.r - other.r
@@ -103,7 +103,7 @@ class Dual():
         =========
         >>> z = 2 - Dual(1, 2)
         >>> print(z)
-        1.00 - e 2.00
+        1.00 - eps 2.00
         """
         real = other - self.r
         dual = -self.d
@@ -126,10 +126,10 @@ class Dual():
         =========
         >>> z = Dual(1, 2) * Dual(3, 4)
         >>> print(z)
-        3.00 + e 10.00
+        3.00 + eps 10.00
         >>> z = 2 * Dual(1, 2)
         >>> print(z)
-        2.00 + e 4.00
+        2.00 + eps 4.00
         """
         try:
             real = self.r*other.r 
@@ -159,10 +159,10 @@ class Dual():
         =========
         >>> z = Dual(1, 2) / 2
         >>> print(z)
-        0.50 + e 1.00
+        0.50 + eps 1.00
         >>> z = Dual(3, 4) / Dual(1, 2)
         >>> print(z)
-        3.00 - e 2.00
+        3.00 - eps 2.00
         """
         try:
             real = (self.r*other.r)/other.r**2
@@ -190,7 +190,7 @@ class Dual():
         =========
         >>> z = 2 / Dual(1, 2)
         >>> print(z)
-        2.00 - e 4.00
+        2.00 - eps 4.00
         """
         real = (other*self.r)/self.r**2
         dual = -(other*self.d)/self.r**2
@@ -199,7 +199,7 @@ class Dual():
         return z
 
     def __pow__(self, other):
-        """ Performs (self.r + e self.d) ** (other.r + e other.d)
+        """ Performs (self.r + eps self.d) ** (other.r + eps other.d)
 
         INPUTS
         =======
@@ -214,7 +214,7 @@ class Dual():
         =========
         >>> z = Dual(1, 2) ** Dual(3, 4)
         >>> print(z)
-        1.00 + e 6.00
+        1.00 + eps 6.00
         """
         # Recast other as Dual object if not created already
         try:
@@ -236,7 +236,7 @@ class Dual():
         =========
         >>> z = Dual(1, 2)
         >>> print(+z)
-        1.00 + e 2.00
+        1.00 + eps 2.00
         """
         return Dual(self.r, self.d)
 
@@ -247,9 +247,30 @@ class Dual():
         =========
         >>> z = Dual(1, 2)
         >>> print(-z)
-        -1.00 - e 2.00
+        -1.00 - eps 2.00
         """
         return Dual(-self.r, -self.d)
+
+    def exp(self):
+        """ Returns e**self
+        
+        INPUTS
+        =======
+        self: Dual object
+        
+        RETURNS
+        ========
+        z: e**self
+        
+        EXAMPLES
+        =========
+        >>> z = np.exp(Dual(1, 2))
+        >>> print(z)
+        2.72 + eps 5.44
+        """
+        real = np.e**self.r
+        dual = np.e**self.r * self.d
+        return Dual(real, dual)
 
     #Trigonometric functions that numpy looks for
     def sin(self):
@@ -267,7 +288,7 @@ class Dual():
         =========
         >>> z = np.sin(Dual(0, 1))
         >>> print(z)
-        0.00 + e 1.00
+        0.00 + eps 1.00
         """
         return Dual(np.sin(self.r), self.d*np.cos(self.r))
         
@@ -286,7 +307,7 @@ class Dual():
         =========
         >>> z = np.cos(Dual(0, 1))
         >>> print(z)
-        1.00 + e -0.00
+        1.00 + eps -0.00
         """
         return Dual(np.cos(self.r), -self.d*np.sin(self.r))
 
@@ -305,14 +326,14 @@ class Dual():
         =========
         >>> z = np.tan(Dual(0,1))
         >>> print(z)
-        0.00 + e 1.00
+        0.00 + eps 1.00
         """
         z = self.sin() / self.cos()
         return Dual(z.r, z.d)
         #return Dual(tan(self.r), self.d / np.cos(self.r)**2)
         
     def __repr__(self):
-        """ Prints self in the form a_r + e a_d, where self = Dual(a_r, a_d),
+        """ Prints self in the form a_r + eps a_d, where self = Dual(a_r, a_d),
         a_r and a_d are the real and dual part of self, respectively,
         and both terms are automatically rounded to two decimal places
         
@@ -324,14 +345,14 @@ class Dual():
         =========
         >>> z = Dual(1, 2)
         >>> print(z)
-        1.00 + e 2.00
+        1.00 + eps 2.00
         """
         if self.d.size == 1:
             if self.d >= 0:
-                s = f'{self.r:.2f} + e {self.d:.2f}' 
+                s = f'{self.r:.2f} + eps {self.d:.2f}' 
             else:
-                s = f'{self.r:.2f} - e {np.abs(self.d):.2f}'
+                s = f'{self.r:.2f} - eps {np.abs(self.d):.2f}'
         else:
-            s = f'{self.r:.2f} + e {self.d}' 
+            s = f'{self.r:.2f} + eps {self.d}' 
 
         return s
