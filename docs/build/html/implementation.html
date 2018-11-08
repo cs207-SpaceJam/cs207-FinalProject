@@ -35,8 +35,22 @@
           <div class="body" role="main">
             
   <div class="section" id="implementation-details">
-<h1>Implementation Details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h1>
-<p>API here</p>
+<span id="api"></span><h1>Implementation Details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="data-structures">
+<h2>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this headline">¶</a></h2>
+<ul>
+<li><p class="first"><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> uses 1D <code class="docutils literal notranslate"><span class="pre">numpy.ndarrays</span></code> to return partial derivatives, where the
+<span class="math notranslate nohighlight">\(n\)</span> th entry contains <span class="math notranslate nohighlight">\(\frac{\partial f_i}{\partial x_n}\)</span> for <span class="math notranslate nohighlight">\(i =
+0, ... m\)</span> for <span class="math notranslate nohighlight">\(m\)</span> different functions specified by the user.</p>
+<p>TODO:</p>
+</li>
+<li><p class="first">The convenience function &lt;insert here&gt; stacks these 1D arrays into
+an <span class="math notranslate nohighlight">\(m\times n\)</span> <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> Jacobian matrix for ease of viewing.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2>API<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
 <span class="target" id="module-spacejam.Dual"></span><dl class="class">
 <dt id="spacejam.Dual.Dual">
 <em class="property">class </em><code class="descclassname">spacejam.Dual.</code><code class="descname">Dual</code><span class="sig-paren">(</span><em>real</em>, <em>dual=1.0</em>, <em>idx=None</em>, <em>x=array(1)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/Dual.html#Dual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.Dual.Dual" title="Permalink to this definition">¶</a></dt>
@@ -492,6 +506,7 @@ A specialized __rsub__ is required.</p>
 </dd></dl>
 
 </div>
+</div>
 
 
           </div>
@@ -516,7 +531,11 @@ A specialized __rsub__ is required.</p>
 <li class="toctree-l1"><a class="reference internal" href="howtouse.html">How to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a></li>
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="organization.html">Software Organization</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Implementation Details</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Implementation Details</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#data-structures">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">API</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
 </ul>
 

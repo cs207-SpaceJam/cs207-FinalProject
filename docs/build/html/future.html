@@ -35,7 +35,57 @@
             
   <div class="section" id="future">
 <h1>Future<a class="headerlink" href="#future" title="Permalink to this headline">¶</a></h1>
-<p>Hey!</p>
+<p><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> has been shown to be capable of solving systems of equations in
+<a class="reference internal" href="howtouse.html#diii"><span class="std std-ref">Demo III: Vector function with vector input</span></a>. For our future work, we will apply this functionality to integrate
+2D orbits in a simple two body planetary system. As previously
+mentioned, we need an integration scheme that is insensitive to the size of the timestep and also has a stable solution. The Adams–Moulton method is one such approach that can accomplish this because it is an implicit linear multistep scheme. This method also has the added benefit of not needing additional equations to be solved as the number of timesteps increases [Süli &amp; Mayers 2003, p. 353].</p>
+<p>An exciting challenge will be extending the simple application to a 1D
+spring, shown below, to a coupled 2D oscillating system that characterizes orbital motion. A possible way to address this would be to store the Cartesian components of the planet’s motion position, velocity, and acceleration as solution vectors, and just iterate each component.</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s1">&#39;darkgrid&#39;</span><span class="p">)</span>
+<span class="o">%</span><span class="n">config</span> <span class="n">InlineBackend</span><span class="o">.</span><span class="n">figure_format</span> <span class="o">=</span> <span class="s1">&#39;retina&#39;</span>
+
+<span class="c1"># initial conditions</span>
+<span class="n">x_old</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">v_old</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">m</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">t_max</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">h</span> <span class="o">=</span> <span class="o">.</span><span class="mi">1</span> <span class="c1"># timestep</span>
+
+<span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">x_old</span><span class="p">]</span> <span class="c1"># holds positions</span>
+<span class="n">vs</span> <span class="o">=</span> <span class="p">[</span><span class="n">v_old</span><span class="p">]</span> <span class="c1"># holds veclocities</span>
+
+<span class="c1"># run simulation</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">t_max</span><span class="p">:</span>
+    <span class="c1"># implicit Euler method</span>
+    <span class="n">delta_v</span> <span class="o">=</span> <span class="o">-</span><span class="n">h</span><span class="o">*</span><span class="n">k</span><span class="o">*</span><span class="p">(</span><span class="n">x_old</span> <span class="o">+</span> <span class="n">h</span><span class="p">)</span> <span class="o">/</span> <span class="p">(</span><span class="n">m</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">+</span> <span class="n">h</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span>
+    <span class="n">v_new</span> <span class="o">=</span> <span class="n">v_old</span> <span class="o">+</span> <span class="n">delta_v</span>
+    <span class="n">delta_x</span> <span class="o">=</span> <span class="n">h</span><span class="o">*</span><span class="n">v_new</span>
+    <span class="n">x_new</span> <span class="o">=</span> <span class="n">x_old</span> <span class="o">+</span> <span class="n">delta_x</span>
+
+    <span class="c1"># Euler-Cromer (semi-implicit method)</span>
+    <span class="c1">#v_new = v_old - h*(k/m)*x_old</span>
+    <span class="c1">#x_new = x_old + h*v_new</span>
+
+    <span class="c1"># update</span>
+    <span class="n">xs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">x_new</span><span class="p">)</span>
+    <span class="n">vs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">v_new</span><span class="p">)</span>
+    <span class="n">x_old</span> <span class="o">=</span> <span class="n">x_new</span>
+    <span class="n">v_old</span> <span class="o">=</span> <span class="n">v_new</span>
+    <span class="n">t</span> <span class="o">+=</span> <span class="n">h</span>
+
+<span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">xs</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s1">&#39;step&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">)</span>
+<span class="o">&gt;&gt;&gt;</span> <span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s1">&#39;Backward Euler Method&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/spring.png" class="align-left" src="_images/spring.png" />
 </div>
 
 

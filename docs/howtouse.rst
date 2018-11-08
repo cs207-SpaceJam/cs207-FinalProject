@@ -1,28 +1,10 @@
+.. _howto:
+
+
 How to use ``spacejam``
 ========================
-
-To install our package, first create a virtual environment using the following command (this should be done in the SpaceJam root folder):
-
-::
-        
-        python -m venv venv
-
-And proceed to activate it as such:
-
-::
-
-        source venv/bin/activate
-
-If you run this in the root folder, you should also install all 
-dependencies via:
-
-::
-
-        pip install -r requirements.txt
-
-Now you should be able to proceed with the demo below. These following series 
-of demos will walk you through how to differentiate a wide variety of 
-functions with ``spacejam``
+The following series of demos will step through how to differentiate a wide
+variety of functions with ``spacejam``
 
 Demo I: Scalar function, scalar input
 -------------------------------------
@@ -136,6 +118,8 @@ The real and dual parts can again be accessed with
         26.8
         >>> print(ad.d)
         [ 6.64 10.2 ]
+
+.. _diii:
 
 Demo III: Vector function with vector input
 -------------------------------------------
