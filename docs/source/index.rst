@@ -3,8 +3,9 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to spacejam's documentation!
+``spacejam``
 ====================================
+for automatic differentiation and other looney things
 
 .. toctree::
    :maxdepth: 2
