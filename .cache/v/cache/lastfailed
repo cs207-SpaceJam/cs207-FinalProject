@@ -1,0 +1,7 @@
+{
+  "spacejam/tests/DualNumbers_test.py::TestDual::()::test_add": true,
+  "spacejam/tests/DualNumbers_test.py::TestDual::()::test_divide": true,
+  "spacejam/tests/DualNumbers_test.py::TestDual::()::test_multiply": true,
+  "spacejam/tests/DualNumbers_test.py::TestDual::()::test_tan": true,
+  "spacejam/tests/DualNumbers_test.py::test_tan": true
+}
