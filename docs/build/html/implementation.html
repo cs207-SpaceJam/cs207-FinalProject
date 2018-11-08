@@ -9,11 +9,11 @@
     <title>Implementation Details &#8212; spacejam 0.0.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/documentation_options.js"></script>
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Future" href="future.html" />
@@ -30,8 +30,6 @@
     <div class="document">
       <div class="documentwrapper">
         <div class="bodywrapper">
-          
-
           <div class="body" role="main">
             
   <div class="section" id="implementation-details">
@@ -64,7 +62,7 @@ operations.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">4.00 + eps 6.00</span>
@@ -103,7 +101,7 @@ operations.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">3.00 + eps 10.00</span>
@@ -118,7 +116,7 @@ operations.</p>
 <dt id="spacejam.Dual.Dual.__neg__">
 <code class="descname">__neg__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/Dual.html#Dual.__neg__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.Dual.Dual.__neg__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns negation of self</p>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="o">-</span><span class="n">z</span><span class="p">)</span>
 <span class="go">-1.00 - eps 2.00</span>
@@ -130,7 +128,7 @@ operations.</p>
 <dt id="spacejam.Dual.Dual.__pos__">
 <code class="descname">__pos__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/Dual.html#Dual.__pos__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.Dual.Dual.__pos__" title="Permalink to this definition">¶</a></dt>
 <dd><p>Returns self</p>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="o">+</span><span class="n">z</span><span class="p">)</span>
 <span class="go">1.00 + eps 2.00</span>
@@ -160,7 +158,7 @@ operations.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">1.00 + eps 6.00</span>
@@ -190,7 +188,7 @@ operations.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">4.00 + eps 6.00</span>
@@ -217,7 +215,7 @@ and both terms are automatically rounded to two decimal places</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">1.00 + eps 2.00</span>
@@ -247,7 +245,7 @@ and both terms are automatically rounded to two decimal places</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">3.00 + eps 10.00</span>
@@ -280,7 +278,7 @@ and both terms are automatically rounded to two decimal places</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">1.00 - eps 2.00</span>
@@ -310,7 +308,7 @@ and both terms are automatically rounded to two decimal places</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">2.00 - eps 4.00</span>
@@ -343,7 +341,7 @@ and both terms are automatically rounded to two decimal places</p>
 <p class="rubric">Notes</p>
 <p>Subtraction does not commute in general.
 A specialized __rsub__ is required.</p>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">-2.00 - eps 2.00</span>
@@ -376,7 +374,7 @@ A specialized __rsub__ is required.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">0.50 + eps 1.00</span>
@@ -409,7 +407,7 @@ A specialized __rsub__ is required.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">Dual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">1.00 + eps -0.00</span>
@@ -433,7 +431,7 @@ A specialized __rsub__ is required.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">2.72 + eps 5.44</span>
@@ -457,7 +455,7 @@ A specialized __rsub__ is required.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">Dual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">0.00 + eps 1.00</span>
@@ -481,7 +479,7 @@ A specialized __rsub__ is required.</p>
 </tr>
 </tbody>
 </table>
-<p class="rubric">Examples</p>
+<p class="rubric">EXAMPLES</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">Dual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
 <span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 <span class="go">0.00 + eps 1.00</span>
@@ -495,32 +493,10 @@ A specialized __rsub__ is required.</p>
 
 
           </div>
-          
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper">
-<h1 class="logo"><a href="index.html">spacejam</a></h1>
-
-
-
-
-
-
-
-
-<h3>Navigation</h3>
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul class="current">
-<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="howtouse.html">How to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a></li>
-<li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="organization.html">Software Organization</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Implementation Details</a></li>
-<li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
-</ul>
-
-<div class="relations">
+        <div class="sphinxsidebarwrapper"><div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="index.html">Documentation overview</a><ul>
@@ -529,6 +505,13 @@ A specialized __rsub__ is required.</p>
   </ul></li>
 </ul>
 </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/implementation.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
 <div id="searchbox" style="display: none" role="search">
   <h3>Quick search</h3>
     <div class="searchformwrapper">
@@ -541,14 +524,6 @@ A specialized __rsub__ is required.</p>
     </div>
 </div>
 <script type="text/javascript">$('#searchbox').show(0);</script>
-
-
-
-
-
-
-
-
         </div>
       </div>
       <div class="clearer"></div>
@@ -557,8 +532,8 @@ A specialized __rsub__ is required.</p>
       &copy;2018, Ian Weaver, Sherif Gerges, Lauren Yoo.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.8.1</a>
-      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.7.4</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.10</a>
       
       |
       <a href="_sources/implementation.rst.txt"
