@@ -29,14 +29,14 @@ Cool tree cartoon:
 Overview of main modules
 ------------------------
 * ``Dual.py``: Overloads basic math operations and returns an 
-  automatic differentiation `spacejam` object
+  automatic differentiation ``spacejam`` object
 
 * ``DualNumbers_test.py``: Test harness for class methods in ``Dual.py``
 
 Tests
 -----
 Unit tests are stored in ``spacejam/tests/DualNumbers.py`` and each
-method in ``spacejam/Dual.py`` have their own doctests. `spacejam` also has
+method in ``spacejam/Dual.py`` have their own doctests. ``spacejam`` also has
 TravisCI and Coveralls integration.
 
 Installation
