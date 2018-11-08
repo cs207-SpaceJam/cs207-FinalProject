@@ -10,9 +10,10 @@ Welcome to spacejam's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-.. include:: ../introduction.rst
-.. include:: ../howtouse.rst
-.. include:: ../background.rst
-.. include:: ../organization.rst
-.. include:: ../implementation.rst
-.. include:: ../future.rst
+   introduction
+   howtouse
+   background
+   organization
+   implementation
+   future
+

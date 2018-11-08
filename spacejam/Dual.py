@@ -17,17 +17,17 @@ class Dual():
     def __add__(self, other):
         """ Returns the addition of self and other
         
-        INPUTS
-        =======
+        Parameters
+        ----------
         self: Dual object
         other: Dual object, float, or int
         
         RETURNS
-        ========
+        ------- 
         z: Dual object that is the sum of self and other
         
         EXAMPLES
-        =========
+        -------- 
         >>> z = Dual(1, 2) + Dual(3, 4)
         >>> print(z)
         4.00 + eps 6.00
@@ -52,23 +52,23 @@ class Dual():
     def __sub__(self, other):
         """ Returns the subtraction of self and other
         
-        INPUTS
-        =======
+        parameters
+        ----------
         self: Dual object
         other: Dual object, float, or int
         
         RETURNS
-        ========
+        ------- 
         z: Dual object
            difference of self and other
            
         NOTES
-        ======
+        ----- 
         Subtraction does not commute in general. 
-        A specialized __rsub__ is required. 
-        
+        A specialized __rsub__ is required.
+
         EXAMPLES
-        =========
+        -------- 
         >>> z = Dual(1, 2) - Dual(3, 4)
         >>> print(z)
         -2.00 - eps 2.00
@@ -90,17 +90,18 @@ class Dual():
     def __rsub__(self, other):
         """ Returns the subtraction of other from self
         
-        INPUTS
-        =======
+        parameters
+        ----------
         self: Dual object
         other: Dual object, float, or int
         
         RETURNS
-        ========
+        ------- 
         z: Dual object
            difference of other and self
+
         EXAMPLES
-        =========
+        -------- 
         >>> z = 2 - Dual(1, 2)
         >>> print(z)
         1.00 - eps 2.00
@@ -114,16 +115,17 @@ class Dual():
     def __mul__(self, other):
         """ Returns the product of self and other
         
-        INPUTS
-        =======
+        parameters
+        ----------
         self: Dual object
         other: Dual object, float, or int
+
         RETURNS
-        ========
+        ------- 
         z: Dual object that is the product of self and other
         
         EXAMPLES
-        =========
+        -------- 
         >>> z = Dual(1, 2) * Dual(3, 4)
         >>> print(z)
         3.00 + eps 10.00
@@ -146,17 +148,17 @@ class Dual():
     def __truediv__(self, other):
         """ Returns the quotient of self and other
         
-        INPUTS
-        =======
+        parameters
+        ----------
         self: Dual object
         other: Dual object, float, or int
         
         RETURNS
-        ========
+        ------- 
         z: Dual object that is the quotient of self and other
         
         EXAMPLES
-        =========
+        -------- 
         >>> z = Dual(1, 2) / 2
         >>> print(z)
         0.50 + eps 1.00
@@ -177,17 +179,17 @@ class Dual():
     def __rtruediv__(self, other):
         """ Returns the quotient of other and self
         
-        INPUTS
-        =======
+        parameters
+        ----------
         self: Dual object
         other: Dual object, float, or int
         
         RETURNS
-        ========
+        ------- 
         z: Dual object that is the product of self and other
         
         EXAMPLES
-        =========
+        --------  
         >>> z = 2 / Dual(1, 2)
         >>> print(z)
         2.00 - eps 4.00
@@ -201,17 +203,17 @@ class Dual():
     def __pow__(self, other):
         """ Performs (self.r + eps self.d) ** (other.r + eps other.d)
 
-        INPUTS
-        =======
+        parameters
+        ----------
         self: Dual object
         other: Dual object, float, or int
         
         RETURNS
-        ========
+        ------- 
         z: Dual object that is self raised to the other power
         
         EXAMPLES
-        =========
+        -------- 
         >>> z = Dual(1, 2) ** Dual(3, 4)
         >>> print(z)
         1.00 + eps 6.00
@@ -233,7 +235,7 @@ class Dual():
         """ Returns self
 
         EXAMPLES
-        =========
+        -------- 
         >>> z = Dual(1, 2)
         >>> print(+z)
         1.00 + eps 2.00
@@ -244,7 +246,7 @@ class Dual():
         """ Returns negation of self
 
         EXAMPLES
-        =========
+        -------- 
         >>> z = Dual(1, 2)
         >>> print(-z)
         -1.00 - eps 2.00
@@ -254,16 +256,16 @@ class Dual():
     def exp(self):
         """ Returns e**self
         
-        INPUTS
-        =======
+        parameters
+        ----------
         self: Dual object
         
         RETURNS
-        ========
+        ------- 
         z: e**self
         
         EXAMPLES
-        =========
+        -------- 
         >>> z = np.exp(Dual(1, 2))
         >>> print(z)
         2.72 + eps 5.44
@@ -276,16 +278,16 @@ class Dual():
     def sin(self):
         """ Returns the sine of a
         
-        INPUTS
-        =======
+        parameters
+        ----------
         self: Dual object
         
         RETURNS
-        ========
+        ------- 
         z: sine of self
         
         EXAMPLES
-        =========
+        -------- 
         >>> z = np.sin(Dual(0, 1))
         >>> print(z)
         0.00 + eps 1.00
@@ -295,16 +297,16 @@ class Dual():
     def cos(self):
         """ Returns the cosine of a
         
-        INPUTS
-        =======
+        parameters
+        ----------
         self: Dual object
         
         RETURNS
-        ========
+        ------- 
         z: cosine of self
         
         EXAMPLES
-        =========
+        -------- 
         >>> z = np.cos(Dual(0, 1))
         >>> print(z)
         1.00 + eps -0.00
@@ -314,16 +316,16 @@ class Dual():
     def tan(self):
         """ Returns the tangent of a
         
-        INPUTS
-        =======
+        parameters
+        ----------
         self: Dual object
         
         RETURNS
-        ========
+        ------- 
         z: tangent of self
         
         EXAMPLES
-        =========
+        -------- 
         >>> z = np.tan(Dual(0,1))
         >>> print(z)
         0.00 + eps 1.00
@@ -338,11 +340,11 @@ class Dual():
         and both terms are automatically rounded to two decimal places
         
         RETURNS
-        ========
+        ------- 
         z: Dual object that is the product of self and other
         
         EXAMPLES
-        =========
+        -------- 
         >>> z = Dual(1, 2)
         >>> print(z)
         1.00 + eps 2.00
