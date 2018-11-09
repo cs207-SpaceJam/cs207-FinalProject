@@ -1,6 +1,5 @@
 .. _howto:
 
-
 How to use ``spacejam``
 ========================
 The following series of demos will step through how to differentiate a wide
@@ -16,14 +15,25 @@ For example, let us take a look at the function :math:`f(x) = x^3`, which you ca
 ::
 
         def f(x):
-            return x_1**3 + x_2
+            return x**3
+
+.. testsetup::
+
+        def f(x):
+            return x**3
 
 ``spacejam`` just needs a value :math:`(x=p)` to evalute your function at and 
 a dual number object :math:`p_x = f(x) + \epsilon_x` which is needed to perform 
 the automatic differentiation of your function wrt. :math:`x`. Luckily, 
 ``spacejam`` creates this object for you with
 
-::      
+::
+
+        import spacejam.Dual as d
+        p = 5  # evaluation point
+        p_x = d.Dual(p) # call Dual object
+
+.. testsetup::
 
         import spacejam.Dual as d
         p = 5  # evaluation point
@@ -31,12 +41,16 @@ the automatic differentiation of your function wrt. :math:`x`. Luckily,
 
 for an example value of :math:`x = 5` to evaluate your function at. Now, 
 evaluating your function at :math:`x=5` and simultaneously computing the 
-derivative at this point is as easy as
+derivative at this point is as easy as:
 
-::
-        
+.. testcode::
+
         ad = f(p_x)
-        >>> ad
+
+        print(ad)
+
+.. testoutput::
+
         125.00 + eps 75.00
 
 where the real part is :math:`f(x=5) = 125` and the dual part is 
@@ -45,12 +59,13 @@ where the real part is :math:`f(x=5) = 125` and the dual part is
 The real and dual parts are also conveniently stored as attributes in the 
 ``spacejam`` object ``ad``,
 
-::
+.. testcode::
 
-        >>> print(ad.r) # real part f(x=p)
-        125.0
-        >>> print(ad.d) # dual part df/dx|x=p
-        75.0
+        print(ad.r, ad.d) # real part f(x=p), dual part df/dx at x=p
+
+.. testoutput::
+
+        125.0 75.0
 
 Note: The dual part is returned as a ``numpy`` array because 
 ``spacejam`` can also operate on multivariable functions and parameters, 
@@ -92,32 +107,36 @@ modified dual numbers above. In this modified setup, ``spacejam`` now returns
 
 Applying this to the new function :math:`f` would look like the following
 
-::
+.. testcode::
 
         import numpy as np 
 
         def f(x_1, x_2): 
-        return 3*x_1*x_2 - 2*x_2**3/x_1
+            return 3*x_1*x_2 - 2*x_2**3/x_1
 
         p = np.array([5, 2]) # evaluation point (x_1, x_2) = (5, 2)
 
         p_x1 = d.Dual(p[0], idx=0, x=p) 
         p_x2 = d.Dual(p[1], idx=1, x=p)
 
-        # print f(p) and grad(f) evaluated at p
         ad = f(p_x1, p_x2)
         
-        >>> print(ad)
+        # f(p) and grad(f) evaluated at p
+        print(ad)
+
+.. testoutput::
+
         26.80 + eps [ 6.64 10.2 ]
 
 The real and dual parts can again be accessed with
 
-::
+.. testcode::
 
-        >>> print(ad.r)
-        26.8
-        >>> print(ad.d)
-        [ 6.64 10.2 ]
+        print(ad.r, ad.d)
+
+.. testoutput::
+
+        26.8 [ 6.64 10.2 ]
 
 .. _diii:
 
@@ -148,13 +167,13 @@ The configuration of ``spacejam`` happens to be exactly the same as in
 `Demo II <Demo II: Scalar function with vector input_>`__, and would look like 
 the following
 
-::
+.. testcode::
 
         def F(x, y):
-        f1 = x**2 + x*y + 2
-        f2 = x*y**3 + x**2
-        f3 = y**3/x + x + x**2*y**2 + y**4
-        return np.array([f1, f2, f3])
+            f1 = x**2 + x*y + 2
+            f2 = x*y**3 + x**2
+            f3 = y**3/x + x + x**2*y**2 + y**4
+            return np.array([f1, f2, f3])
 
         p = np.array([1, 2])
         p_x = d.Dual(p[0], idx=0, x=p)
@@ -162,8 +181,11 @@ the following
 
         ad = F(p_x, p_y)
         
-        >>> print(ad)
-        [5.00 + eps [4. 1.], 9.00 + eps [10. 12.], 29.00 + eps [ 1. 48.]]
+        print(ad)
+
+.. testoutput::
+
+        [5.00 + eps [4. 1.] 9.00 + eps [10. 12.] 29.00 + eps [ 1. 48.]]
 
 For each :math:`i` th entry, in the 1D ``numpy`` array `ad`, the real part is 
 the :math:`i` th component of :math:`\mathbf{F}(\mathbf{p})` and the dual 
@@ -173,13 +195,16 @@ part is the corresponding row in the Jacobian :math:`\mathbf J` evaluated at
 The output can be cleaned up a bit to shape :math:`\mathbf J` into its matrix 
 form ``Jac`` with,
 
-::
+.. testcode::
 
         Jac = np.empty((F(*p).size, p.size))
         for i, f in enumerate(ad):
             Jac[i] = f.d
         
-        >>> print(Jac)
-        [[ 4.,  1.],
-        [10., 12.],
-        [ 1., 48.]]
+        print(Jac)
+
+.. testoutput::   
+
+        [[ 4.  1.]
+         [10. 12.]
+         [ 1. 48.]]

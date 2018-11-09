@@ -165,7 +165,7 @@ variety of functions with <code class="docutils literal notranslate"><span class
 scalar argument <span class="math notranslate nohighlight">\((x=a)\)</span> and outputs a single scalar value <span class="math notranslate nohighlight">\(f(a)\)</span>.</p>
 <p>For example, let us take a look at the function <span class="math notranslate nohighlight">\(f(x) = x^3\)</span>, which you can define below as:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
-    <span class="k">return</span> <span class="n">x_1</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="n">x_2</span>
+    <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">3</span>
 </pre></div>
 </div>
 <p><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> just needs a value <span class="math notranslate nohighlight">\((x=p)\)</span> to evalute your function at and
@@ -179,20 +179,23 @@ the automatic differentiation of your function wrt. <span class="math notranslat
 </div>
 <p>for an example value of <span class="math notranslate nohighlight">\(x = 5\)</span> to evaluate your function at. Now,
 evaluating your function at <span class="math notranslate nohighlight">\(x=5\)</span> and simultaneously computing the
-derivative at this point is as easy as</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ad</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">p_x</span><span class="p">)</span>
-<span class="o">&gt;&gt;&gt;</span> <span class="n">ad</span>
-<span class="mf">125.00</span> <span class="o">+</span> <span class="n">eps</span> <span class="mf">75.00</span>
+derivative at this point is as easy as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">ad</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">p_x</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">ad</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>125.00 + eps 75.00
 </pre></div>
 </div>
 <p>where the real part is <span class="math notranslate nohighlight">\(f(x=5) = 125\)</span> and the dual part is
 <span class="math notranslate nohighlight">\(\left.\frac{\mathrm d f}{\mathrm d x}\right|_{x=5} = 75\)</span> .</p>
 <p>The real and dual parts are also conveniently stored as attributes in the
 <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> object <code class="docutils literal notranslate"><span class="pre">ad</span></code>,</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="p">)</span> <span class="c1"># real part f(x=p)</span>
-<span class="go">125.0</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">d</span><span class="p">)</span> <span class="c1"># dual part df/dx|x=p</span>
-<span class="go">75.0</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">d</span><span class="p">)</span> <span class="c1"># real part f(x=p), dual part df/dx at x=p</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>125.0 75.0
 </pre></div>
 </div>
 <p>Note: The dual part is returned as a <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array because
@@ -227,28 +230,30 @@ f(\mathbf p) + \epsilon_{x_1}\frac{\partial f}{\partial x_1}
 \frac{\partial f}{\partial x_2}\right] = f(\mathbf p) + \epsilon\nabla f
 \end{align*}\quad.\]</div>
 <p>Applying this to the new function <span class="math notranslate nohighlight">\(f\)</span> would look like the following</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x_1</span><span class="p">,</span> <span class="n">x_2</span><span class="p">):</span>
-<span class="k">return</span> <span class="mi">3</span><span class="o">*</span><span class="n">x_1</span><span class="o">*</span><span class="n">x_2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">x_2</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="n">x_1</span>
+    <span class="k">return</span> <span class="mi">3</span><span class="o">*</span><span class="n">x_1</span><span class="o">*</span><span class="n">x_2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">x_2</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="n">x_1</span>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="c1"># evaluation point (x_1, x_2) = (5, 2)</span>
 
 <span class="n">p_x1</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">idx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
 <span class="n">p_x2</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">idx</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
 
-<span class="c1"># print f(p) and grad(f) evaluated at p</span>
 <span class="n">ad</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">p_x1</span><span class="p">,</span> <span class="n">p_x2</span><span class="p">)</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">ad</span><span class="p">)</span>
-<span class="mf">26.80</span> <span class="o">+</span> <span class="n">eps</span> <span class="p">[</span> <span class="mf">6.64</span> <span class="mf">10.2</span> <span class="p">]</span>
+<span class="c1"># f(p) and grad(f) evaluated at p</span>
+<span class="k">print</span><span class="p">(</span><span class="n">ad</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>26.80 + eps [ 6.64 10.2 ]
 </pre></div>
 </div>
 <p>The real and dual parts can again be accessed with</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
-<span class="go">26.8</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">d</span><span class="p">)</span>
-<span class="go">[ 6.64 10.2 ]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">d</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>26.8 [ 6.64 10.2 ]
 </pre></div>
 </div>
 </div>
@@ -271,11 +276,11 @@ x_1^2 + x_1x_2 + 2 \\ x_1x_2^3 + x_1^2 \\ x_2^3/x_1 + x_1 + x_1^2x_2^2 + x_2^4
 <p>The configuration of <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> happens to be exactly the same as in
 <a class="reference internal" href="#demo-ii-scalar-function-with-vector-input">Demo II</a>, and would look like
 the following</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">F</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
-<span class="n">f1</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="mi">2</span>
-<span class="n">f2</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
-<span class="n">f3</span> <span class="o">=</span> <span class="n">y</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="n">x</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">4</span>
-<span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">])</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">F</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="mi">2</span>
+    <span class="n">f2</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">f3</span> <span class="o">=</span> <span class="n">y</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="n">x</span> <span class="o">+</span> <span class="n">x</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">4</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">,</span> <span class="n">f3</span><span class="p">])</span>
 
 <span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
 <span class="n">p_x</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="n">p</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">idx</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">p</span><span class="p">)</span>
@@ -283,8 +288,10 @@ the following</p>
 
 <span class="n">ad</span> <span class="o">=</span> <span class="n">F</span><span class="p">(</span><span class="n">p_x</span><span class="p">,</span> <span class="n">p_y</span><span class="p">)</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">ad</span><span class="p">)</span>
-<span class="p">[</span><span class="mf">5.00</span> <span class="o">+</span> <span class="n">eps</span> <span class="p">[</span><span class="mf">4.</span> <span class="mf">1.</span><span class="p">],</span> <span class="mf">9.00</span> <span class="o">+</span> <span class="n">eps</span> <span class="p">[</span><span class="mf">10.</span> <span class="mf">12.</span><span class="p">],</span> <span class="mf">29.00</span> <span class="o">+</span> <span class="n">eps</span> <span class="p">[</span> <span class="mf">1.</span> <span class="mf">48.</span><span class="p">]]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">ad</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[5.00 + eps [4. 1.] 9.00 + eps [10. 12.] 29.00 + eps [ 1. 48.]]
 </pre></div>
 </div>
 <p>For each <span class="math notranslate nohighlight">\(i\)</span> th entry, in the 1D <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array <cite>ad</cite>, the real part is
@@ -293,14 +300,16 @@ part is the corresponding row in the Jacobian <span class="math notranslate nohi
 <span class="math notranslate nohighlight">\(\mathbf p = (x_1, x_2) = (1, 2)\)</span> .</p>
 <p>The output can be cleaned up a bit to shape <span class="math notranslate nohighlight">\(\mathbf J\)</span> into its matrix
 form <code class="docutils literal notranslate"><span class="pre">Jac</span></code> with,</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Jac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">F</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Jac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">F</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ad</span><span class="p">):</span>
     <span class="n">Jac</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">d</span>
 
-<span class="o">&gt;&gt;&gt;</span> <span class="nb">print</span><span class="p">(</span><span class="n">Jac</span><span class="p">)</span>
-<span class="p">[[</span> <span class="mf">4.</span><span class="p">,</span>  <span class="mf">1.</span><span class="p">],</span>
-<span class="p">[</span><span class="mf">10.</span><span class="p">,</span> <span class="mf">12.</span><span class="p">],</span>
-<span class="p">[</span> <span class="mf">1.</span><span class="p">,</span> <span class="mf">48.</span><span class="p">]]</span>
+<span class="k">print</span><span class="p">(</span><span class="n">Jac</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[[ 4.  1.]
+ [10. 12.]
+ [ 1. 48.]]
 </pre></div>
 </div>
 </div>
