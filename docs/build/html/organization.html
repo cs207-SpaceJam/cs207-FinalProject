@@ -193,6 +193,10 @@ automatic differentiation <code class="docutils literal notranslate"><span class
 <p>Unit tests are stored in <code class="docutils literal notranslate"><span class="pre">spacejam/tests/DualNumbers.py</span></code> and each
 method in <code class="docutils literal notranslate"><span class="pre">spacejam/Dual.py</span></code> have their own doctests. <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> also has
 TravisCI and Coveralls integration.</p>
+<p>These tests can be run with the following command in the root directory:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pytest --doctest-modules --cov=. --cov-report term-missing
+</pre></div>
+</div>
 </div>
 <div class="section" id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>

@@ -41,6 +41,12 @@ Unit tests are stored in ``spacejam/tests/DualNumbers.py`` and each
 method in ``spacejam/Dual.py`` have their own doctests. ``spacejam`` also has
 TravisCI and Coveralls integration.
 
+These tests can be run with the following command in the root directory:
+
+.. code-block:: none
+
+        pytest --doctest-modules --cov=. --cov-report term-missing
+
 Installation
 ------------
 Until ``spacejam`` is made available on PyPI, the easiest way to install is to
