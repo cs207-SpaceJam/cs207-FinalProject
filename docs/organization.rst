@@ -1,7 +1,7 @@
 Software Organization
 =====================
 
-Cool tree cartoon:
+Cool tree cartoon of main files:
 
 .. code-block:: text
 
