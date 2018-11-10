@@ -1,11 +1,11 @@
 Background
 ==========
 
-Euler's Method As a Solution to Our Problem
--------------------------------------------
-Euler's method is a numerical procedure for solving ordinary differential
-equations with a given initial value. In the case of our problem statement,
-here is how it applies:
+Numerical Integration: A brief crash couse
+------------------------------------------
+Many physical systems can be expressed as a series of differential equations.
+Euler's method is the simplest numerical procedure for solving these equations
+given some initial conditions. In the case of our problem statement:
 
 * We have some initial conditions (such as position and velocity of a planet)
   and we want to know what kind of orbit this planet will trace out, given that
@@ -32,86 +32,81 @@ approximate (red), given that we only know two things:
 * where we started :math:`(t_0, y_0)`
 
 * the rate of how where we were changes with time 
-  :math:`\left(y'_0 = \frac{y_1 - y_0}{\Delta t}\right)`
+  :math:`\left(\dot{y}_0 \equiv \frac{\mathrm d y_0}{\mathrm{d} t}
+  = \frac{y_1 - y_0}{h}\right)`
 
 The cool thing about this is that even though we do not explicity know what
-:math:`y_1` is, the fact that we are given :math:`y'_0` from the initial
+:math:`y_1` is, the fact that we are given :math:`\dot{y}_0` from the initial
 conditions allows us to bootstrap our way around this. Starting with the
-definition of slope, we can use the timestep :math:`h = \Delta t`, to find
-where we will be a timestep later :math:`y_1`: 
+definition of slope, we can use the timestep :math:`h \equiv \Delta t = t_{n+1}
+- t_n`, to find where we will be a timestep later :math:`\dot{y}_1`: 
 
 .. math::
 
-        y_0' = \frac{y_1 - y_0}{\Delta t}\quad\longrightarrow\quad y_1 
-        = y_0 + \Delta t\ y_0'\quad.  
+        \dot y_0 = \frac{y_1 - y_0}{h}\quad\longrightarrow\quad y_1 
+        = y_0 + h \dot{y}_0\quad.  
 
 Generalizing to any timestep :math:`n`:
 
 .. math::
 
-        y_{n+1} = y_n + \Delta t\ y_n'
+        y_{n+1} = y_n + h \dot{y}_n \quad.
 
 Whenever all of the :math:`n+1` terms are on one side of the equation and the
-:math:`n` terms are on the other, we have something called an **explicit
-numerical method**. This is intuitively straightforward and easy to implement,
-but there is a downside, the solutions **do not converge** for a given
-timestep. A solution to this would be to consider an implicit analogue to
-Euler's method. 
-
-Instead, we can recast our problem in the form of an oscillator with some
-motion :math:`x(t)` along the x-axis confined to an area that is close to this
-axis. In other words,
+:math:`n` terms are on the other, we have an **explicit
+numerical method**. This can also be easily extended to :math:`m` components
+for :math:`y_n` with the simple substitution:
 
 .. math::
 
         \newcommand{b}[1]{\mathbf#1}
-        \newcommand{od}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
-        \b f(\b X_n) = \dot{\b X}_n = \od{}{t}\begin{bmatrix}x_n\\y_n\end{bmatrix}
-        = \begin{bmatrix}-x_n\\-ky_n\end{bmatrix}
-        \quad,
+        y_{n} \longrightarrow \b X_{n} 
+        = \begin{pmatrix}x_1 \\ x_2 \\ \vdots \\ x_m\end{pmatrix},\quad
+        y_{n+1} \longrightarrow \b X_{n+1} = \b X_{n} + h \dot{\b X}_n \quad.
 
-for large :math:`k` to constrain our oscillator to the x-axis.
-
-Running our explicit Euler scheme then gives,
-
-.. math::
-
-        \b X_{n+1} = \b X_n + h\b f(\b X_n) 
-        = \begin{pmatrix}x_0\\y_0\end{pmatrix}
-        - h\begin{pmatrix}-x_0\\-ky_0\end{pmatrix}
-        = \begin{bmatrix}(1 - h)x_0\\(1 - hk) y_0\end{bmatrix}
-        \quad.
-
-**This is our problem**. If :math:`|1 - hk| > 0`, then :math:`|y_{n+1}| >
-|y_n|`, which would imply that our spring would actually get farther and
-farther away from the x-axis! In other words, if we happened to select a
-timestep larger than :math:`h = 2/k`, our solution would not converge. By
-definition, :math:`k` is large, so the only way to avoid having this system
-blow up on us is to select very small timesteps, which is computationally
-expensive and would take forever to run. 
+This is intuitively straightforward and easy to implement,
+but there is a downside, the solutions **do not converge** for any given
+timestep. If the steps are too large, our numerical estimations would return
+results that are not physically meaningful, and if they are too small the
+simulation would take too long to run.  
 
 We need a scheme that will remain stable for a wide range of timesteps, which
-is what **implicit differentiation can accomplish**. One way of approaching this
-is to re-cast it as the root finding problem
+is what **implicit differentiation** can accomplish. In this framework,
+:math:`\b X_{n+1}` is now determined by:
 
 .. math::
 
-        \b g(\b X_{n+1}) = \b X_{n+1} - \b X_n - h\b f(\b X_{n+1})\quad.
+        \b X_{n+1} = \b X_{n} + h \dot{\b X}_{n+1} \quad.
+
+Now, we have :math:`n+1` terms on both sides, making this an implicit scheme. A
+common way of solving this new problem is by re-casting it as the root finding
+problem:
+
+.. math::
+
+        \b g(\b X_{n+1}) = \b X_{n+1} - \b X_n - h \dot{\b X}_{n+1}\quad.
 
 Here, the root of the new function :math:`\b g` is the solution to our original
-implicit integration problem. The `Newton-Raphson method
-<https://en.wikipedia.org/wiki/Newton%27s_method>`_. is a useful root finding
-algorithm, but it requires the computation of the Jacobian,
+implicit integration equation. The `Newton-Raphson method
+<https://en.wikipedia.org/wiki/Newton%27s_method>`_ is a useful root finding
+algorithm, but one of its steps requires the computation of the 
+:math:`m \times m` Jacobian:
 
 .. math::
 
-        \b I - h\b J\b f(\b X_{n+1})\quad.
+        \newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
+        \b J(\b X_n) = \pd{}{\b X_n} \dot{\b X}_n 
+        = \begin{pmatrix}\nabla \dot{\b X}_{n_0} \\ 
+                         \nabla \dot{\b X}_{n_1} \\
+                         \vdots                  \\
+                         \nabla \dot{\b X}_{n_m}
+                         \end{pmatrix} \quad,
+
+where :math:`n_i` is the :math:`i` th component of :math:`\dot{\b X}_n` .
 
 Accurately computing the elements of the Jacobian can be numerically expensive,
 so a method to quickly and accurately compute derivatives would be extremely
-useful.
-
-``spacejam`` provides this capability by computing the Jacobian quickly and
+useful. ``spacejam`` provides this capability by computing the Jacobian quickly and
 accurately via 
 `automatic differentiation <Automatic Differentiation: A brief overview_>`__,
 which can be used to solve a class or problems that depend on implicit

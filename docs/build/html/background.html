@@ -83,7 +83,7 @@
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
 <li class="toctree-l1"><a class="reference internal" href="howtouse.html">How to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Background</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#euler-s-method-as-a-solution-to-our-problem">Euler’s Method As a Solution to Our Problem</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#numerical-integration-a-brief-crash-couse">Numerical Integration: A brief crash couse</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#automatic-differentiation-a-brief-overview">Automatic Differentiation: A brief overview</a></li>
 </ul>
 </li>
@@ -156,11 +156,11 @@
             
   <div class="section" id="background">
 <h1>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="euler-s-method-as-a-solution-to-our-problem">
-<h2>Euler’s Method As a Solution to Our Problem<a class="headerlink" href="#euler-s-method-as-a-solution-to-our-problem" title="Permalink to this headline">¶</a></h2>
-<p>Euler’s method is a numerical procedure for solving ordinary differential
-equations with a given initial value. In the case of our problem statement,
-here is how it applies:</p>
+<div class="section" id="numerical-integration-a-brief-crash-couse">
+<h2>Numerical Integration: A brief crash couse<a class="headerlink" href="#numerical-integration-a-brief-crash-couse" title="Permalink to this headline">¶</a></h2>
+<p>Many physical systems can be expressed as a series of differential equations.
+Euler’s method is the simplest numerical procedure for solving these equations
+given some initial conditions. In the case of our problem statement:</p>
 <ul class="simple">
 <li>We have some initial conditions (such as position and velocity of a planet)
 and we want to know what kind of orbit this planet will trace out, given that
@@ -182,63 +182,60 @@ approximate (red), given that we only know two things:</p>
 <ul class="simple">
 <li>where we started <span class="math notranslate nohighlight">\((t_0, y_0)\)</span></li>
 <li>the rate of how where we were changes with time
-<span class="math notranslate nohighlight">\(\left(y'_0 = \frac{y_1 - y_0}{\Delta t}\right)\)</span></li>
+<span class="math notranslate nohighlight">\(\left(\dot{y}_0 \equiv \frac{\mathrm d y_0}{\mathrm{d} t}
+= \frac{y_1 - y_0}{h}\right)\)</span></li>
 </ul>
 <p>The cool thing about this is that even though we do not explicity know what
-<span class="math notranslate nohighlight">\(y_1\)</span> is, the fact that we are given <span class="math notranslate nohighlight">\(y'_0\)</span> from the initial
+<span class="math notranslate nohighlight">\(y_1\)</span> is, the fact that we are given <span class="math notranslate nohighlight">\(\dot{y}_0\)</span> from the initial
 conditions allows us to bootstrap our way around this. Starting with the
-definition of slope, we can use the timestep <span class="math notranslate nohighlight">\(h = \Delta t\)</span>, to find
-where we will be a timestep later <span class="math notranslate nohighlight">\(y_1\)</span>:</p>
+definition of slope, we can use the timestep <span class="math notranslate nohighlight">\(h \equiv \Delta t = t_{n+1}
+- t_n\)</span>, to find where we will be a timestep later <span class="math notranslate nohighlight">\(\dot{y}_1\)</span>:</p>
 <div class="math notranslate nohighlight">
-\[y_0' = \frac{y_1 - y_0}{\Delta t}\quad\longrightarrow\quad y_1
-= y_0 + \Delta t\ y_0'\quad.\]</div>
+\[\dot y_0 = \frac{y_1 - y_0}{h}\quad\longrightarrow\quad y_1
+= y_0 + h \dot{y}_0\quad.\]</div>
 <p>Generalizing to any timestep <span class="math notranslate nohighlight">\(n\)</span>:</p>
 <div class="math notranslate nohighlight">
-\[y_{n+1} = y_n + \Delta t\ y_n'\]</div>
+\[y_{n+1} = y_n + h \dot{y}_n \quad.\]</div>
 <p>Whenever all of the <span class="math notranslate nohighlight">\(n+1\)</span> terms are on one side of the equation and the
-<span class="math notranslate nohighlight">\(n\)</span> terms are on the other, we have something called an <strong>explicit
-numerical method</strong>. This is intuitively straightforward and easy to implement,
-but there is a downside, the solutions <strong>do not converge</strong> for a given
-timestep. A solution to this would be to consider an implicit analogue to
-Euler’s method.</p>
-<p>Instead, we can recast our problem in the form of an oscillator with some
-motion <span class="math notranslate nohighlight">\(x(t)\)</span> along the x-axis confined to an area that is close to this
-axis. In other words,</p>
+<span class="math notranslate nohighlight">\(n\)</span> terms are on the other, we have an <strong>explicit
+numerical method</strong>. This can also be easily extended to <span class="math notranslate nohighlight">\(m\)</span> components
+for <span class="math notranslate nohighlight">\(y_n\)</span> with the simple substitution:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\newcommand{b}[1]{\mathbf#1}
-\newcommand{od}[2]{\frac{\mathrm{d}#1}{\mathrm{d}#2}}
-\b f(\b X_n) = \dot{\b X}_n = \od{}{t}\begin{bmatrix}x_n\\y_n\end{bmatrix}
-= \begin{bmatrix}-x_n\\-ky_n\end{bmatrix}
-\quad,\end{split}\]</div>
-<p>for large <span class="math notranslate nohighlight">\(k\)</span> to constrain our oscillator to the x-axis.</p>
-<p>Running our explicit Euler scheme then gives,</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}\b X_{n+1} = \b X_n + h\b f(\b X_n)
-= \begin{pmatrix}x_0\\y_0\end{pmatrix}
-- h\begin{pmatrix}-x_0\\-ky_0\end{pmatrix}
-= \begin{bmatrix}(1 - h)x_0\\(1 - hk) y_0\end{bmatrix}
-\quad.\end{split}\]</div>
-<p><strong>This is our problem</strong>. If <span class="math notranslate nohighlight">\(|1 - hk| &gt; 0\)</span>, then <span class="math notranslate nohighlight">\(|y_{n+1}| &gt;
-|y_n|\)</span>, which would imply that our spring would actually get farther and
-farther away from the x-axis! In other words, if we happened to select a
-timestep larger than <span class="math notranslate nohighlight">\(h = 2/k\)</span>, our solution would not converge. By
-definition, <span class="math notranslate nohighlight">\(k\)</span> is large, so the only way to avoid having this system
-blow up on us is to select very small timesteps, which is computationally
-expensive and would take forever to run.</p>
+y_{n} \longrightarrow \b X_{n}
+= \begin{pmatrix}x_1 \\ x_2 \\ \vdots \\ x_m\end{pmatrix},\quad
+y_{n+1} \longrightarrow \b X_{n+1} = \b X_{n} + h \dot{\b X}_n \quad.\end{split}\]</div>
+<p>This is intuitively straightforward and easy to implement,
+but there is a downside, the solutions <strong>do not converge</strong> for any given
+timestep. If the steps are too large, our numerical estimations would return
+results that are not physically meaningful, and if they are too small the
+simulation would take too long to run.</p>
 <p>We need a scheme that will remain stable for a wide range of timesteps, which
-is what <strong>implicit differentiation can accomplish</strong>. One way of approaching this
-is to re-cast it as the root finding problem</p>
+is what <strong>implicit differentiation</strong> can accomplish. In this framework,
+<span class="math notranslate nohighlight">\(\b X_{n+1}\)</span> is now determined by:</p>
 <div class="math notranslate nohighlight">
-\[\b g(\b X_{n+1}) = \b X_{n+1} - \b X_n - h\b f(\b X_{n+1})\quad.\]</div>
+\[\b X_{n+1} = \b X_{n} + h \dot{\b X}_{n+1} \quad.\]</div>
+<p>Now, we have <span class="math notranslate nohighlight">\(n+1\)</span> terms on both sides, making this an implicit scheme. A
+common way of solving this new problem is by re-casting it as the root finding
+problem:</p>
+<div class="math notranslate nohighlight">
+\[\b g(\b X_{n+1}) = \b X_{n+1} - \b X_n - h \dot{\b X}_{n+1}\quad.\]</div>
 <p>Here, the root of the new function <span class="math notranslate nohighlight">\(\b g\)</span> is the solution to our original
-implicit integration problem. The <a class="reference external" href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton-Raphson method</a>. is a useful root finding
-algorithm, but it requires the computation of the Jacobian,</p>
+implicit integration equation. The <a class="reference external" href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton-Raphson method</a> is a useful root finding
+algorithm, but one of its steps requires the computation of the
+<span class="math notranslate nohighlight">\(m \times m\)</span> Jacobian:</p>
 <div class="math notranslate nohighlight">
-\[\b I - h\b J\b f(\b X_{n+1})\quad.\]</div>
+\[\begin{split}\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
+\b J(\b X_n) = \pd{}{\b X_n} \dot{\b X}_n
+= \begin{pmatrix}\nabla \dot{\b X}_{n_0} \\
+                 \nabla \dot{\b X}_{n_1} \\
+                 \vdots                  \\
+                 \nabla \dot{\b X}_{n_m}
+                 \end{pmatrix} \quad,\end{split}\]</div>
+<p>where <span class="math notranslate nohighlight">\(n_i\)</span> is the <span class="math notranslate nohighlight">\(i\)</span> th component of <span class="math notranslate nohighlight">\(\dot{\b X}_n\)</span> .</p>
 <p>Accurately computing the elements of the Jacobian can be numerically expensive,
 so a method to quickly and accurately compute derivatives would be extremely
-useful.</p>
-<p><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> provides this capability by computing the Jacobian quickly and
+useful. <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> provides this capability by computing the Jacobian quickly and
 accurately via
 <a class="reference internal" href="#automatic-differentiation-a-brief-overview">automatic differentiation</a>,
 which can be used to solve a class or problems that depend on implicit
