@@ -171,7 +171,7 @@ scalar argument <span class="math notranslate nohighlight">\((x=a)\)</span> and 
 <p><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> just needs a value <span class="math notranslate nohighlight">\((x=p)\)</span> to evalute your function at and
 a dual number object <span class="math notranslate nohighlight">\(p_x = f(x) + \epsilon_x\)</span> which is needed to perform
 the automatic differentiation of your function wrt. <span class="math notranslate nohighlight">\(x\)</span>. Luckily,
-<code class="docutils literal notranslate"><span class="pre">spacejam</span></code> creates this object for you with</p>
+<code class="docutils literal notranslate"><span class="pre">spacejam</span></code> creates this object for you with:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacejam.Dual</span> <span class="k">as</span> <span class="nn">d</span>
 <span class="n">p</span> <span class="o">=</span> <span class="mi">5</span>  <span class="c1"># evaluation point</span>
 <span class="n">p_x</span> <span class="o">=</span> <span class="n">d</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="c1"># call Dual object</span>
@@ -188,10 +188,10 @@ derivative at this point is as easy as:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>125.00 + eps 75.00
 </pre></div>
 </div>
-<p>where the real part is <span class="math notranslate nohighlight">\(f(x=5) = 125\)</span> and the dual part is
-<span class="math notranslate nohighlight">\(\left.\frac{\mathrm d f}{\mathrm d x}\right|_{x=5} = 75\)</span> .</p>
+<p>where the real part is <span class="math notranslate nohighlight">\(f(x=5) = 125\)</span> and the dual part (preceded by
+<code class="docutils literal notranslate"><span class="pre">eps</span></code>) is <span class="math notranslate nohighlight">\(\left.\frac{\mathrm d f}{\mathrm d x}\right|_{x=5} = 75\)</span> .</p>
 <p>The real and dual parts are also conveniently stored as attributes in the
-<code class="docutils literal notranslate"><span class="pre">spacejam</span></code> object <code class="docutils literal notranslate"><span class="pre">ad</span></code>,</p>
+<code class="docutils literal notranslate"><span class="pre">spacejam</span></code> object <code class="docutils literal notranslate"><span class="pre">ad</span></code>:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">d</span><span class="p">)</span> <span class="c1"># real part f(x=p), dual part df/dx at x=p</span>
 </pre></div>
 </div>
@@ -211,7 +211,7 @@ single scalar value <span class="math notranslate nohighlight">\(f(\mathbf p) = 
 <p>The dual number objects are created in much the same way as in
 <a class="reference internal" href="#demo-i-scalar-function-scalar-input">Demo I</a>,
 with the only difference being the specification of separate dual number
-objects</p>
+objects:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\begin{align*}
 p_{x_1} &amp;= f(x_1, x_2) + \epsilon_{x_1} \frac{\partial f}{\partial x_1}
@@ -221,7 +221,7 @@ p_{x_2} &amp;= f(x_1, x_2) + \epsilon_{x_1} 0
 \end{align*}\quad.\end{split}\]</div>
 <p>This is accomplished with the <code class="docutils literal notranslate"><span class="pre">idx</span></code> and <code class="docutils literal notranslate"><span class="pre">x</span></code> argument that you supply to
 <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> so that it knows which dual parts need to be set to zero in the
-modified dual numbers above. In this modified setup, <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> now returns</p>
+modified dual numbers above. In this modified setup, <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> now returns:</p>
 <div class="math notranslate nohighlight">
 \[\begin{align*}
 f(\mathbf p) + \epsilon_{x_1}\frac{\partial f}{\partial x_1}
@@ -229,7 +229,7 @@ f(\mathbf p) + \epsilon_{x_1}\frac{\partial f}{\partial x_1}
 \equiv f(\mathbf p) + \epsilon \left[\frac{\partial f}{\partial x_1},
 \frac{\partial f}{\partial x_2}\right] = f(\mathbf p) + \epsilon\nabla f
 \end{align*}\quad.\]</div>
-<p>Applying this to the new function <span class="math notranslate nohighlight">\(f\)</span> would look like the following</p>
+<p>Applying this to the new function <span class="math notranslate nohighlight">\(f\)</span> would look like the following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x_1</span><span class="p">,</span> <span class="n">x_2</span><span class="p">):</span>
@@ -249,7 +249,7 @@ f(\mathbf p) + \epsilon_{x_1}\frac{\partial f}{\partial x_1}
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>26.80 + eps [ 6.64 10.2 ]
 </pre></div>
 </div>
-<p>The real and dual parts can again be accessed with</p>
+<p>The real and dual parts can again be accessed with:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">d</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -260,22 +260,22 @@ f(\mathbf p) + \epsilon_{x_1}\frac{\partial f}{\partial x_1}
 <div class="section" id="demo-iii-vector-function-with-vector-input">
 <span id="diii"></span><h2>Demo III: Vector function with vector input<a class="headerlink" href="#demo-iii-vector-function-with-vector-input" title="Permalink to this headline">¶</a></h2>
 <p>This final demo shows how to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> to simultaneously evaluate the
-example vector function</p>
+example vector function:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\mathbf{F} = \begin{bmatrix}f_1(x_1, x_2)\\f_2(x_1, x_2)
 \\f_{3}(x_1, x_2)\end{bmatrix}
 = \begin{bmatrix}
 x_1^2 + x_1x_2 + 2 \\ x_1x_2^3 + x_1^2 \\ x_2^3/x_1 + x_1 + x_1^2x_2^2 + x_2^4
 \end{bmatrix}\end{split}\]</div>
-<p>and its Jacobian,</p>
+<p>and its Jacobian:</p>
 <div class="math notranslate nohighlight">
 \[\begin{split}\mathbf J = \begin{bmatrix}
 \nabla f_1(x_1, x_2) \\ \nabla f_2(x_1, x_2) \\ \nabla f_3(x_1, x_2)
 \end{bmatrix}\quad.\end{split}\]</div>
 <p>at the point <span class="math notranslate nohighlight">\(\mathbf{p} = (x_1, x_2) = (1, 2)\)</span> .</p>
-<p>The configuration of <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> happens to be exactly the same as in
+<p>The interface with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> happens to be exactly the same as in
 <a class="reference internal" href="#demo-ii-scalar-function-with-vector-input">Demo II</a>, and would look like
-the following</p>
+the following:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">F</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
     <span class="n">f1</span> <span class="o">=</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span> <span class="o">+</span> <span class="mi">2</span>
     <span class="n">f2</span> <span class="o">=</span> <span class="n">x</span><span class="o">*</span><span class="n">y</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span>
@@ -299,7 +299,7 @@ the <span class="math notranslate nohighlight">\(i\)</span> th component of <spa
 part is the corresponding row in the Jacobian <span class="math notranslate nohighlight">\(\mathbf J\)</span> evaluated at
 <span class="math notranslate nohighlight">\(\mathbf p = (x_1, x_2) = (1, 2)\)</span> .</p>
 <p>The output can be cleaned up a bit to shape <span class="math notranslate nohighlight">\(\mathbf J\)</span> into its matrix
-form <code class="docutils literal notranslate"><span class="pre">Jac</span></code> with,</p>
+form <code class="docutils literal notranslate"><span class="pre">Jac</span></code> with:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Jac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">F</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ad</span><span class="p">):</span>
     <span class="n">Jac</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">d</span>

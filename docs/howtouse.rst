@@ -25,7 +25,7 @@ For example, let us take a look at the function :math:`f(x) = x^3`, which you ca
 ``spacejam`` just needs a value :math:`(x=p)` to evalute your function at and 
 a dual number object :math:`p_x = f(x) + \epsilon_x` which is needed to perform 
 the automatic differentiation of your function wrt. :math:`x`. Luckily, 
-``spacejam`` creates this object for you with
+``spacejam`` creates this object for you with:
 
 ::
 
@@ -53,11 +53,11 @@ derivative at this point is as easy as:
 
         125.00 + eps 75.00
 
-where the real part is :math:`f(x=5) = 125` and the dual part is 
-:math:`\left.\frac{\mathrm d f}{\mathrm d x}\right|_{x=5} = 75` .
+where the real part is :math:`f(x=5) = 125` and the dual part (preceded by
+``eps``) is :math:`\left.\frac{\mathrm d f}{\mathrm d x}\right|_{x=5} = 75` .
 
-The real and dual parts are also conveniently stored as attributes in the 
-``spacejam`` object ``ad``,
+The real and dual parts are also conveniently stored as attributes in the
+``spacejam`` object ``ad``:
 
 .. testcode::
 
@@ -81,7 +81,7 @@ single scalar value :math:`f(\mathbf p) = f(x_1, x_2) = 3x_1x_2 - 2x_2^3/x_1` .
 The dual number objects are created in much the same way as in 
 `Demo I <Demo I: Scalar function, scalar input_>`__,
 with the only difference being the specification of separate dual number 
-objects 
+objects: 
 
 .. math::
 
@@ -94,7 +94,7 @@ objects
 
 This is accomplished with the ``idx`` and ``x`` argument that you supply to
 ``spacejam`` so that it knows which dual parts need to be set to zero in the 
-modified dual numbers above. In this modified setup, ``spacejam`` now returns
+modified dual numbers above. In this modified setup, ``spacejam`` now returns:
 
 .. math::
 
@@ -105,7 +105,7 @@ modified dual numbers above. In this modified setup, ``spacejam`` now returns
         \frac{\partial f}{\partial x_2}\right] = f(\mathbf p) + \epsilon\nabla f
         \end{align*}\quad.
 
-Applying this to the new function :math:`f` would look like the following
+Applying this to the new function :math:`f` would look like the following:
 
 .. testcode::
 
@@ -128,7 +128,7 @@ Applying this to the new function :math:`f` would look like the following
 
         26.80 + eps [ 6.64 10.2 ]
 
-The real and dual parts can again be accessed with
+The real and dual parts can again be accessed with:
 
 .. testcode::
 
@@ -143,7 +143,7 @@ The real and dual parts can again be accessed with
 Demo III: Vector function with vector input
 -------------------------------------------
 This final demo shows how to use ``spacejam`` to simultaneously evaluate the
-example vector function
+example vector function:
 
 .. math::
 
@@ -153,7 +153,7 @@ example vector function
         x_1^2 + x_1x_2 + 2 \\ x_1x_2^3 + x_1^2 \\ x_2^3/x_1 + x_1 + x_1^2x_2^2 + x_2^4
         \end{bmatrix}
 
-and its Jacobian,
+and its Jacobian:       
 
 .. math::
 
@@ -163,9 +163,9 @@ and its Jacobian,
 
 at the point :math:`\mathbf{p} = (x_1, x_2) = (1, 2)` .
 
-The configuration of ``spacejam`` happens to be exactly the same as in 
+The interface with ``spacejam`` happens to be exactly the same as in 
 `Demo II <Demo II: Scalar function with vector input_>`__, and would look like 
-the following
+the following:
 
 .. testcode::
 
@@ -193,7 +193,7 @@ part is the corresponding row in the Jacobian :math:`\mathbf J` evaluated at
 :math:`\mathbf p = (x_1, x_2) = (1, 2)` .
 
 The output can be cleaned up a bit to shape :math:`\mathbf J` into its matrix 
-form ``Jac`` with,
+form ``Jac`` with:
 
 .. testcode::
 

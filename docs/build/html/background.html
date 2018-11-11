@@ -171,7 +171,7 @@ over time is acceleration, we can predict, or integrate, how the quantities
 will change over time.</li>
 <li>More explicitly, we can use the acceleration
 supplied by gravity to predict the velocity of our planet, and then use this
-velocity to predict its position a timestep <span class="math notranslate nohighlight">\(Delta t\)</span> later.</li>
+velocity to predict its position a timestep <span class="math notranslate nohighlight">\(\Delta t\)</span> later.</li>
 <li>This gives us a new position and the whole process starts over again at the
 next timestep. Here is a schematic of the Euler integration method.</li>
 </ul>
@@ -205,14 +205,14 @@ for <span class="math notranslate nohighlight">\(y_n\)</span> with the simple su
 y_{n} \longrightarrow \b X_{n}
 = \begin{pmatrix}x_1 \\ x_2 \\ \vdots \\ x_m\end{pmatrix},\quad
 y_{n+1} \longrightarrow \b X_{n+1} = \b X_{n} + h \dot{\b X}_n \quad.\end{split}\]</div>
-<p>This is intuitively straightforward and easy to implement,
-but there is a downside, the solutions <strong>do not converge</strong> for any given
-timestep. If the steps are too large, our numerical estimations would return
-results that are not physically meaningful, and if they are too small the
-simulation would take too long to run.</p>
-<p>We need a scheme that will remain stable for a wide range of timesteps, which
-is what <strong>implicit differentiation</strong> can accomplish. In this framework,
-<span class="math notranslate nohighlight">\(\b X_{n+1}\)</span> is now determined by:</p>
+<p>This is intuitively straightforward and easy to implement, but there is a
+downside: the solutions <strong>do not converge</strong> for any given timestep. If the
+steps are too large, our numerical estimations are essentially dominated by
+progation of error and would return results that are non-physical, and if they
+are too small the simulation would take too long to run.</p>
+<p>We need a scheme that remains stable and accurate for a wide range of
+timesteps, which is what <strong>implicit differentiation</strong> can accomplish. In this
+framework, <span class="math notranslate nohighlight">\(\b X_{n+1}\)</span> is now determined by:</p>
 <div class="math notranslate nohighlight">
 \[\b X_{n+1} = \b X_{n} + h \dot{\b X}_{n+1} \quad.\]</div>
 <p>Now, we have <span class="math notranslate nohighlight">\(n+1\)</span> terms on both sides, making this an implicit scheme. A
@@ -238,7 +238,7 @@ so a method to quickly and accurately compute derivatives would be extremely
 useful. <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> provides this capability by computing the Jacobian quickly and
 accurately via
 <a class="reference internal" href="#automatic-differentiation-a-brief-overview">automatic differentiation</a>,
-which can be used to solve a class or problems that depend on implicit
+which can be used to solve a wide class or problems that depend on implicit
 differentiation for numerically stable solutions.</p>
 </div>
 <div class="section" id="automatic-differentiation-a-brief-overview">
@@ -254,7 +254,7 @@ have:</p>
 <span class="math notranslate nohighlight">\(\epsilon\)</span> vanish and we are left with <span class="math notranslate nohighlight">\(f(x+\epsilon) = f(x) +
 \epsilon f'(x)\)</span>, where the dual part, <span class="math notranslate nohighlight">\(f'(x)\)</span>, of this transformed
 function is the derivative of our original function <span class="math notranslate nohighlight">\(f(x)\)</span>. If we adhere
-to the new system of algebra introduced by dual numbers, we are able to compute
+to the new system of math introduced by dual numbers, we are able to compute
 derivatives of functions exactly.</p>
 <p>For example, multiplying two dual numbers <span class="math notranslate nohighlight">\(z_1 = a_r + \epsilon a_d\)</span> and
 <span class="math notranslate nohighlight">\(z_2 = b_r + \epsilon b_d\)</span> would behave like:</p>
@@ -262,8 +262,31 @@ derivatives of functions exactly.</p>
 \[\begin{split}z_1 \times z_2 &amp;= (a_r + \epsilon a_d) \times (b_r + \epsilon b_d)
 = a_rb_r + \epsilon(a_rb_d + a_db_r) + \epsilon^2 a_db_d \\
 &amp;= \boxed{a_rb_r + \epsilon(a_rb_d + a_db_r)}\quad.\end{split}\]</div>
-<p>Operations like this can be redefined via <strong>operator overloading</strong>, which we
-implement in <a class="reference internal" href="implementation.html#api"><span class="std std-ref">Implementation Details</span></a>.</p>
+<p>A function like <span class="math notranslate nohighlight">\(f(x) = x^2\)</span> could then be automatically differentiated
+to give:</p>
+<div class="math notranslate nohighlight">
+\[f(x) \longrightarrow f(x+\epsilon)
+= (x + \epsilon) \times (x + \epsilon)
+= x^2 + \epsilon (x\cdot 1 + 1\cdot x) = x^2 + \epsilon\ 2x \quad,\]</div>
+<p>where <span class="math notranslate nohighlight">\(f(x) + \epsilon f'(x)\)</span> is returned as expected.
+Operations like this can be redefined via <strong>operator overloading</strong>, which we
+implement in <a class="reference internal" href="implementation.html#api"><span class="std std-ref">Implementation Details</span></a>. This method is also easily extended to multivariable
+functions with the introduction of “dual number basis vectors”. For example,
+the multivariable function <span class="math notranslate nohighlight">\(f(x, y) = xy\)</span> would transform like:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\require{cancel}
+x \quad\longrightarrow\quad&amp; x + \epsilon_x + \epsilon_y\ 0 \\
+y \quad\longrightarrow\quad&amp; y + \epsilon_x\ 0 + \epsilon_y \\
+f(x, y) \quad\longrightarrow\quad&amp; (x + \epsilon_x + \epsilon_y\ 0)
+\times (y + \epsilon_x\ 0 + \epsilon_y) \\
+&amp;= xy + \epsilon_y x + \epsilon_x y +
+\cancel{\epsilon_x\epsilon_y} \\
+&amp;= xy + \epsilon_y x + \epsilon_x y \quad,\end{split}\]</div>
+<p>where we now have:</p>
+<div class="math notranslate nohighlight">
+\[f(x+\epsilon_x, y+\epsilon_y)
+= f(x, y) + \epsilon_x\pd{f}{x} + \epsilon_y\pd{f}{y}
+= f(x, y) + \epsilon \nabla f(x, y)\quad.\]</div>
 </div>
 </div>
 

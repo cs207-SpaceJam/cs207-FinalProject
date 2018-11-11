@@ -18,7 +18,7 @@ given some initial conditions. In the case of our problem statement:
 
 * More explicitly, we can use the acceleration
   supplied by gravity to predict the velocity of our planet, and then use this
-  velocity to predict its position a timestep :math:`Delta t` later.  
+  velocity to predict its position a timestep :math:`\Delta t` later.  
   
 * This gives us a new position and the whole process starts over again at the
   next timestep. Here is a schematic of the Euler integration method.
@@ -64,15 +64,15 @@ for :math:`y_n` with the simple substitution:
         = \begin{pmatrix}x_1 \\ x_2 \\ \vdots \\ x_m\end{pmatrix},\quad
         y_{n+1} \longrightarrow \b X_{n+1} = \b X_{n} + h \dot{\b X}_n \quad.
 
-This is intuitively straightforward and easy to implement,
-but there is a downside, the solutions **do not converge** for any given
-timestep. If the steps are too large, our numerical estimations would return
-results that are not physically meaningful, and if they are too small the
-simulation would take too long to run.  
+This is intuitively straightforward and easy to implement, but there is a
+downside: the solutions **do not converge** for any given timestep. If the
+steps are too large, our numerical estimations are essentially dominated by
+progation of error and would return results that are non-physical, and if they
+are too small the simulation would take too long to run.  
 
-We need a scheme that will remain stable for a wide range of timesteps, which
-is what **implicit differentiation** can accomplish. In this framework,
-:math:`\b X_{n+1}` is now determined by:
+We need a scheme that remains stable and accurate for a wide range of
+timesteps, which is what **implicit differentiation** can accomplish. In this
+framework, :math:`\b X_{n+1}` is now determined by:
 
 .. math::
 
@@ -109,7 +109,7 @@ so a method to quickly and accurately compute derivatives would be extremely
 useful. ``spacejam`` provides this capability by computing the Jacobian quickly and
 accurately via 
 `automatic differentiation <Automatic Differentiation: A brief overview_>`__,
-which can be used to solve a class or problems that depend on implicit
+which can be used to solve a wide class or problems that depend on implicit
 differentiation for numerically stable solutions.
 
 Automatic Differentiation: A brief overview
@@ -128,7 +128,7 @@ By the definition of :math:`\epsilon`, all second order and higher terms in
 :math:`\epsilon` vanish and we are left with :math:`f(x+\epsilon) = f(x) +
 \epsilon f'(x)`, where the dual part, :math:`f'(x)`, of this transformed
 function is the derivative of our original function :math:`f(x)`. If we adhere
-to the new system of algebra introduced by dual numbers, we are able to compute
+to the new system of math introduced by dual numbers, we are able to compute
 derivatives of functions exactly. 
 
 For example, multiplying two dual numbers :math:`z_1 = a_r + \epsilon a_d` and 
@@ -140,6 +140,35 @@ For example, multiplying two dual numbers :math:`z_1 = a_r + \epsilon a_d` and
         = a_rb_r + \epsilon(a_rb_d + a_db_r) + \epsilon^2 a_db_d \\
         &= \boxed{a_rb_r + \epsilon(a_rb_d + a_db_r)}\quad.
 
+A function like :math:`f(x) = x^2` could then be automatically differentiated
+to give:
+
+.. math::
+        f(x) \longrightarrow f(x+\epsilon) 
+        = (x + \epsilon) \times (x + \epsilon)
+        = x^2 + \epsilon (x\cdot 1 + 1\cdot x) = x^2 + \epsilon\ 2x \quad,
+
+where :math:`f(x) + \epsilon f'(x)` is returned as expected.
 Operations like this can be redefined via **operator overloading**, which we
-implement in :ref:`api`.
+implement in :ref:`api`. This method is also easily extended to multivariable
+functions with the introduction of "dual number basis vectors". For example,
+the multivariable function :math:`f(x, y) = xy` would transform like:
+
+.. math::
+        \require{cancel}
+        x \quad\longrightarrow\quad& x + \epsilon_x + \epsilon_y\ 0 \\
+        y \quad\longrightarrow\quad& y + \epsilon_x\ 0 + \epsilon_y \\
+        f(x, y) \quad\longrightarrow\quad& (x + \epsilon_x + \epsilon_y\ 0) 
+        \times (y + \epsilon_x\ 0 + \epsilon_y) \\
+        &= xy + \epsilon_y x + \epsilon_x y + 
+        \cancel{\epsilon_x\epsilon_y} \\
+        &= xy + \epsilon_y x + \epsilon_x y \quad,
+
+where we now have:
+
+.. math::
+        f(x+\epsilon_x, y+\epsilon_y) 
+        = f(x, y) + \epsilon_x\pd{f}{x} + \epsilon_y\pd{f}{y} 
+        = f(x, y) + \epsilon \nabla f(x, y)\quad.
+
 
