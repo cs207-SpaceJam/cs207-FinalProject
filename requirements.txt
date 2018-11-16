@@ -14,5 +14,5 @@ pytest==3.10.0
 pytest-cov==2.6.0
 requests==2.20.0
 six==1.11.0
--e git+git@github.com:cs207-SpaceJam/cs207-FinalProject.git@cc91d7432e54d4e3d8e22a17b04900b035d66a0b#egg=spacejam
+-e git+https://github.com/cs207-SpaceJam/cs207-FinalProject.git@cc91d7432e54d4e3d8e22a17b04900b035d66a0b#egg=spacejam
 urllib3==1.24.1
