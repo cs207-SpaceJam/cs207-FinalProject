@@ -6,6 +6,21 @@ class Dual():
     """
 
     def __init__(self, real, dual=1.00, idx=None, x=np.array(1)):
+        """
+        Parameters
+        ----------
+        real : str
+            Human readable string describing the exception.
+        dual : :obj:`int`, optional
+            Numeric error code.
+
+        Attributes
+        ----------
+        msg : str
+            Human readable string describing the exception.
+        code : int
+            Numeric error code.
+        """
         # set numpy display output to be formatted to two decimal places
         # for easier doctesting
         formatter = lambda x: "%.2f" % x
