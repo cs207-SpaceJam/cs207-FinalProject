@@ -1,2 +1,2 @@
-from .dual import Dual
-from .autodiff import AutoDiff
+from spacejam.dual import Dual
+from spacejam.autodiff import AutoDiff
