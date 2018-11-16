@@ -112,6 +112,8 @@ accurately via
 which can be used to solve a wide class or problems that depend on implicit
 differentiation for numerically stable solutions.
 
+.. _ad:
+
 Automatic Differentiation: A brief overview
 -------------------------------------------
 This is a method to simultaneously compute a function and its derivative to

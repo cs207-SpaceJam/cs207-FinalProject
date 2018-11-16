@@ -6,8 +6,18 @@ class Dual():
     """
 
     def __init__(self, real, dual=1.00, idx=None, x=np.array(1)):
-        self.r = float(real)
+        # set numpy display output to be formatted to two decimal places
+        # for easier doctesting
+        formatter = lambda x: "%.2f" % x
+        np.set_printoptions(formatter={
+                                'int_kind':formatter,
+                                'float_kind':formatter
+                                })
 
+        # load func(p) into self.r
+        self.r = np.array(real)
+
+        # prepare self.d for differentiation
         if idx is not None: # dual basis vector
             self.d = np.zeros(x.size)
             self.d[idx] = 1.00
@@ -349,6 +359,15 @@ class Dual():
         >>> print(z)
         1.00 + eps 2.00
         """
+        # set numpy display output to be formatted to two decimal places
+        # for easier doctesting
+        float_formatter = lambda x: "%.2f" % x
+        np.set_printoptions(formatter={
+                                'int_kind':float_formatter,
+                                'float_kind':float_formatter
+                                })
+
+        # format dual numbers accordingly if p is scalar or vector
         if self.d.size == 1:
             if self.d >= 0:
                 s = f'{self.r:.2f} + eps {self.d:.2f}' 
