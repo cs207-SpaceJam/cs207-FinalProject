@@ -49,12 +49,18 @@ extensions = [
     'sphinx.ext.autodoc'
 ]
 
+# autodoc configs
+autodoc_default_flags = ['members']
+
+# autosummary configs
+autosummary_generate = True
+
 # napoleon settings
 napoleon_include_init_with_doc = True
 napoleon_include_private_with_doc = True
 napoleon_include_special_with_doc = True
 
-# sphinx.ext.doctest configs
+# doctest configs
 doctest_test_doctest_blocks = ''
 
 # Add any paths that contain templates here, relative to this directory.

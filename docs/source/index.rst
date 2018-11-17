@@ -9,7 +9,6 @@ for automatic differentiation and other looney things
 
 .. toctree::
    :maxdepth: 2
-   :caption: Contents:
 
    introduction
    howtouse
@@ -17,4 +16,3 @@ for automatic differentiation and other looney things
    organization
    implementation
    future
-

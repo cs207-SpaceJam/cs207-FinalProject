@@ -15,6 +15,13 @@ Data Structures
   
 API
 ---
-
+``spacejam.autodiff``
+~~~~~~~~~~~~~~~~~~~~~
 .. automodule:: spacejam.autodiff
    :members:
+
+``spacejam.dual``
+~~~~~~~~~~~~~~~~~
+.. automodule:: spacejam.dual
+   :members:
+

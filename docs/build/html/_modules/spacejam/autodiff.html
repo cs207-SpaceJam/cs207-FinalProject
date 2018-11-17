@@ -1,0 +1,302 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>spacejam.autodiff &mdash; spacejam 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> spacejam
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howtouse.html">How to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../background.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../organization.html">Software Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../implementation.html">Implementation Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../future.html">Future</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">spacejam</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>spacejam.autodiff</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spacejam.autodiff</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">dual</span>
+
+<div class="viewcode-block" id="AutoDiff"><a class="viewcode-back" href="../../implementation.html#spacejam.autodiff.AutoDiff">[docs]</a><span class="k">class</span> <span class="nc">AutoDiff</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Performs automatic differentiation (AD) on functions input by user.</span>
+
+<span class="sd">    AD if performed by transforming `f(x1, x2, ...)` to `f(p_x1, p_x2, ...)`,</span>
+<span class="sd">    where `p_xi` is returned from :any:`spacejam.dual.Dual` . </span>
+<span class="sd">    The final result is then returned in a series of 1D `numpy.ndarray` or </span>
+<span class="sd">    formatted matrices depending on if the user specified functions F are</span>
+<span class="sd">    multivariable or not.  </span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : numpy.ndarray</span>
+<span class="sd">        User defined function(s) `F` evaluated at `p`.</span>
+<span class="sd">    d : numpy.ndarray</span>
+<span class="sd">        Corresponding derivative, gradient, or Jacobian of user defined</span>
+<span class="sd">        functions(s).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="AutoDiff.__init__"><a class="viewcode-back" href="../../implementation.html#spacejam.autodiff.AutoDiff.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        func : numpy.ndarray</span>
+<span class="sd">            user defined function(s).</span>
+<span class="sd">        p : numpy.ndarray</span>
+<span class="sd">            user defined point(s) to evaluate derivative/gradient/Jacobian at.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ad</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="c1"># perform AD</span>
+
+        <span class="c1"># returns func(p) and approriate J func(p) or grad func(p)</span>
+        <span class="c1"># in real and dual part of AutoDiff class, respectively</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># scalar F, scalar or vector p</span>
+            <span class="c1"># hacky way to get numpy formatting to work</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">r</span>
+            <span class="k">else</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">r</span><span class="p">])</span>
+            <span class="c1"># load dual part</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">d</span>
+            <span class="c1"># load full func(p) + epsilon f&#39;(p) or</span>
+            <span class="c1"># func(p) + epsilon grad f(p)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_full</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># vector F, scalar or vector p</span>
+            <span class="c1"># format as F(p) column vector and Jacobian matrix</span>
+            <span class="c1"># for real and dual part, respectively</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_full</span> <span class="o">=</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="AutoDiff._ad"><a class="viewcode-back" href="../../implementation.html#spacejam.autodiff.AutoDiff._ad">[docs]</a>    <span class="k">def</span> <span class="nf">_ad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Internally computes `func(p)` and its derivative(s).</span>
+<span class="sd">        </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        `_ad` returns a nested 1D `numpy.ndarray` to be formatted internally</span>
+<span class="sd">        accordingly in :any:`spacejam.autodiff.AutoDiff.__init__`  .</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        func : numpy.ndarray</span>
+<span class="sd">            function(s) specified by user.</span>
+<span class="sd">        p : numpy.ndarray</span>
+<span class="sd">            point(s) specified by user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># scalar p</span>
+            <span class="n">p_mult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dual</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="n">p</span><span class="p">)])</span> 
+
+        <span class="k">else</span><span class="p">:</span><span class="c1"># vector p</span>
+            <span class="n">p_mult</span> <span class="o">=</span> <span class="p">[</span><span class="n">dual</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
+            <span class="n">p_mult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p_mult</span><span class="p">)</span> <span class="c1"># convert list to numpy array</span>
+
+        <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">p_mult</span><span class="p">)</span> <span class="c1"># perform AD with specified function(s)</span>
+        <span class="k">return</span> <span class="n">result</span></div>
+
+<div class="viewcode-block" id="AutoDiff._matrix"><a class="viewcode-back" href="../../implementation.html#spacejam.autodiff.AutoDiff._matrix">[docs]</a>    <span class="k">def</span> <span class="nf">_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span> 
+        <span class="sd">&quot;&quot;&quot; Internally formats `result` returned by </span>
+<span class="sd">        :any:`spacejam.autodiff.AutoDiff._ad` into matrices.</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        F : numpy.ndarray</span>
+<span class="sd">            functionss specified by user.</span>
+<span class="sd">        p : numpy.ndarray</span>
+<span class="sd">            point(s) specified by user.</span>
+<span class="sd">        result: numpy.ndarray</span>
+<span class="sd">            Nested 1D numpy.ndarray to be formatted into matrices.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        -------</span>
+<span class="sd">        Fs : numpy.ndarray</span>
+<span class="sd">            Column matrix of functions evaluated at points(s).</span>
+<span class="sd">        jac : numpy.ndarray </span>
+<span class="sd">            Corresponding Jacobian matrix.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># returns formatted F(p) and Jacobian matrices </span>
+        <span class="n">Fs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">F</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># initialze empty F(p)</span>
+        <span class="n">jac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">F</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="p">))</span> <span class="c1"># initialize empty J F(p)</span>
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">):</span> <span class="c1"># fill in each row of each</span>
+            <span class="n">Fs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">r</span>
+            <span class="n">jac</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">d</span>
+        <span class="k">return</span> <span class="n">Fs</span><span class="p">,</span> <span class="n">jac</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Ian Weaver, Sherif Gerges, Lauren Yoo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

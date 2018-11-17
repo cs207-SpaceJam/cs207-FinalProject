@@ -199,24 +199,24 @@ of functions :math:`(f_1, f_2, f_3)`:
          [10.00 12.00]
          [1.00 48.00]]
 
-Internally, for each :math:`i` th entry, in the 1D ``numpy`` array `ad._full`, the real part is 
-the :math:`i` th component of :math:`\mathbf{F}(\mathbf{p})` and the dual 
-part is the corresponding row in the Jacobian :math:`\mathbf J` evaluated at 
-:math:`\mathbf p = (x_1, x_2) = (1, 2)` .
+Internally, for each :math:`i` th entry, in the 1D ``numpy`` array
+``ad._full``, the real part is the :math:`i` th component of
+:math:`\mathbf{F}(\mathbf{p})` and the dual part is the corresponding row in
+the Jacobian :math:`\mathbf J` evaluated at 
+:math:`\mathbf p = (x_1, x_2) = (1,2)` .
 
-This is done in ``spacejam._jac`` for you with:
+This is done in ``spacejam._matrix`` for you with:
 
 .. testcode::
 
-       result = ad._full
-       evals = np.empty((F(*p).size, 1)) # initialze empty F(p)
+       Fs = np.empty((F(*p).size, 1)) # initialze empty F(p)
        jac = np.empty((F(*p).size, p.size)) # initialize empty J F(p)
 
-       for i, f in enumerate(result): # fill in each row of each
-           evals[i] = f.r
+       for i, f in enumerate(ad._full): # fill in each row of each
+           Fs[i] = f.r
            jac[i] = f.d
 
-       print(f'formated F(p):\n{evals}\n\nformated J F(p):\n{jac}') 
+       print(f'formated F(p):\n{Fs}\n\nformated J F(p):\n{jac}') 
 
 
 .. testoutput::

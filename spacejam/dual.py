@@ -1,25 +1,39 @@
 import numpy as np
 
 class Dual():
-    """ Create dual numbers and performing elementary math 
-        operations.
+    """ Creates dual numbers and defines dual number math.
+
+    A real number `a` is taken in and its dual counterpart `a + eps [1.00]` is
+    returned to facilitate automatic differentiation in 
+    :any:`spacejam.autodiff` .
+
+    Notes
+    -----
+    The dual part can optionally be returned as a "dual basis vector"
+    [0 1 0] if the user function `f` is multivariable and the partial
+    derivative :math:`\partial f / \partial x_2` is desired, for example.
+
+    Attributes
+    ----------
+    r : float
+        real part of :any:`spacejam.dual.Dual` .
+    d : numpy.ndarray
+        dual part of :any:`spacejam.dual.Dual` .
+
     """
 
     def __init__(self, real, dual=1.00, idx=None, x=np.array(1)):
         """
         Parameters
         ----------
-        real : str
-            Human readable string describing the exception.
-        dual : :obj:`int`, optional
-            Numeric error code.
-
-        Attributes
-        ----------
-        msg : str
-            Human readable string describing the exception.
-        code : int
-            Numeric error code.
+        real : int/float
+            real part of :any:`spacejam.dual.Dual` .
+        dual : float
+            dual part of :any:`spacejam.dual.Dual` (default 1.00) .
+        idx : int (default None)
+            index in dual part of dual basis vector.
+        x : numpy.ndarray (default [1])
+            set size of pre-allocated array for dual basis vector.
         """
         # set numpy display output to be formatted to two decimal places
         # for easier doctesting
@@ -47,11 +61,11 @@ class Dual():
         self: Dual object
         other: Dual object, float, or int
         
-        RETURNS
+        Returns
         ------- 
         z: Dual object that is the sum of self and other
         
-        EXAMPLES
+        Examples
         -------- 
         >>> z = Dual(1, 2) + Dual(3, 4)
         >>> print(z)
@@ -77,12 +91,12 @@ class Dual():
     def __sub__(self, other):
         """ Returns the subtraction of self and other
         
-        parameters
+        Parameters
         ----------
         self: Dual object
         other: Dual object, float, or int
         
-        RETURNS
+        Returns
         ------- 
         z: Dual object
            difference of self and other
@@ -92,7 +106,7 @@ class Dual():
         Subtraction does not commute in general. 
         A specialized __rsub__ is required.
 
-        EXAMPLES
+        Examples
         -------- 
         >>> z = Dual(1, 2) - Dual(3, 4)
         >>> print(z)
@@ -115,17 +129,17 @@ class Dual():
     def __rsub__(self, other):
         """ Returns the subtraction of other from self
         
-        parameters
+        Parameters
         ----------
         self: Dual object
         other: Dual object, float, or int
         
-        RETURNS
+        Returns
         ------- 
         z: Dual object
            difference of other and self
 
-        EXAMPLES
+        Examples
         -------- 
         >>> z = 2 - Dual(1, 2)
         >>> print(z)
@@ -140,16 +154,16 @@ class Dual():
     def __mul__(self, other):
         """ Returns the product of self and other
         
-        parameters
+        Parameters
         ----------
         self: Dual object
         other: Dual object, float, or int
 
-        RETURNS
+        Returns
         ------- 
         z: Dual object that is the product of self and other
         
-        EXAMPLES
+        Examples
         -------- 
         >>> z = Dual(1, 2) * Dual(3, 4)
         >>> print(z)
@@ -173,16 +187,16 @@ class Dual():
     def __truediv__(self, other):
         """ Returns the quotient of self and other
         
-        parameters
+        Parameters
         ----------
         self: Dual object
         other: Dual object, float, or int
         
-        RETURNS
+        Returns
         ------- 
         z: Dual object that is the quotient of self and other
         
-        EXAMPLES
+        Examples
         -------- 
         >>> z = Dual(1, 2) / 2
         >>> print(z)
@@ -204,16 +218,16 @@ class Dual():
     def __rtruediv__(self, other):
         """ Returns the quotient of other and self
         
-        parameters
+        Parameters
         ----------
         self: Dual object
         other: Dual object, float, or int
         
-        RETURNS
+        Returns
         ------- 
         z: Dual object that is the product of self and other
         
-        EXAMPLES
+        Examples
         --------  
         >>> z = 2 / Dual(1, 2)
         >>> print(z)
@@ -228,16 +242,16 @@ class Dual():
     def __pow__(self, other):
         """ Performs (self.r + eps self.d) ** (other.r + eps other.d)
 
-        parameters
+        Parameters
         ----------
         self: Dual object
         other: Dual object, float, or int
         
-        RETURNS
+        Returns
         ------- 
         z: Dual object that is self raised to the other power
         
-        EXAMPLES
+        Examples
         -------- 
         >>> z = Dual(1, 2) ** Dual(3, 4)
         >>> print(z)
@@ -259,7 +273,7 @@ class Dual():
     def __pos__(self):
         """ Returns self
 
-        EXAMPLES
+        Examples
         -------- 
         >>> z = Dual(1, 2)
         >>> print(+z)
@@ -270,7 +284,7 @@ class Dual():
     def __neg__(self):
         """ Returns negation of self
 
-        EXAMPLES
+        Examples
         -------- 
         >>> z = Dual(1, 2)
         >>> print(-z)
@@ -281,15 +295,15 @@ class Dual():
     def exp(self):
         """ Returns e**self
         
-        parameters
+        Parameters
         ----------
         self: Dual object
         
-        RETURNS
+        Returns
         ------- 
         z: e**self
         
-        EXAMPLES
+        Examples
         -------- 
         >>> z = np.exp(Dual(1, 2))
         >>> print(z)
@@ -303,15 +317,15 @@ class Dual():
     def sin(self):
         """ Returns the sine of a
         
-        parameters
+        Parameters
         ----------
         self: Dual object
         
-        RETURNS
+        Returns
         ------- 
         z: sine of self
         
-        EXAMPLES
+        Examples
         -------- 
         >>> z = np.sin(Dual(0, 1))
         >>> print(z)
@@ -322,15 +336,15 @@ class Dual():
     def cos(self):
         """ Returns the cosine of a
         
-        parameters
+        Parameters
         ----------
         self: Dual object
         
-        RETURNS
+        Returns
         ------- 
         z: cosine of self
         
-        EXAMPLES
+        Examples
         -------- 
         >>> z = np.cos(Dual(0, 1))
         >>> print(z)
@@ -341,15 +355,15 @@ class Dual():
     def tan(self):
         """ Returns the tangent of a
         
-        parameters
+        Parameters
         ----------
         self: Dual object
         
-        RETURNS
+        Returns
         ------- 
         z: tangent of self
         
-        EXAMPLES
+        Examples
         -------- 
         >>> z = np.tan(Dual(0,1))
         >>> print(z)
@@ -364,11 +378,11 @@ class Dual():
         a_r and a_d are the real and dual part of self, respectively,
         and both terms are automatically rounded to two decimal places
         
-        RETURNS
+        Returns
         ------- 
         z: Dual object that is the product of self and other
         
-        EXAMPLES
+        Examples
         -------- 
         >>> z = Dual(1, 2)
         >>> print(z)
