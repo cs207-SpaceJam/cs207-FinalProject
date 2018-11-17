@@ -157,7 +157,8 @@
   <div class="section" id="how-to-use-spacejam">
 <span id="howto"></span><h1>How to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code><a class="headerlink" href="#how-to-use-spacejam" title="Permalink to this headline">¶</a></h1>
 <p>The following series of demos will step through how to differentiate a wide
-variety of functions with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> .</p>
+variety of functions with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code>. Check out <a class="reference internal" href="organization.html#install"><span class="std std-ref">Installation</span></a> to get
+started.</p>
 <div class="section" id="demo-i-scalar-function-scalar-input">
 <h2>Demo I: Scalar function, scalar input<a class="headerlink" href="#demo-i-scalar-function-scalar-input" title="Permalink to this headline">¶</a></h2>
 <p>This is the simplest case, where the function you provide takes in a single
@@ -182,7 +183,7 @@ derivative with <code class="docutils literal notranslate"><span class="pre">spa
 <span class="n">ad</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>The real part of <cite>ad</cite> is now <span class="math notranslate nohighlight">\(f(x=5) = 125\)</span> and the dual part is
+<p>The real part of <code class="docutils literal notranslate"><span class="pre">ad</span></code> is now <span class="math notranslate nohighlight">\(f(x=5) = 125\)</span> and the dual part is
 <span class="math notranslate nohighlight">\(\left.\frac{\mathrm d f}{\mathrm d x}\right|_{x=5} = 75\)</span> .</p>
 <p>Theses real and dual parts are conveniently stored, respectively, as the <code class="docutils literal notranslate"><span class="pre">r</span></code> and <code class="docutils literal notranslate"><span class="pre">d</span></code>
 attributes in <code class="docutils literal notranslate"><span class="pre">ad</span></code> and can easily be printed to examine:</p>

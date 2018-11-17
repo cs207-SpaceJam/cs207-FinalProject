@@ -3,7 +3,8 @@
 How to use ``spacejam``
 ========================
 The following series of demos will step through how to differentiate a wide
-variety of functions with ``spacejam`` .
+variety of functions with ``spacejam``. Check out :ref:`install` to get
+started.
 
 Demo I: Scalar function, scalar input
 -------------------------------------
@@ -54,7 +55,7 @@ derivative with ``spacejam`` at this point is as easy as:
 
         ad = sj.AutoDiff(f, p)
 
-The real part of `ad` is now :math:`f(x=5) = 125` and the dual part is
+The real part of ``ad`` is now :math:`f(x=5) = 125` and the dual part is
 :math:`\left.\frac{\mathrm d f}{\mathrm d x}\right|_{x=5} = 75` .
 
 Theses real and dual parts are conveniently stored, respectively, as the ``r`` and ``d``

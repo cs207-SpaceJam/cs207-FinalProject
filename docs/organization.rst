@@ -47,12 +47,14 @@ These tests can be run with the following command in the root directory:
 
         pytest --doctest-modules --cov=. --cov-report term-missing
 
+.. _install:
+
 Installation
 ------------
 Until ``spacejam`` is made available on PyPI, the easiest way to install is to
 run everything in a virtual environment.
 
-First download the ``spacejam`` repo anywhere onto your computer with
+First download the ``spacejam`` repo anywhere onto your computer with:
 
 .. code-block:: none 
 
@@ -72,10 +74,10 @@ Next activate the environment by doing:
            source venv/bin/activate                                                    
                                                                                     
 Finally, navigate into the root directory (cs207-FinalProject) and install the 
-required dependencies (along with `spacejam``).
+required dependencies (along with ``spacejam``).
 
 .. code-block:: none
 
         pip install -r requirements.txt
 
-* Check out :ref:`howto` for a quick tutorial on getting started.
+* Check out :ref:`howto` for a quick tutorial on what you can do.
