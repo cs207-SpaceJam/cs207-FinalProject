@@ -8,7 +8,7 @@
 for automatic differentiation and other looney things
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    introduction
    howtouse
