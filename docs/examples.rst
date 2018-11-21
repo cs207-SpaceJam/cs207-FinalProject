@@ -19,7 +19,7 @@ equation:
 .. math::
         \newcommand{b}[1]{\mathbf{#1}}
 
-        \b X_{n+1} = \b X_{n} + h \dot{\b X}_{n+1} \quad,
+        \b X_{n+1} = \b X_{n} + h \dot{\b X}_{n+1}
 
 by re-casting it as the root finding problem:
 
@@ -114,7 +114,32 @@ In this framework, both the real and dual part of the dual object returned by
   from ``spacejam`` for :math:`\b {\dot X}_{n}^{(i)}` and the dual part
   as :math:`\b{J}\left[\left(\b {\dot X}_{n+1}\right)^{(i)}\right]` . 
   
-  Below, we will do just that for a few interesting systems.
+Adam-Moulton :math:`(s=1)` and Newton-Raphson
+---------------------------------------------
+A similar implementation can be made with the next order up in this family of
+implicit methods. In this scheme we have:
+
+.. math::
+        \b X_{n+1} = \b X_n + \frac{1}{2}h\left(\b {\dot X_{n+1}} + \b X_n\right)\quad.
+
+Applying the same treatment of turning this into a root finding problem and
+applying Newton's method gives the similar result:
+
+.. math::
+        \b g(\b X_{n+1}) &= \b X_{n+1} - \b X_n 
+        - \frac{h}{2} \b {\dot X_{n+1}} 
+        - \frac{h}{2} \b {\dot X_n} \quad, \\
+        \b X_{n+1}^{(i+1)} &= \b X_{n+1}^{(i)} 
+        - \b D\left[\b g\left(\b X_{n+1}\right)^{(i)}\right]^{-1}
+          \b g\left(\b X_{n+1}\right)^{(i)} \quad, \\
+        \b D &= \left[ \b I 
+        - \frac{h}{2}\b J\left(\b {\dot X_{n+1}}\right)^{(i)}\right] \quad .
+
+In this new scheme, :math:`\b D` happens to be the same as in the backward
+Eueler method but now ``spacejam`` will also be computing 
+:math:`\b {\dot X_n}` . 
+
+
 
 Lotka–Volterra Equations
 ------------------------
@@ -139,8 +164,8 @@ where,
   predator populations, respectively 
 - TODO: say more about :math:`\alpha,\beta,\delta,\gamma`
 
-Simulating how these two populations evolve over time could then be
-accomplished with:
+Simulating how these two populations evolve over time with backward Euler
+could then be accomplished with:
 
 ::
 
@@ -219,5 +244,24 @@ And visualized with:
             plt.suptitle('Lotka Volterra System Example')
 
 .. image:: ../figs/test.png
+
+
+
+
+In comparison, making the necessary modifications for the :math:`s=1`
+Adam-Moulton method gives:
+
+::
+
+        ad_old = sj.AutoDiff(f, X_old)
+        D = np.eye(len(ad.r.flatten())) - (h/2)*ad.d
+        g = X_iold - X_old - (h/2)*ad.r.flatten() - (h/2)*ad_old.r.flatten()
+
+.. image:: ../figs/test_ii.png
+
+Using the same exact timestep, the phase curve converges for the higher order
+scheme.
+
+
 
 

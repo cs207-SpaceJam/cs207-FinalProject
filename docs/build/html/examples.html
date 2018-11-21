@@ -86,6 +86,7 @@
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Example Applications with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#backward-euler-and-newton-raphson">Backward Euler and Newton-Raphson</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#adam-moulton-s-1-and-newton-raphson">Adam-Moulton <span class="math notranslate nohighlight">\((s=1)\)</span> and Newton-Raphson</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lotkavolterra-equations">Lotka–Volterra Equations</a></li>
 </ul>
 </li>
@@ -165,7 +166,7 @@ method to iterate a solution. TODO: also include s=1 Adams Method.</p>
 <p>As we saw in <a class="reference internal" href="background.html#numerical"><span class="std std-ref">Numerical Integration: A brief crash couse</span></a>, this is a numerical scheme to solve the implicit
 equation:</p>
 <div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}\newcommand{b}[1]{\mathbf{#1}}\\\b X_{n+1} = \b X_{n} + h \dot{\b X}_{n+1} \quad,\end{aligned}\end{align} \]</div>
+\[ \begin{align}\begin{aligned}\newcommand{b}[1]{\mathbf{#1}}\\\b X_{n+1} = \b X_{n} + h \dot{\b X}_{n+1}\end{aligned}\end{align} \]</div>
 <p>by re-casting it as the root finding problem:</p>
 <div class="math notranslate nohighlight">
 \[\b g(\b X_{n+1}) = \b X_{n+1} - \b X_n - h \dot{\b X}_{n+1}\quad.\]</div>
@@ -231,16 +232,34 @@ start Newton’s method. A single forward Euler step should do:</p>
 \end{bmatrix}\quad.\end{split}\]</div>
 <p>In this framework, both the real and dual part of the dual object returned by
 <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> will be used. To summarize:</p>
-<ul>
-<li><p class="first">The user supplies the system of equations <span class="math notranslate nohighlight">\(\b {\dot X}_{n}\)</span>
-and initial conditions <span class="math notranslate nohighlight">\(\b {\dot X}_{n}^{(0)}\)</span> .</p>
-</li>
-<li><p class="first">The user implements the integration scheme using the real part returned
+<ul class="simple">
+<li>The user supplies the system of equations <span class="math notranslate nohighlight">\(\b {\dot X}_{n}\)</span>
+and initial conditions <span class="math notranslate nohighlight">\(\b {\dot X}_{n}^{(0)}\)</span> .</li>
+<li>The user implements the integration scheme using the real part returned
 from <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> for <span class="math notranslate nohighlight">\(\b {\dot X}_{n}^{(i)}\)</span> and the dual part
-as <span class="math notranslate nohighlight">\(\b{J}\left[\left(\b {\dot X}_{n+1}\right)^{(i)}\right]\)</span> .</p>
-<p>Below, we will do just that for a few interesting systems.</p>
-</li>
+as <span class="math notranslate nohighlight">\(\b{J}\left[\left(\b {\dot X}_{n+1}\right)^{(i)}\right]\)</span> .</li>
 </ul>
+</div>
+<div class="section" id="adam-moulton-s-1-and-newton-raphson">
+<h2>Adam-Moulton <span class="math notranslate nohighlight">\((s=1)\)</span> and Newton-Raphson<a class="headerlink" href="#adam-moulton-s-1-and-newton-raphson" title="Permalink to this headline">¶</a></h2>
+<p>A similar implementation can be made with the next order up in this family of
+implicit methods. In this scheme we have:</p>
+<div class="math notranslate nohighlight">
+\[\b X_{n+1} = \b X_n + \frac{1}{2}h\left(\b {\dot X_{n+1}} + \b X_n\right)\quad.\]</div>
+<p>Applying the same treatment of turning this into a root finding problem and
+applying Newton’s method gives the similar result:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\b g(\b X_{n+1}) &amp;= \b X_{n+1} - \b X_n
+- \frac{h}{2} \b {\dot X_{n+1}}
+- \frac{h}{2} \b {\dot X_n} \quad, \\
+\b X_{n+1}^{(i+1)} &amp;= \b X_{n+1}^{(i)}
+- \b D\left[\b g\left(\b X_{n+1}\right)^{(i)}\right]^{-1}
+  \b g\left(\b X_{n+1}\right)^{(i)} \quad, \\
+\b D &amp;= \left[ \b I
+- \frac{h}{2}\b J\left(\b {\dot X_{n+1}}\right)^{(i)}\right] \quad .\end{split}\]</div>
+<p>In this new scheme, <span class="math notranslate nohighlight">\(\b D\)</span> happens to be the same as in the backward
+Eueler method but now <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> will also be computing
+<span class="math notranslate nohighlight">\(\b {\dot X_n}\)</span> .</p>
 </div>
 <div class="section" id="lotkavolterra-equations">
 <h2>Lotka–Volterra Equations<a class="headerlink" href="#lotkavolterra-equations" title="Permalink to this headline">¶</a></h2>
@@ -259,8 +278,8 @@ interact. The population of each can then be tracked with:</p>
 predator populations, respectively</li>
 <li>TODO: say more about <span class="math notranslate nohighlight">\(\alpha,\beta,\delta,\gamma\)</span></li>
 </ul>
-<p>Simulating how these two populations evolve over time could then be
-accomplished with:</p>
+<p>Simulating how these two populations evolve over time with backward Euler
+could then be accomplished with:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacejam</span> <span class="k">as</span> <span class="nn">sj</span>
 
 <span class="c1"># some useful packages for visualization</span>
@@ -335,6 +354,16 @@ accomplished with:</p>
 </pre></div>
 </div>
 <img alt="_images/test.png" src="_images/test.png" />
+<p>In comparison, making the necessary modifications for the <span class="math notranslate nohighlight">\(s=1\)</span>
+Adam-Moulton method gives:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ad_old</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">X_old</span><span class="p">)</span>
+<span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span> <span class="o">-</span> <span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">d</span>
+<span class="n">g</span> <span class="o">=</span> <span class="n">X_iold</span> <span class="o">-</span> <span class="n">X_old</span> <span class="o">-</span> <span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">-</span> <span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">ad_old</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+</pre></div>
+</div>
+<img alt="_images/test_ii.png" src="_images/test_ii.png" />
+<p>Using the same exact timestep, the phase curve converges for the higher order
+scheme.</p>
 </div>
 </div>
 
