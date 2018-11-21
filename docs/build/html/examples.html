@@ -257,8 +257,8 @@ applying Newton’s method gives the similar result:</p>
   \b g\left(\b X_{n+1}\right)^{(i)} \quad, \\
 \b D &amp;= \left[ \b I
 - \frac{h}{2}\b J\left(\b {\dot X_{n+1}}\right)^{(i)}\right] \quad .\end{split}\]</div>
-<p>In this new scheme, <span class="math notranslate nohighlight">\(\b D\)</span> happens to be the same as in the backward
-Eueler method but now <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> will also be computing
+<p>In this new scheme, <span class="math notranslate nohighlight">\(\b D\)</span> has an extra factor of <span class="math notranslate nohighlight">\(1/2\)</span> on its
+Jacobian in the backward and now <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> will also be computing
 <span class="math notranslate nohighlight">\(\b {\dot X_n}\)</span> .</p>
 </div>
 <div class="section" id="lotkavolterra-equations">

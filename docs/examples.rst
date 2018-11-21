@@ -135,8 +135,8 @@ applying Newton's method gives the similar result:
         \b D &= \left[ \b I 
         - \frac{h}{2}\b J\left(\b {\dot X_{n+1}}\right)^{(i)}\right] \quad .
 
-In this new scheme, :math:`\b D` happens to be the same as in the backward
-Eueler method but now ``spacejam`` will also be computing 
+In this new scheme, :math:`\b D` has an extra factor of :math:`1/2` on its
+Jacobian in the backward and now ``spacejam`` will also be computing 
 :math:`\b {\dot X_n}` . 
 
 
