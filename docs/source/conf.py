@@ -46,8 +46,7 @@ extensions = [
     'sphinx.ext.viewcode',
     'sphinx.ext.githubpages',
     'sphinx.ext.napoleon',
-    'sphinx.ext.autodoc',
-    'matplotlib.sphinxext.plot_directive'
+    'sphinx.ext.autodoc'
 ]
 
 # autodoc configs
