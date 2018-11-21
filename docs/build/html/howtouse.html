@@ -90,6 +90,7 @@
 <li class="toctree-l1"><a class="reference internal" href="organization.html">Software Organization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation Details</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Applications with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a></li>
 </ul>
 
             
@@ -272,7 +273,7 @@ x_1^2 + x_1x_2 + 2 \\ x_1x_2^3 + x_1^2 \\ x_2^3/x_1 + x_1 + x_1^2x_2^2 + x_2^4
 <p>The interface with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> happens to be exactly the same as in the
 previous two demos, only now your <span class="math notranslate nohighlight">\(F(x)\)</span> will return a 1D <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array
 of functions <span class="math notranslate nohighlight">\((f_1, f_2, f_3)\)</span>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># your (n) system of equations:</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># your (m) system of equations:</span>
 <span class="c1"># F(x_1, x_2, ..., x_m) = (f1, f2, ..., f_n)</span>
 <span class="k">def</span> <span class="nf">F</span><span class="p">(</span><span class="n">x_1</span><span class="p">,</span> <span class="n">x_2</span><span class="p">):</span>
         <span class="n">f_1</span> <span class="o">=</span> <span class="n">x_1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x_1</span><span class="o">*</span><span class="n">x_2</span> <span class="o">+</span> <span class="mi">2</span>

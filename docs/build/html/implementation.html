@@ -93,6 +93,7 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Applications with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a></li>
 </ul>
 
             
@@ -163,12 +164,12 @@
 <h2>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this headline">¶</a></h2>
 <ul>
 <li><p class="first"><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> uses 1D <code class="docutils literal notranslate"><span class="pre">numpy.ndarrays</span></code> to return partial derivatives, where the
-<span class="math notranslate nohighlight">\(n\)</span> th entry contains <span class="math notranslate nohighlight">\(\frac{\partial f_i}{\partial x_n}\)</span> for <span class="math notranslate nohighlight">\(i =
-0, ... m\)</span> for <span class="math notranslate nohighlight">\(m\)</span> different functions specified by the user.</p>
+<span class="math notranslate nohighlight">\(j\)</span> th entry contains <span class="math notranslate nohighlight">\(\frac{\partial f_i}{\partial x_j}\)</span> for <span class="math notranslate nohighlight">\(i =
+1, ... m\)</span> and <span class="math notranslate nohighlight">\(j = 1, ... k \)</span> different functions that are a function of <span class="math notranslate nohighlight">\(k\)</span> different variables.</p>
 <p>TODO:</p>
 </li>
 <li><p class="first">The convenience function &lt;insert here&gt; stacks these 1D arrays into
-an <span class="math notranslate nohighlight">\(m\times n\)</span> <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> Jacobian matrix for ease of viewing.</p>
+an <span class="math notranslate nohighlight">\(m\times k\)</span> <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> Jacobian matrix for ease of viewing.</p>
 </li>
 </ul>
 </div>

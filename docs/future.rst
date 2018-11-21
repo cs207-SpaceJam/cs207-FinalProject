@@ -1,5 +1,8 @@
 Future
 ======
+
+TODO: merge with application sections
+
 ``spacejam`` has been shown to be capable of solving systems of equations in
 :ref:`diii`. For our future work, we will apply this functionality to integrate
 2D orbits in a simple two body planetary system. As previously

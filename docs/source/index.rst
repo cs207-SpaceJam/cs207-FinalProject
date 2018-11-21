@@ -16,3 +16,4 @@ for automatic differentiation and other looney things
    organization
    implementation
    future
+   examples

@@ -1,0 +1,398 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Example Applications with spacejam &mdash; spacejam 0.0.1 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="Future" href="future.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> spacejam
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howtouse.html">How to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organization.html">Software Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Example Applications with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#backward-euler-and-newton-raphson">Backward Euler and Newton-Raphson</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#lotkavolterra-equations">Lotka–Volterra Equations</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">spacejam</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Example Applications with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/examples.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="example-applications-with-spacejam">
+<span id="examples"></span><h1>Example Applications with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code><a class="headerlink" href="#example-applications-with-spacejam" title="Permalink to this headline">¶</a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> can be used to simulate a wide range of physical systems. Below
+are two applications of what you can do with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> and its automatic
+differentiation capabilities. These applications use the
+<a class="reference external" href="https://en.wikipedia.org/wiki/Backward_Euler_method">backward Euler</a>
+method to iterate a solution. TODO: also include s=1 Adams Method.</p>
+<div class="section" id="backward-euler-and-newton-raphson">
+<h2>Backward Euler and Newton-Raphson<a class="headerlink" href="#backward-euler-and-newton-raphson" title="Permalink to this headline">¶</a></h2>
+<p>As we saw in <a class="reference internal" href="background.html#numerical"><span class="std std-ref">Numerical Integration: A brief crash couse</span></a>, this is a numerical scheme to solve the implicit
+equation:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{b}[1]{\mathbf{#1}}\\\b X_{n+1} = \b X_{n} + h \dot{\b X}_{n+1} \quad,\end{aligned}\end{align} \]</div>
+<p>by re-casting it as the root finding problem:</p>
+<div class="math notranslate nohighlight">
+\[\b g(\b X_{n+1}) = \b X_{n+1} - \b X_n - h \dot{\b X}_{n+1}\quad.\]</div>
+<p>In 1D, the Newton-Raphson method succesively finds better and better
+approximations to the root of a function <span class="math notranslate nohighlight">\(f(x)\)</span> in the following way:</p>
+<img alt="https://upload.wikimedia.org/wikipedia/commons/e/e0/NewtonIteration_Ani.gif" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/NewtonIteration_Ani.gif" />
+<ul class="simple">
+<li>Make a guess next to one of the roots you want</li>
+<li>Draw the corresponding tangent line (red) at this guess evaluated on the
+original function (blue)</li>
+<li>Trace this tangent line to where it intercepts the x-axis</li>
+<li>Make this intercept your new guess</li>
+<li>Rinse and repeat until your latest guess is close enough (your tolerance) to
+the root you wanted to approximate in the first place</li>
+</ul>
+<p>The equation for this can be quickly derived by solving for the next root
+iterate <span class="math notranslate nohighlight">\(x_{n+1}\)</span> from the definition of the derivative:</p>
+<div class="math notranslate nohighlight">
+\[\text{slope} = \frac{\text{rise}}{\text{run}}\quad\longrightarrow\quad
+f'(x_n) = \frac{f(x_n)}{x_n - x_{n+1}}\quad\longrightarrow\quad
+x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} \quad .\]</div>
+<p>This is natuarlly extended to vector functions that accept multi-valued input by
+using the multi-variable version of the derivative, the Jacobian <span class="math notranslate nohighlight">\(\b J\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}\\\b X_{n+1} = \b X_{n} - \b J[\b f(\b X_n)]^{-1} \b f(\b X_n) \quad,\end{aligned}\end{align} \]</div>
+<p>where:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\b J[\b f(\b X_n)]_{ij} &amp;= \pd{f_i}{x_j} \quad, \\
+\b f\left(\b X_n\right) &amp;= [f_1, f_2, \cdots, f_m] \quad, \\
+\b X_n &amp;= [x_1, x_2, \cdots, x_k] \quad.\end{split}\]</div>
+<p>For these examples, <span class="math notranslate nohighlight">\(m=k\)</span>,
+<span class="math notranslate nohighlight">\(\b f = \b {\dot X}_n = [\dot x_1, \dot x_2, \cdots, \dot x_m]_n\)</span>,
+<span class="math notranslate nohighlight">\(1 \le i,j \le k\)</span> .</p>
+<p>Applying this to our backward Euler equation:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}0 &amp;= \b g\left(\b X_{n+1}\right) = \b X_{n+1} - \b X_n - h \dot{\b X}_{n+1} \quad, \\
+\b X_{n+1}^{(i+1)} &amp;= \b X_{n+1}^{(i)} -
+\b D\left[\b g\left(\b X_{n+1}\right)^{(i)}\right]^{-1} \b g\left(\b X_{n+1}\right)^{(i)} \quad.\end{split}\]</div>
+<p>Here, <span class="math notranslate nohighlight">\((i)\)</span> and <span class="math notranslate nohighlight">\((i+1)\)</span> have been used to avoid confusion with the
+<span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(n+1\)</span> iterate used in the 1D example above, and the root to
+this equation is the solution <span class="math notranslate nohighlight">\(\b X_{n+1}\)</span> to our original implicit equation.
+The Jacobian <span class="math notranslate nohighlight">\(\b J\)</span> is hiding inside of <span class="math notranslate nohighlight">\(\b D\)</span> and we can make it show itself by
+just performin the multi-variable derivative that is required of the
+Newton-Raphson method:</p>
+<div class="math notranslate nohighlight">
+\[\require{cancel}
+\b D\left[\b g\left(\b X_{n+1}\right)^{(i)}\right]
+= \pd{\b g\left(\b X_{n+1}\right)^{(i)}}{\b X_{n+1}^{(i)}}
+= \pd{\b X_{n+1}^{(i)}}{\b X_{n+1}^{(i)}}
+- \cancelto{0}{\pd{\b X_{n}^{(i)}}{\b X_{n+1}^{(i)}}}
+  - \pd{h \b {\dot X}_{n+1}}{\b X_{n+1}^{(i)}}
+= \b I - h\b{J}\left[\left(\b {\dot X}_{n+1}\right)^{(i)}\right] \quad.\]</div>
+<p>All that is needed now is an initial guess for <span class="math notranslate nohighlight">\(\b X_{n+1}^{(0)}\)</span> to jump
+start Newton’s method. A single forward Euler step should do:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\b X_{n+1}^{(0)} &amp;= \b X_{n}^{(0)} + h \b {\dot X}_n^{(0)}\quad, \\
+\b {\dot X}_n^{(0)}
+&amp;= \begin{bmatrix}
+        \dot{x}_1 (t=0) \\
+        \dot{x}_2 (t=0) \\
+        \vdots \\
+        \dot{x}_k (t=0)
+\end{bmatrix}\quad.\end{split}\]</div>
+<p>In this framework, both the real and dual part of the dual object returned by
+<code class="docutils literal notranslate"><span class="pre">spacejam</span></code> will be used. To summarize:</p>
+<ul>
+<li><p class="first">The user supplies the system of equations <span class="math notranslate nohighlight">\(\b {\dot X}_{n}\)</span>
+and initial conditions <span class="math notranslate nohighlight">\(\b {\dot X}_{n}^{(0)}\)</span> .</p>
+</li>
+<li><p class="first">The user implements the integration scheme using the real part returned
+from <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> for <span class="math notranslate nohighlight">\(\b {\dot X}_{n}^{(i)}\)</span> and the dual part
+as <span class="math notranslate nohighlight">\(\b{J}\left[\left(\b {\dot X}_{n+1}\right)^{(i)}\right]\)</span> .</p>
+<p>Below, we will do just that for a few interesting systems.</p>
+</li>
+</ul>
+</div>
+<div class="section" id="lotkavolterra-equations">
+<h2>Lotka–Volterra Equations<a class="headerlink" href="#lotkavolterra-equations" title="Permalink to this headline">¶</a></h2>
+<p>These are a popular system of differential equations used to describe the
+<a class="reference external" href="https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations">dynamics of biological systems</a> where two sets of species (predator and prey)
+interact. The population of each can then be tracked with:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\od}[2]{\frac{\mathrm d #1}{\mathrm d #2}}
+\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}\\\begin{split}\od{x}{t} &amp;= \dot x = \alpha x - \beta xy\quad, \\
+\od{y}{t} &amp;= \dot y = \delta xy - \gamma y\quad,\end{split}\end{aligned}\end{align} \]</div>
+<p>where,</p>
+<ul class="simple">
+<li><span class="math notranslate nohighlight">\(x\)</span>: number of prey</li>
+<li><span class="math notranslate nohighlight">\(y\)</span>: number of predators</li>
+<li><span class="math notranslate nohighlight">\(\dot x\)</span> and <span class="math notranslate nohighlight">\(\dot y\)</span>: instantaneous growth rate of the prey and
+predator populations, respectively</li>
+<li>TODO: say more about <span class="math notranslate nohighlight">\(\alpha,\beta,\delta,\gamma\)</span></li>
+</ul>
+<p>Simulating how these two populations evolve over time could then be
+accomplished with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacejam</span> <span class="k">as</span> <span class="nn">sj</span>
+
+<span class="c1"># some useful packages for visualization</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s1">&#39;darkgrid&#39;</span><span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">4.</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">4.</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+        <span class="n">f1</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">*</span><span class="n">x1</span> <span class="o">-</span> <span class="n">beta</span><span class="o">*</span><span class="n">x1</span><span class="o">*</span><span class="n">x2</span>
+        <span class="n">f2</span> <span class="o">=</span> <span class="n">delta</span><span class="o">*</span><span class="n">x1</span><span class="o">*</span><span class="n">x2</span> <span class="o">-</span> <span class="n">gamma</span><span class="o">*</span><span class="n">x2</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">])</span>
+
+<span class="c1"># run simulation</span>
+<span class="n">X_old</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span> <span class="c1"># initial population conditions ([prey, predator])</span>
+<span class="n">h</span> <span class="o">=</span> <span class="o">.</span><span class="mi">01</span> <span class="c1"># timestep</span>
+<span class="n">t</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># number of steps</span>
+<span class="n">T</span> <span class="o">=</span> <span class="mi">10</span>
+
+<span class="n">time</span><span class="p">,</span> <span class="n">x1_sols</span><span class="p">,</span> <span class="n">x2_sols</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span> <span class="c1"># hold solutions for plotting later</span>
+<span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">T</span><span class="p">:</span>
+    <span class="n">time</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
+    <span class="n">x1_sols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X_old</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">x2_sols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X_old</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+
+    <span class="c1"># use forward Euler for initial guess for X_n+1 = X_new</span>
+    <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_old</span> <span class="o">+</span> <span class="n">h</span><span class="o">*</span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">X_old</span><span class="p">)</span> <span class="c1"># X_{n+1}^(0)</span>
+
+    <span class="c1"># Iterate to better solution for X_new using Newton-Raphson method</span>
+    <span class="c1"># on backward Euler implementation</span>
+    <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_old</span>
+    <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_new</span>
+    <span class="n">idx</span><span class="p">,</span> <span class="n">idx_break</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1E4</span>
+    <span class="k">while</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">X_inew</span> <span class="o">-</span> <span class="n">X_iold</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1E-14</span><span class="p">:</span>
+        <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_inew</span>
+
+        <span class="k">if</span> <span class="n">idx</span> <span class="o">&gt;</span> <span class="n">idx_break</span><span class="p">:</span>
+                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;solution did not converge&#39;</span><span class="p">)</span>
+
+        <span class="n">ad</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">X_iold</span><span class="p">)</span> <span class="c1"># get Jacobian (ad.d)</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span> <span class="o">-</span> <span class="n">h</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">d</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">X_iold</span> <span class="o">-</span> <span class="n">X_old</span> <span class="o">-</span> <span class="n">h</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_iold</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">g</span><span class="p">)</span>
+        <span class="c1"># update</span>
+        <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># update</span>
+    <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_iold</span>
+    <span class="n">X_old</span> <span class="o">=</span> <span class="n">X_new</span>
+    <span class="n">t</span> <span class="o">+=</span> <span class="n">h</span>
+</pre></div>
+</div>
+<p>And visualized with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot setup</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span> <span class="o">=</span> <span class="n">axes</span>
+
+<span class="c1"># solution plot</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">x1_sols</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;prey&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">x2_sols</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;predator&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;time (arbitrary units)&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;population&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># phase plot</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1_sols</span><span class="p">,</span> <span class="n">x2_sols</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;prey population&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;predator population&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Lotka Volterra System Example&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/test.png" src="_images/test.png" />
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+      
+        <a href="future.html" class="btn btn-neutral" title="Future" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Ian Weaver, Sherif Gerges, Lauren Yoo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

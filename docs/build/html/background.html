@@ -89,6 +89,7 @@
 <li class="toctree-l1"><a class="reference internal" href="organization.html">Software Organization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation Details</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Applications with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a></li>
 </ul>
 
             
@@ -156,7 +157,7 @@
   <div class="section" id="background">
 <h1>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="numerical-integration-a-brief-crash-couse">
-<h2>Numerical Integration: A brief crash couse<a class="headerlink" href="#numerical-integration-a-brief-crash-couse" title="Permalink to this headline">¶</a></h2>
+<span id="numerical"></span><h2>Numerical Integration: A brief crash couse<a class="headerlink" href="#numerical-integration-a-brief-crash-couse" title="Permalink to this headline">¶</a></h2>
 <p>Many physical systems can be expressed as a series of differential equations.
 Euler’s method is the simplest numerical procedure for solving these equations
 given some initial conditions. In the case of our problem statement:</p>
@@ -197,12 +198,14 @@ definition of slope, we can use the timestep <span class="math notranslate nohig
 \[y_{n+1} = y_n + h \dot{y}_n \quad.\]</div>
 <p>Whenever all of the <span class="math notranslate nohighlight">\(n+1\)</span> terms are on one side of the equation and the
 <span class="math notranslate nohighlight">\(n\)</span> terms are on the other, we have an <strong>explicit
-numerical method</strong>. This can also be easily extended to <span class="math notranslate nohighlight">\(m\)</span> components
+numerical method</strong>. This can also be extended to <span class="math notranslate nohighlight">\(k\)</span> components
 for <span class="math notranslate nohighlight">\(y_n\)</span> with the simple substitution:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\newcommand{b}[1]{\mathbf#1}
-y_{n} \longrightarrow \b X_{n}
-= \begin{pmatrix}x_1 \\ x_2 \\ \vdots \\ x_m\end{pmatrix},\quad
+\[\begin{split}\newcommand{b}[1]{\mathbf{#1}}
+y_n \longrightarrow \b X_n
+= \begin{pmatrix}x_1 \\ x_2 \\ \vdots \\ x_k\end{pmatrix},\quad
+\dot{y}_n \longrightarrow \b {\dot X}_n
+= \begin{pmatrix}\dot{x}_1 \\ \dot{x}_2 \\ \vdots \\ \dot{x}_k\end{pmatrix},\quad
 y_{n+1} \longrightarrow \b X_{n+1} = \b X_{n} + h \dot{\b X}_n \quad.\end{split}\]</div>
 <p>This is intuitively straightforward and easy to implement, but there is a
 downside: the solutions <strong>do not converge</strong> for any given timestep. If the
@@ -210,35 +213,49 @@ steps are too large, our numerical estimations are essentially dominated by
 progation of error and would return results that are non-physical, and if they
 are too small the simulation would take too long to run.</p>
 <p>We need a scheme that remains stable and accurate for a wide range of
-timesteps, which is what <strong>implicit differentiation</strong> can accomplish. In this
-framework, <span class="math notranslate nohighlight">\(\b X_{n+1}\)</span> is now determined by:</p>
+timesteps, which is what <strong>implicit differentiation</strong> can accomplish. An
+example of one such scheme is:</p>
 <div class="math notranslate nohighlight">
 \[\b X_{n+1} = \b X_{n} + h \dot{\b X}_{n+1} \quad.\]</div>
-<p>Now, we have <span class="math notranslate nohighlight">\(n+1\)</span> terms on both sides, making this an implicit scheme. A
-common way of solving this new problem is by re-casting it as the root finding
-problem:</p>
+<p>Now we have <span class="math notranslate nohighlight">\(n+1\)</span> terms on both sides, making this an implicit scheme.
+This is know as the <a class="reference external" href="https://en.wikipedia.org/wiki/Backward_Euler_method">backward Euler method</a> and a common way of solving this
+and many other similar schemes that build of off this one is by re-casting it
+as a root finding problem. For the backward Euler method, this would look like:</p>
 <div class="math notranslate nohighlight">
 \[\b g(\b X_{n+1}) = \b X_{n+1} - \b X_n - h \dot{\b X}_{n+1}\quad.\]</div>
 <p>Here, the root of the new function <span class="math notranslate nohighlight">\(\b g\)</span> is the solution to our original
 implicit integration equation. The <a class="reference external" href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton-Raphson method</a> is a useful root finding
 algorithm, but one of its steps requires the computation of the
-<span class="math notranslate nohighlight">\(m \times m\)</span> Jacobian:</p>
+<span class="math notranslate nohighlight">\(k \times k\)</span> Jacobian:</p>
 <div class="math notranslate nohighlight">
-\[\begin{split}\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
-\b J(\b X_n) = \pd{}{\b X_n} \dot{\b X}_n
-= \begin{pmatrix}\nabla \dot{\b X}_{n_0} \\
-                 \nabla \dot{\b X}_{n_1} \\
-                 \vdots                  \\
-                 \nabla \dot{\b X}_{n_m}
-                 \end{pmatrix} \quad,\end{split}\]</div>
-<p>where <span class="math notranslate nohighlight">\(n_i\)</span> is the <span class="math notranslate nohighlight">\(i\)</span> th component of <span class="math notranslate nohighlight">\(\dot{\b X}_n\)</span> .</p>
+\[ \begin{align}\begin{aligned}\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}\\\begin{split}\b{J}(\b {\dot X}_{n+1})
+= \pd{\b {\dot X}_{n+1}}{\b X_{n+1}}
+= \begin{pmatrix} \nabla (\dot x_1)_{n+1} \\
+                  \nabla (\dot x_2)_{n+1} \\
+                  \vdots \\
+                  \nabla (\dot x_k)_{n+1} \\
+                 \end{pmatrix} \quad.\end{split}\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>We have avoided using superscript notation here because that will be
+reserved for identifying iterates in Newton’s method, which we discuss
+in later sections.</p>
+<p class="last"><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> can also support systems with a different number of
+equations than variables, i.e. non-square Jacobians. See <a class="reference internal" href="howtouse.html#diii"><span class="std std-ref">Demo III: Vector function with vector input</span></a> .</p>
+</div>
 <p>Accurately computing the elements of the Jacobian can be numerically expensive,
 so a method to quickly and accurately compute derivatives would be extremely
-useful. <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> provides this capability by computing the Jacobian quickly and
-accurately via
+useful. <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> provides this capability by computing the Jacobian quickly
+and accurately via
 <a class="reference internal" href="#automatic-differentiation-a-brief-overview">automatic differentiation</a>,
-which can be used to solve a wide class or problems that depend on implicit
+which can be used to solve a wide class of problems that depend on implicit
 differentiation for numerically stable solutions.</p>
+<p>We walk through using
+<code class="docutils literal notranslate"><span class="pre">spacejam</span></code> to implement Newton’s method for the Backward Euler method and
+its slightly more sophisticated sibling, the <span class="math notranslate nohighlight">\(s=1\)</span>
+<a class="reference external" href="https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods">Adams Moulton method</a> in <a class="reference internal" href="examples.html#examples"><span class="std std-ref">Example Applications with spacejam</span></a>. Note: <span class="math notranslate nohighlight">\(s=0\)</span> is just the
+original backward Euler method and <span class="math notranslate nohighlight">\(s=1\)</span> is also know as the famous
+trapezoid rule.</p>
 </div>
 <div class="section" id="automatic-differentiation-a-brief-overview">
 <span id="ad"></span><h2>Automatic Differentiation: A brief overview<a class="headerlink" href="#automatic-differentiation-a-brief-overview" title="Permalink to this headline">¶</a></h2>

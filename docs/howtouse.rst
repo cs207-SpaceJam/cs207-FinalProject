@@ -169,7 +169,7 @@ of functions :math:`(f_1, f_2, f_3)`:
 
 .. testcode::
 
-        # your (n) system of equations: 
+        # your (m) system of equations: 
         # F(x_1, x_2, ..., x_m) = (f1, f2, ..., f_n)
         def F(x_1, x_2):
                 f_1 = x_1**2 + x_1*x_2 + 2

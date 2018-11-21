@@ -1,6 +1,8 @@
 Background
 ==========
 
+.. _numerical:
+
 Numerical Integration: A brief crash couse
 ------------------------------------------
 Many physical systems can be expressed as a series of differential equations.
@@ -54,14 +56,16 @@ Generalizing to any timestep :math:`n`:
 
 Whenever all of the :math:`n+1` terms are on one side of the equation and the
 :math:`n` terms are on the other, we have an **explicit
-numerical method**. This can also be easily extended to :math:`m` components
+numerical method**. This can also be extended to :math:`k` components
 for :math:`y_n` with the simple substitution:
 
 .. math::
 
-        \newcommand{b}[1]{\mathbf#1}
-        y_{n} \longrightarrow \b X_{n} 
-        = \begin{pmatrix}x_1 \\ x_2 \\ \vdots \\ x_m\end{pmatrix},\quad
+        \newcommand{b}[1]{\mathbf{#1}}
+        y_n \longrightarrow \b X_n
+        = \begin{pmatrix}x_1 \\ x_2 \\ \vdots \\ x_k\end{pmatrix},\quad
+        \dot{y}_n \longrightarrow \b {\dot X}_n
+        = \begin{pmatrix}\dot{x}_1 \\ \dot{x}_2 \\ \vdots \\ \dot{x}_k\end{pmatrix},\quad
         y_{n+1} \longrightarrow \b X_{n+1} = \b X_{n} + h \dot{\b X}_n \quad.
 
 This is intuitively straightforward and easy to implement, but there is a
@@ -71,16 +75,19 @@ progation of error and would return results that are non-physical, and if they
 are too small the simulation would take too long to run.  
 
 We need a scheme that remains stable and accurate for a wide range of
-timesteps, which is what **implicit differentiation** can accomplish. In this
-framework, :math:`\b X_{n+1}` is now determined by:
+timesteps, which is what **implicit differentiation** can accomplish. An
+example of one such scheme is: 
 
 .. math::
 
         \b X_{n+1} = \b X_{n} + h \dot{\b X}_{n+1} \quad.
 
-Now, we have :math:`n+1` terms on both sides, making this an implicit scheme. A
-common way of solving this new problem is by re-casting it as the root finding
-problem:
+Now we have :math:`n+1` terms on both sides, making this an implicit scheme.
+This is know as the `backward Euler method`_ and a common way of solving this
+and many other similar schemes that build of off this one is by re-casting it
+as a root finding problem. For the backward Euler method, this would look like:
+
+.. _backward Euler method: https://en.wikipedia.org/wiki/Backward_Euler_method
 
 .. math::
 
@@ -90,27 +97,44 @@ Here, the root of the new function :math:`\b g` is the solution to our original
 implicit integration equation. The `Newton-Raphson method
 <https://en.wikipedia.org/wiki/Newton%27s_method>`_ is a useful root finding
 algorithm, but one of its steps requires the computation of the 
-:math:`m \times m` Jacobian:
+:math:`k \times k` Jacobian: 
 
 .. math::
 
         \newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
-        \b J(\b X_n) = \pd{}{\b X_n} \dot{\b X}_n 
-        = \begin{pmatrix}\nabla \dot{\b X}_{n_0} \\ 
-                         \nabla \dot{\b X}_{n_1} \\
-                         \vdots                  \\
-                         \nabla \dot{\b X}_{n_m}
-                         \end{pmatrix} \quad,
 
-where :math:`n_i` is the :math:`i` th component of :math:`\dot{\b X}_n` .
+        \b{J}(\b {\dot X}_{n+1}) 
+        = \pd{\b {\dot X}_{n+1}}{\b X_{n+1}} 
+        = \begin{pmatrix} \nabla (\dot x_1)_{n+1} \\ 
+                          \nabla (\dot x_2)_{n+1} \\ 
+                          \vdots \\
+                          \nabla (\dot x_k)_{n+1} \\ 
+                         \end{pmatrix} \quad.
+
+.. note:: 
+        We have avoided using superscript notation here because that will be
+        reserved for identifying iterates in Newton's method, which we discuss
+        in later sections. 
+        
+        ``spacejam`` can also support systems with a different number of
+        equations than variables, i.e. non-square Jacobians. See :ref:`diii` .
 
 Accurately computing the elements of the Jacobian can be numerically expensive,
 so a method to quickly and accurately compute derivatives would be extremely
-useful. ``spacejam`` provides this capability by computing the Jacobian quickly and
-accurately via 
+useful. ``spacejam`` provides this capability by computing the Jacobian quickly
+and accurately via 
 `automatic differentiation <Automatic Differentiation: A brief overview_>`__,
-which can be used to solve a wide class or problems that depend on implicit
-differentiation for numerically stable solutions.
+which can be used to solve a wide class of problems that depend on implicit
+differentiation for numerically stable solutions. 
+
+We walk through using 
+``spacejam`` to implement Newton's method for the Backward Euler method and
+its slightly more sophisticated sibling, the :math:`s=1` 
+`Adams Moulton method`_ in :ref:`examples`. Note: :math:`s=0` is just the
+original backward Euler method and :math:`s=1` is also know as the famous
+trapezoid rule.
+
+.. _Adams Moulton method: https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods
 
 .. _ad:
 
