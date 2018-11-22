@@ -15,5 +15,5 @@ for automatic differentiation and other looney things
    background
    organization
    implementation
-   future
    examples
+   future

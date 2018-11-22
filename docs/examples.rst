@@ -1,15 +1,14 @@
 .. _examples:
 
-Example Applications with ``spacejam``
-======================================
+Example Applications
+====================
 ``spacejam`` can be used to simulate a wide range of physical systems. Below
 are two applications of what you can do with ``spacejam`` and its automatic
 differentiation capabilities. These applications use the 
-`backward Euler`_
-method to iterate a solution. TODO: also include s=1 Adams Method.
+`backward Euler`_ and :math:`(s=1)` `Adam-Moulton`_ method.
 
 .. _backward Euler: https://en.wikipedia.org/wiki/Backward_Euler_method
-
+.. _`Adam-Moulton`: https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods
 
 Backward Euler and Newton-Raphson
 ---------------------------------
@@ -27,7 +26,7 @@ by re-casting it as the root finding problem:
         \b g(\b X_{n+1}) = \b X_{n+1} - \b X_n - h \dot{\b X}_{n+1}\quad.
 
 
-In 1D, the Newton-Raphson method succesively finds better and better
+In 1D, the Newton-Raphson method successively finds better and better
 approximations to the root of a function :math:`f(x)` in the following way:
 
 .. image:: https://upload.wikimedia.org/wikipedia/commons/e/e0/NewtonIteration_Ani.gif
@@ -48,7 +47,7 @@ iterate :math:`x_{n+1}` from the definition of the derivative:
         f'(x_n) = \frac{f(x_n)}{x_n - x_{n+1}}\quad\longrightarrow\quad
         x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} \quad .
 
-This is natuarlly extended to vector functions that accept multi-valued input by
+This is naturally extended to vector functions that accept multi-valued input by
 using the multi-variable version of the derivative, the Jacobian :math:`\b J`:
 
 .. math::
@@ -78,7 +77,7 @@ Here, :math:`(i)` and :math:`(i+1)` have been used to avoid confusion with the
 :math:`n` and :math:`n+1` iterate used in the 1D example above, and the root to
 this equation is the solution :math:`\b X_{n+1}` to our original implicit equation.
 The Jacobian :math:`\b J` is hiding inside of :math:`\b D` and we can make it show itself by
-just performin the multi-variable derivative that is required of the
+just performing the multi-variable derivative that is required of the
 Newton-Raphson method:
 
 .. math::
@@ -114,7 +113,7 @@ In this framework, both the real and dual part of the dual object returned by
   from ``spacejam`` for :math:`\b {\dot X}_{n}^{(i)}` and the dual part
   as :math:`\b{J}\left[\left(\b {\dot X}_{n+1}\right)^{(i)}\right]` . 
   
-Adam-Moulton :math:`(s=1)` and Newton-Raphson
+:math:`(s=1)` Adam-Moulton and Newton-Raphson
 ---------------------------------------------
 A similar implementation can be made with the next order up in this family of
 implicit methods. In this scheme we have:

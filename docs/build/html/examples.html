@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Example Applications with spacejam &mdash; spacejam 0.0.1 documentation</title>
+  <title>Example Applications &mdash; spacejam 0.0.1 documentation</title>
   
 
   
@@ -28,7 +28,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="prev" title="Future" href="future.html" /> 
+    <link rel="next" title="Future" href="future.html" />
+    <link rel="prev" title="Implementation Details" href="implementation.html" /> 
 
   
   <script src="_static/js/modernizr.min.js"></script>
@@ -79,17 +80,17 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1"><a class="reference internal" href="howtouse.html">How to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a></li>
+<li class="toctree-l1"><a class="reference internal" href="howtouse.html">How to use</a></li>
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="organization.html">Software Organization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation Details</a></li>
-<li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Example Applications with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Example Applications</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#backward-euler-and-newton-raphson">Backward Euler and Newton-Raphson</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#adam-moulton-s-1-and-newton-raphson">Adam-Moulton <span class="math notranslate nohighlight">\((s=1)\)</span> and Newton-Raphson</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#s-1-adam-moulton-and-newton-raphson"><span class="math notranslate nohighlight">\((s=1)\)</span> Adam-Moulton and Newton-Raphson</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#lotkavolterra-equations">Lotka–Volterra Equations</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
 </ul>
 
             
@@ -135,7 +136,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Example Applications with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></li>
+      <li>Example Applications</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -154,13 +155,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="example-applications-with-spacejam">
-<span id="examples"></span><h1>Example Applications with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code><a class="headerlink" href="#example-applications-with-spacejam" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="example-applications">
+<span id="examples"></span><h1>Example Applications<a class="headerlink" href="#example-applications" title="Permalink to this headline">¶</a></h1>
 <p><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> can be used to simulate a wide range of physical systems. Below
 are two applications of what you can do with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> and its automatic
 differentiation capabilities. These applications use the
-<a class="reference external" href="https://en.wikipedia.org/wiki/Backward_Euler_method">backward Euler</a>
-method to iterate a solution. TODO: also include s=1 Adams Method.</p>
+<a class="reference external" href="https://en.wikipedia.org/wiki/Backward_Euler_method">backward Euler</a> and <span class="math notranslate nohighlight">\((s=1)\)</span> <a class="reference external" href="https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods">Adam-Moulton</a> method.</p>
 <div class="section" id="backward-euler-and-newton-raphson">
 <h2>Backward Euler and Newton-Raphson<a class="headerlink" href="#backward-euler-and-newton-raphson" title="Permalink to this headline">¶</a></h2>
 <p>As we saw in <a class="reference internal" href="background.html#numerical"><span class="std std-ref">Numerical Integration: A brief crash couse</span></a>, this is a numerical scheme to solve the implicit
@@ -170,7 +170,7 @@ equation:</p>
 <p>by re-casting it as the root finding problem:</p>
 <div class="math notranslate nohighlight">
 \[\b g(\b X_{n+1}) = \b X_{n+1} - \b X_n - h \dot{\b X}_{n+1}\quad.\]</div>
-<p>In 1D, the Newton-Raphson method succesively finds better and better
+<p>In 1D, the Newton-Raphson method successively finds better and better
 approximations to the root of a function <span class="math notranslate nohighlight">\(f(x)\)</span> in the following way:</p>
 <img alt="https://upload.wikimedia.org/wikipedia/commons/e/e0/NewtonIteration_Ani.gif" src="https://upload.wikimedia.org/wikipedia/commons/e/e0/NewtonIteration_Ani.gif" />
 <ul class="simple">
@@ -188,7 +188,7 @@ iterate <span class="math notranslate nohighlight">\(x_{n+1}\)</span> from the d
 \[\text{slope} = \frac{\text{rise}}{\text{run}}\quad\longrightarrow\quad
 f'(x_n) = \frac{f(x_n)}{x_n - x_{n+1}}\quad\longrightarrow\quad
 x_{n+1} = x_n - \frac{f(x_n)}{f'(x_n)} \quad .\]</div>
-<p>This is natuarlly extended to vector functions that accept multi-valued input by
+<p>This is naturally extended to vector functions that accept multi-valued input by
 using the multi-variable version of the derivative, the Jacobian <span class="math notranslate nohighlight">\(\b J\)</span>:</p>
 <div class="math notranslate nohighlight">
 \[ \begin{align}\begin{aligned}\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}\\\b X_{n+1} = \b X_{n} - \b J[\b f(\b X_n)]^{-1} \b f(\b X_n) \quad,\end{aligned}\end{align} \]</div>
@@ -209,7 +209,7 @@ using the multi-variable version of the derivative, the Jacobian <span class="ma
 <span class="math notranslate nohighlight">\(n\)</span> and <span class="math notranslate nohighlight">\(n+1\)</span> iterate used in the 1D example above, and the root to
 this equation is the solution <span class="math notranslate nohighlight">\(\b X_{n+1}\)</span> to our original implicit equation.
 The Jacobian <span class="math notranslate nohighlight">\(\b J\)</span> is hiding inside of <span class="math notranslate nohighlight">\(\b D\)</span> and we can make it show itself by
-just performin the multi-variable derivative that is required of the
+just performing the multi-variable derivative that is required of the
 Newton-Raphson method:</p>
 <div class="math notranslate nohighlight">
 \[\require{cancel}
@@ -240,8 +240,8 @@ from <code class="docutils literal notranslate"><span class="pre">spacejam</span
 as <span class="math notranslate nohighlight">\(\b{J}\left[\left(\b {\dot X}_{n+1}\right)^{(i)}\right]\)</span> .</li>
 </ul>
 </div>
-<div class="section" id="adam-moulton-s-1-and-newton-raphson">
-<h2>Adam-Moulton <span class="math notranslate nohighlight">\((s=1)\)</span> and Newton-Raphson<a class="headerlink" href="#adam-moulton-s-1-and-newton-raphson" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="s-1-adam-moulton-and-newton-raphson">
+<h2><span class="math notranslate nohighlight">\((s=1)\)</span> Adam-Moulton and Newton-Raphson<a class="headerlink" href="#s-1-adam-moulton-and-newton-raphson" title="Permalink to this headline">¶</a></h2>
 <p>A similar implementation can be made with the next order up in this family of
 implicit methods. In this scheme we have:</p>
 <div class="math notranslate nohighlight">
@@ -375,8 +375,10 @@ scheme.</p>
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
+        <a href="future.html" class="btn btn-neutral float-right" title="Future" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
-        <a href="future.html" class="btn btn-neutral" title="Future" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+        <a href="implementation.html" class="btn btn-neutral" title="Implementation Details" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   

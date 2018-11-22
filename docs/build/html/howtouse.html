@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>How to use spacejam &mdash; spacejam 0.0.1 documentation</title>
+  <title>How to use &mdash; spacejam 0.0.1 documentation</title>
   
 
   
@@ -80,7 +80,7 @@
             
               <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">How to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to use</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#demo-i-scalar-function-scalar-input">Demo I: Scalar function, scalar input</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#demo-ii-scalar-function-with-vector-input">Demo II: Scalar function with vector input</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#demo-iii-vector-function-with-vector-input">Demo III: Vector function with vector input</a></li>
@@ -89,8 +89,8 @@
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="organization.html">Software Organization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Applications with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></a></li>
 </ul>
 
             
@@ -136,7 +136,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>How to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code></li>
+      <li>How to use</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -155,8 +155,8 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="how-to-use-spacejam">
-<span id="howto"></span><h1>How to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code><a class="headerlink" href="#how-to-use-spacejam" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="how-to-use">
+<span id="howto"></span><h1>How to use<a class="headerlink" href="#how-to-use" title="Permalink to this headline">¶</a></h1>
 <p>The following series of demos will step through how to differentiate a wide
 variety of functions with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code>. Check out <a class="reference internal" href="organization.html#install"><span class="std std-ref">Installation</span></a> to get
 started.</p>
@@ -166,7 +166,7 @@ started.</p>
 scalar argument <span class="math notranslate nohighlight">\((x=a)\)</span> and outputs a single scalar value <span class="math notranslate nohighlight">\(f(a)\)</span>.</p>
 <p>For example, let’s take a look at the function <span class="math notranslate nohighlight">\(f(x) = x^3\)</span>, which you
 can define below as:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 
 <span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span><span class="p">])</span>
@@ -174,12 +174,12 @@ can define below as:</p>
 </div>
 <p>All <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> needs now is for you to specify a point <span class="math notranslate nohighlight">\(\mathbf p\)</span>
 where you would like to evaluate your function at:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">])</span>  <span class="c1"># evaluation point</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">])</span>  <span class="c1"># evaluation point</span>
 </pre></div>
 </div>
 <p>Now, evaluating your function and simultaneously computing the
 derivative with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> at this point is as easy as:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacejam</span> <span class="k">as</span> <span class="nn">sj</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacejam</span> <span class="kn">as</span> <span class="nn">sj</span>
 
 <span class="n">ad</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
 </pre></div>
@@ -337,6 +337,19 @@ formated J F(p):
 </div>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[5.00 + eps [4.00 1.00] 9.00 + eps [10.00 12.00] 29.00 + eps [1.00 48.00]]
 </pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>You are also free to make your own dual numbers (for example
+<span class="math notranslate nohighlight">\(z = 3 + \epsilon 4\)</span>) by doing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="last highlight-none notranslate"><div class="highlight"><pre><span></span>3.00 + eps 4.00
+</pre></div>
+</div>
 </div>
 </div>
 </div>

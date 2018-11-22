@@ -1,7 +1,7 @@
 .. _howto:
 
-How to use ``spacejam``
-========================
+How to use
+==========
 The following series of demos will step through how to differentiate a wide
 variety of functions with ``spacejam``. Check out :ref:`install` to get
 started.
@@ -14,14 +14,7 @@ scalar argument :math:`(x=a)` and outputs a single scalar value :math:`f(a)`.
 For example, let's take a look at the function :math:`f(x) = x^3`, which you
 can define below as:
 
-::
-
-        import numpy as np
-
-        def f(x):
-            return np.array([x**3])
-
-.. testsetup::
+.. testcode::
 
         import numpy as np
 
@@ -31,25 +24,14 @@ can define below as:
 All ``spacejam`` needs now is for you to specify a point :math:`\mathbf p`
 where you would like to evaluate your function at:
 
-::
-
-        p = np.array([5])  # evaluation point
-
-.. testsetup::
+.. testcode::
 
         p = np.array([5])  # evaluation point
 
 Now, evaluating your function and simultaneously computing the 
 derivative with ``spacejam`` at this point is as easy as:
 
-::
-
-        import spacejam as sj
-
-        ad = sj.AutoDiff(f, p)
-
-
-.. testsetup::
+.. testcode::
 
         import spacejam as sj
 
@@ -241,3 +223,18 @@ where:
 .. testoutput::
 
         [5.00 + eps [4.00 1.00] 9.00 + eps [10.00 12.00] 29.00 + eps [1.00 48.00]]
+
+.. note::
+        
+        You are also free to make your own dual numbers (for example 
+        :math:`z = 3 + \epsilon 4`) by doing:
+
+        .. testcode::
+
+                z = sj.Dual(3, 4)
+
+                print(z)
+
+        .. testoutput::
+
+                3.00 + eps 4.00

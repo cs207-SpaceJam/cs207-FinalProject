@@ -265,7 +265,8 @@ class Dual():
        
         real = self.r**other.r
         dual = self.r**(other.r - 1)*self.d*other.r
-        dual += self.r**other.r*other.d*np.log(self.r)
+        if other.d != 0:
+            dual += self.r**other.r*other.d*np.log(self.r)
 
         z = Dual(real, dual)
         return z
