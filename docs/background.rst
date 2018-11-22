@@ -174,27 +174,63 @@ to give:
         = (x + \epsilon) \times (x + \epsilon)
         = x^2 + \epsilon (x\cdot 1 + 1\cdot x) = x^2 + \epsilon\ 2x \quad,
 
-where :math:`f(x) + \epsilon f'(x)` is returned as expected.
-Operations like this can be redefined via **operator overloading**, which we
-implement in :ref:`api`. This method is also easily extended to multivariable
-functions with the introduction of "dual number basis vectors". For example,
-the multivariable function :math:`f(x, y) = xy` would transform like:
+where :math:`f(x) + \epsilon f'(x)` is returned as expected.  Operations like
+this can be redefined via **operator overloading**, which we implement in
+:ref:`api`. This method is also easily extended to multivariable functions with
+the introduction of "dual number basis vectors" 
+:math:`\b p_i = i + \epsilon_i 1`, where :math:`i` takes on any of the
+components of :math:`\b X_{n}`. For example, the multivariable function
+:math:`f(x, y) = xy` would transform like:
 
 .. math::
         \require{cancel}
-        x \quad\longrightarrow\quad& x + \epsilon_x + \epsilon_y\ 0 \\
-        y \quad\longrightarrow\quad& y + \epsilon_x\ 0 + \epsilon_y \\
-        f(x, y) \quad\longrightarrow\quad& (x + \epsilon_x + \epsilon_y\ 0) 
+        x \quad\longrightarrow\quad& \b p_x = x + \epsilon_x + \epsilon_y\ 0 \\
+        y \quad\longrightarrow\quad& \b p_y = y + \epsilon_x\ 0 + \epsilon_y \\
+        f(x, y) \quad\longrightarrow\quad& f(\b p) = (x + \epsilon_x + \epsilon_y\ 0) 
         \times (y + \epsilon_x\ 0 + \epsilon_y) \\
         &= xy + \epsilon_y x + \epsilon_x y + 
         \cancel{\epsilon_x\epsilon_y} \\
-        &= xy + \epsilon_y x + \epsilon_x y \quad,
+        &= xy + \epsilon_x y + \epsilon_y x \quad,
 
 where we now have:
 
 .. math::
         f(x+\epsilon_x, y+\epsilon_y) 
-        = f(x, y) + \epsilon_x\pd{f}{x} + \epsilon_y\pd{f}{y} 
-        = f(x, y) + \epsilon \nabla f(x, y)\quad.
+        &= f(x, y) + \epsilon_x\pd{f}{x} + \epsilon_y\pd{f}{y} 
+        = f(x, y) + \epsilon \left[\pd{f}{x},\ \pd{f}{y}\right] \\
+        &= f(x, y) + \epsilon \nabla f(x, y)\quad.
+
+This is accomplished internally in ``spacejam.autodiff.Autodiff._ad`` with:
+
+::
+
+        def _ad(self, func, p):                                                                                                     
+        """ Internally computes `func(p)` and its derivative(s).                                                                
+                                                                                                                                
+        Notes                                                                                                                   
+        -----                                                                                                                   
+        `_ad` returns a nested 1D `numpy.ndarray` to be formatted internally                                                    
+        accordingly in :any:`spacejam.autodiff.AutoDiff.__init__`  .                                                            
+                                                                                                                                
+        Parameters                                                                                                              
+        ----------                                                                                                              
+        func : numpy.ndarray                                                                                                    
+            function(s) specified by user.                                                                                      
+        p : numpy.ndarray                                                                                                       
+            point(s) specified by user.                                                                                         
+        """                                                                                                                     
+        if len(p) == 1: # scalar p                                                                                              
+            p_mult = np.array([dual.Dual(p)])                                                                                   
+                                                                                                                                
+        else:# vector p                                                                                                         
+            p_mult = [dual.Dual(pi, idx=i, x=p) for i, pi in enumerate(p)]                                                      
+            p_mult = np.array(p_mult) # convert list to numpy array                                                             
+                                                                                                                                
+        result = func(*p_mult) # perform AD with specified function(s)                                                          
+        return result
+
+The ``x`` argument in the ``spacejam.dual.Dual`` class above sets the length of
+the :math:`\ p` dual basis vector and the ``idx`` argument sets the proper
+index to 1 (with the rest being zero).  
 
 
