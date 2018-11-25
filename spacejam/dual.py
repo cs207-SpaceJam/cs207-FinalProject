@@ -412,3 +412,42 @@ class Dual():
             s = f'{self.r:.2f} + eps {self.d}' 
 
         return s
+    def __eq__(self, other):
+        """ Tests if two dual objects are equal or not. 
+        
+        Returns
+        ------- 
+        True or false, depending on the comparison
+        
+        Examples
+        -------- 
+        >>> z = Dual(1, 2)
+        >>> y = Dual(1, 2)
+        >>> z == y
+        True
+        """
+        # compare the real and dual parts of self versus other.
+        #Output True if both cases match, false otherwise. 
+        if self.r == other.r and self.d == other.d:
+            return True
+        else:
+            return False
+        
+    def __ne__(self, other):
+        """ Tests if two dual objects are equal or not. 
+        
+        Returns
+        ------- 
+        True or false, depending on the comparison
+        
+        Examples
+        -------- 
+        >>> z = Dual(1, 2)
+        >>> y = Dual(1, 1)
+        >>> z != y
+        True
+        """
+        # compare the real and dual parts of self versus other.
+        #Output false if both cases match, true otherwise. 
+        print("These two dual objects are not equal.")
+        return not self.__eq__(other)
