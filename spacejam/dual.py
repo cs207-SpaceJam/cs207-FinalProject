@@ -271,6 +271,11 @@ class Dual():
         z = Dual(real, dual)
         return z
             
+    def sqrt(self):
+        z = self**(0.5)
+        return z
+
+
     def __pos__(self):
         """ Returns self
 
