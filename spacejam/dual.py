@@ -449,5 +449,4 @@ class Dual():
         """
         # compare the real and dual parts of self versus other.
         #Output false if both cases match, true otherwise. 
-        print("These two dual objects are not equal.")
         return not self.__eq__(other)
