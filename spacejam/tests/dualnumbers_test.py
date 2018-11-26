@@ -50,12 +50,12 @@ def test_cos():
 def test_eq():
     z = sj.Dual(1,1)
     y = sj.Dual(1,1)
-    assert 1.00 + eps 1.00 == 1.00 + eps 1.00
+    assert z == y
 
 def test_ne():
     z = sj.Dual(1,1)
     y = sj.Dual(1,1)
-    assert 1.00 + eps 1.00 != 1.00 + eps 1.00
+    assert z!=y
 
 	
 
