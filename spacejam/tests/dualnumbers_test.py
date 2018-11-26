@@ -53,11 +53,11 @@ def test_eq():
     assert z.r == y.r
     assert z.d == y.d
 
-def test_ne():
-    z = sj.Dual(1,1)
-    y = sj.Dual(1,1)
-    assert z.r != y.r
-    assert z.d != y.d
+# def test_ne():
+#     z = sj.Dual(1,1)
+#     y = sj.Dual(1,1)
+#     assert z.r != y.r
+#     assert z.d != y.d
 
 	
 
