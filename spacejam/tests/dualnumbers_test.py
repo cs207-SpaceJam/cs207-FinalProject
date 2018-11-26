@@ -55,7 +55,7 @@ def test_eq():
 def test_ne():
     z = sj.Dual(1,1)
     y = sj.Dual(1,1)
-    assert y!=z
+    assert y!=z, "These two dual objects are not equal."
 
 	
 
