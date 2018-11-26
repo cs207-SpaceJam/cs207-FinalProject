@@ -48,13 +48,13 @@ def test_cos():
 	assert z.d==-4.0*np.sin(3.0)
     
 def test_eq():
-    z = Dual(1,1)
-    y = Dual(1,1)
+    z = sj.Dual(1,1)
+    y = sj.Dual(1,1)
     assertTrue(y==z, msg=None)
 
 def test_ne():
-    z = Dual(1,1)
-    y = Dual(1,1)
+    z = sj.Dual(1,1)
+    y = sj.Dual(1,1)
     assertTrue(y!=z, msg="These two dual objects are not equal.")
 
 	
