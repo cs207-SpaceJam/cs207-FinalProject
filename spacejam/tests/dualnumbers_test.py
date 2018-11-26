@@ -50,12 +50,12 @@ def test_cos():
 def test_eq():
     z = sj.Dual(1,1)
     y = sj.Dual(1,1)
-    assertTrue(y==z, msg=None)
+    assert y==z
 
 def test_ne():
     z = sj.Dual(1,1)
     y = sj.Dual(1,1)
-    assertTrue(y!=z, msg="These two dual objects are not equal.")
+    assert y!=z
 
 	
 
