@@ -433,20 +433,23 @@ class Dual():
         else:
             return False
         
-#     def __ne__(self, other):
-#         """ Tests if two dual objects are equal or not. 
+    def __ne__(self, other):
+        """ Tests if two dual objects are equal or not. 
         
-#         Returns
-#         ------- 
-#         True or false, depending on the comparison
+        Returns
+        ------- 
+        True or false, depending on the comparison
         
-#         Examples
-#         -------- 
-#         >>> z = Dual(1, 1)
-#         >>> y = Dual(1, 1)
-#         >>> z != y
-#         False
-#         """
-#         # compare the real and dual parts of self versus other.
-#         #Output false if both cases match, true otherwise. 
-#         return not self.__eq__(other)
+        Examples
+        -------- 
+        >>> z = Dual(1, 1)
+        >>> y = Dual(1, 1)
+        >>> z != y
+        False
+        """
+        # compare the real and dual parts of self versus other.
+        #Output false if both cases match, true otherwise. 
+        if self.r != other.r or self.d != other.d:
+            return True
+        else:
+            return False
