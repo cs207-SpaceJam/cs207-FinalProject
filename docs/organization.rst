@@ -53,7 +53,7 @@ First download the ``spacejam`` repo anywhere onto your computer with:
 
 .. code-block:: none 
 
-        git clone git@github.com:cs207-SpaceJam/cs207-FinalProject.git
+	git clone https://github.com/cs207-SpaceJam/cs207-FinalProject.git
 
 A virtual environment can be created by using the following
 command:                               
