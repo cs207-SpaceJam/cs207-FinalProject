@@ -160,8 +160,11 @@ where,
 - :math:`x`: number of prey
 - :math:`y`: number of predators
 - :math:`\dot x` and :math:`\dot y`: instantaneous growth rate of the prey and
-  predator populations, respectively 
-- TODO: say more about :math:`\alpha,\beta,\delta,\gamma`
+  predator populations, respectively .
+- :math:`\gamma`: predator mortality rate
+- :math:`\alpha`: intrinsic rate of prey population increase
+- :math:`\beta`: predation rate coefficient
+- :math:`\delta`:reproduction rate of predators per 1 prey eaten
 
 Simulating how these two populations evolve over time with backward Euler
 could then be accomplished with:
