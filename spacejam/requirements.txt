@@ -1,0 +1,12 @@
+urllib3==1.24.1
+atomicwrites==1.2.1
+attrs==18.2.0
+coverage==4.5.2
+more-itertools==4.3.0
+numpy==1.15.4
+pluggy==0.8.0
+py==1.7.0
+pytest==4.0.1
+pytest-cov==2.6.0
+six==1.11.0
+-e git+https://github.com/cs207-SpaceJam/cs207-FinalProject.git@ecdac10f6a351d5f3d97552bf3a600d0f2feeca0#egg=spacejam

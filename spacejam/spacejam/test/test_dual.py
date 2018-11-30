@@ -46,19 +46,3 @@ def test_cos():
 	z=x.cos()
 	assert z.r==np.cos(3.0)
 	assert z.d==-4.0*np.sin(3.0)
-    
-def test_eq():
-    z = sj.Dual(1,1)
-    y = sj.Dual(1,1)
-    assert z.r == y.r
-    assert z.d == y.d
-
-def test_ne():
-    z = sj.Dual(1,1)
-    y = sj.Dual(1,2)
-    assert z != y
-
-	
-
-
-

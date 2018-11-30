@@ -22,7 +22,7 @@ class Dual():
 
     """
 
-    def __init__(self, real, dual=1.00, idx=None, x=np.array(1)):
+    def __init__(self, real, dual=None, idx=None, x=np.array(1)):
         """
         Parameters
         ----------
@@ -36,7 +36,7 @@ class Dual():
             set size of pre-allocated array for dual basis vector.
         """
         # set numpy display output to be formatted to two decimal places
-        # for easier doctesting
+        # for easier doctesting and dedicated user dual number creation
         formatter = lambda x: "%.2f" % x
         np.set_printoptions(formatter={
                                 'int_kind':formatter,
@@ -51,7 +51,10 @@ class Dual():
             self.d = np.zeros(x.size)
             self.d[idx] = 1.00
         else: # regular dual vector
-            self.d = np.array(dual)
+            if dual is not None:
+                self.d = np.array(dual)
+            else:
+                self.d = np.ones_like(self.r)
 
     def __add__(self, other):
         """ Returns the addition of self and other
@@ -403,6 +406,10 @@ class Dual():
                                 })
 
         # format dual numbers accordingly if p is scalar or vector
+        if self.r.size > 1:
+            s = f'{self.r} + eps {self.d}' 
+            return s
+
         if self.d.size == 1:
             if self.d >= 0:
                 s = f'{self.r:.2f} + eps {self.d:.2f}' 
@@ -412,44 +419,3 @@ class Dual():
             s = f'{self.r:.2f} + eps {self.d}' 
 
         return s
-    def __eq__(self, other):
-        """ Tests if two dual objects are equal or not. 
-        
-        Returns
-        ------- 
-        True or false, depending on the comparison
-        
-        Examples
-        -------- 
-        >>> z = Dual(1, 1)
-        >>> y = Dual(1, 1)
-        >>> z == y
-        True
-        """
-        # compare the real and dual parts of self versus other.
-        #Output True if both cases match, false otherwise. 
-        if self.r == other.r and self.d == other.d:
-            return True
-        else:
-            return False
-        
-    def __ne__(self, other):
-        """ Tests if two dual objects are equal or not. 
-        
-        Returns
-        ------- 
-        True or false, depending on the comparison
-        
-        Examples
-        -------- 
-        >>> z = Dual(1, 1)
-        >>> y = Dual(1, 1)
-        >>> z != y
-        False
-        """
-        # compare the real and dual parts of self versus other.
-        #Output false if both cases match, true otherwise. 
-        if self.r != other.r or self.d != other.d:
-            return True
-        else:
-            return False
