@@ -2,10 +2,10 @@ language: python
 python:
     - "3.6"
 before_install:
+    - cd spacejam
     - pip install pytest pytest-cov
     - pip install coveralls
 script:
-    - cd spacejam
     - pytest
     - python -m pytest --doctest-modules --cov=. --cov-report term-missing
 after_success:
