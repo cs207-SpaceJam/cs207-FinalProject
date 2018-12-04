@@ -46,33 +46,15 @@ These tests can be run with the following command in the root directory:
 
 Installation
 ------------
-Until ``spacejam`` is made available on PyPI, the easiest way to install is to
-run everything in a virtual environment.
+Virtual Environment
+~~~~~~~~~~~~~~~~~~~
+For development, or just to have a self contained enviroment to use ``spacejam``
+in, run the following commands anywhere on your computer:
 
-First download the ``spacejam`` repo anywhere onto your computer with:
-
-.. code-block:: none 
-
-        git clone git@github.com:cs207-SpaceJam/cs207-FinalProject.git
-
-A virtual environment can be created by using the following
-command:                               
-                                                                                    
 .. code-block:: none                                                                                   
                                                                                     
         python -m venv venv                                                         
-                                                                                    
-Next activate the environment by doing:                                                 
-                                                                                    
-.. code-block:: none
-   
-           source venv/bin/activate                                                    
-                                                                                    
-Finally, navigate into the root directory (cs207-FinalProject) and install the 
-required dependencies (along with ``spacejam``).
+        source venv/bin/activate                                                    
 
-.. code-block:: none
-
-        pip install -r requirements.txt
 
 * Check out :ref:`howto` for a quick tutorial on what you can do.
