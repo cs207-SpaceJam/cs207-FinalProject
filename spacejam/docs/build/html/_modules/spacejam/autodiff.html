@@ -168,7 +168,7 @@
 <span class="sd">        functions(s).</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="AutoDiff.__init__"><a class="viewcode-back" href="../../implementation.html#spacejam.autodiff.AutoDiff.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+<div class="viewcode-block" id="AutoDiff.__init__"><a class="viewcode-back" href="../../implementation.html#spacejam.autodiff.AutoDiff.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; </span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -177,11 +177,14 @@
 <span class="sd">        p : numpy.ndarray</span>
 <span class="sd">            user defined point(s) to evaluate derivative/gradient/Jacobian at.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ad</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="c1"># perform AD</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ad</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># perform AD</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ad</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="c1"># perform AD</span>
 
         <span class="c1"># returns func(p) and approriate J func(p) or grad func(p)</span>
         <span class="c1"># in real and dual part of AutoDiff class, respectively</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">))</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># scalar F, scalar or vector p</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># scalar F, scalar or vector p</span>
             <span class="c1"># hacky way to get numpy formatting to work</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">r</span>
             <span class="k">else</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">result</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">r</span><span class="p">])</span>
@@ -197,7 +200,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_matrix</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_full</span> <span class="o">=</span> <span class="n">result</span></div>
 
-<div class="viewcode-block" id="AutoDiff._ad"><a class="viewcode-back" href="../../implementation.html#spacejam.autodiff.AutoDiff._ad">[docs]</a>    <span class="k">def</span> <span class="nf">_ad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
+<div class="viewcode-block" id="AutoDiff._ad"><a class="viewcode-back" href="../../implementation.html#spacejam.autodiff.AutoDiff._ad">[docs]</a>    <span class="k">def</span> <span class="nf">_ad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Internally computes `func(p)` and its derivative(s).</span>
 <span class="sd">        </span>
 <span class="sd">        Notes</span>
@@ -219,7 +222,11 @@
             <span class="n">p_mult</span> <span class="o">=</span> <span class="p">[</span><span class="n">dual</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
             <span class="n">p_mult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p_mult</span><span class="p">)</span> <span class="c1"># convert list to numpy array</span>
 
-        <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">p_mult</span><span class="p">)</span> <span class="c1"># perform AD with specified function(s)</span>
+        <span class="c1"># perform AD with specified function(s)</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">p_mult</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">p_mult</span><span class="p">)</span> 
         <span class="k">return</span> <span class="n">result</span></div>
 
 <div class="viewcode-block" id="AutoDiff._matrix"><a class="viewcode-back" href="../../implementation.html#spacejam.autodiff.AutoDiff._matrix">[docs]</a>    <span class="k">def</span> <span class="nf">_matrix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">F</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">result</span><span class="p">):</span> 
@@ -243,8 +250,8 @@
 <span class="sd">            Corresponding Jacobian matrix.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># returns formatted F(p) and Jacobian matrices </span>
-        <span class="n">Fs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">F</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># initialze empty F(p)</span>
-        <span class="n">jac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">F</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="p">))</span> <span class="c1"># initialize empty J F(p)</span>
+        <span class="n">Fs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">result</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># initialze empty F(p)</span>
+        <span class="n">jac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">result</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="p">))</span> <span class="c1"># initialize empty J F(p)</span>
         <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">result</span><span class="p">):</span> <span class="c1"># fill in each row of each</span>
             <span class="n">Fs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">r</span>
             <span class="n">jac</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">d</span>

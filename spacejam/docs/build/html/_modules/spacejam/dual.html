@@ -171,7 +171,7 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
-<div class="viewcode-block" id="Dual.__init__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="mf">1.00</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">1</span><span class="p">)):</span>
+<div class="viewcode-block" id="Dual.__init__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">1</span><span class="p">)):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Parameters</span>
 <span class="sd">        ----------</span>
@@ -185,7 +185,7 @@
 <span class="sd">            set size of pre-allocated array for dual basis vector.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1"># set numpy display output to be formatted to two decimal places</span>
-        <span class="c1"># for easier doctesting</span>
+        <span class="c1"># for easier doctesting and dedicated user dual number creation</span>
         <span class="n">formatter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">x</span>
         <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">formatter</span><span class="o">=</span><span class="p">{</span>
                                 <span class="s1">&#39;int_kind&#39;</span><span class="p">:</span><span class="n">formatter</span><span class="p">,</span>
@@ -200,7 +200,10 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.00</span>
         <span class="k">else</span><span class="p">:</span> <span class="c1"># regular dual vector</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dual</span><span class="p">)</span></div>
+            <span class="k">if</span> <span class="n">dual</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dual</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">)</span></div>
 
 <div class="viewcode-block" id="Dual.__add__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__add__">[docs]</a>    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns the addition of self and other</span>
@@ -420,6 +423,11 @@
         <span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">dual</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">z</span></div>
             
+    <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">**</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span>
+
+
 <div class="viewcode-block" id="Dual.__pos__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__pos__">[docs]</a>    <span class="k">def</span> <span class="nf">__pos__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot; Returns self</span>
 
@@ -547,6 +555,10 @@
                                 <span class="p">})</span>
 
         <span class="c1"># format dual numbers accordingly if p is scalar or vector</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.r}</span><span class="s1"> + eps </span><span class="si">{self.d}</span><span class="s1">&#39;</span> 
+            <span class="k">return</span> <span class="n">s</span>
+
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.r:.2f}</span><span class="s1"> + eps </span><span class="si">{self.d:.2f}</span><span class="s1">&#39;</span> 
