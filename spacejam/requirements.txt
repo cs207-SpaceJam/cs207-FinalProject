@@ -8,4 +8,4 @@ py~=1.7.0
 pytest~=4.0.1
 pytest-cov~=2.6.0
 six~=1.11.0
--e https://github.com/cs207-SpaceJam/cs207-FinalProject.git@536e55cc9fd34757fbae8440dd38584f5763e9d0#egg=spacejam&subdirectory=spacejam
+-e git+https://github.com/cs207-SpaceJam/cs207-FinalProject.git@536e55cc9fd34757fbae8440dd38584f5763e9d0#egg=spacejam&subdirectory=spacejam
