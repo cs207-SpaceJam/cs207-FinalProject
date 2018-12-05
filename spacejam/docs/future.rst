@@ -128,5 +128,10 @@ Using the same exact timestep, the phase curve converges for the higher order
 scheme.
 
 We would like to see ``spacejam`` applied to a whole host of systems, such as
-the one described above. Add more here
+the one described above. 
+
+| **Add some more stuff like...**
+| + user input: dicts, json, yml, etc.
+| + vectors: do things like g = ..., instead of g_x, g_y = ...
+| + add app. for time-dependent diff eqs. using spacejam
 

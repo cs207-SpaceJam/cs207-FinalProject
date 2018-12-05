@@ -119,7 +119,7 @@ A similar implementation can be made with the next order up in this family of
 implicit methods. In this scheme we have:
 
 .. math::
-        \b X_{n+1} = \b X_n + \frac{1}{2}h\left(\b {\dot X_{n+1}} + \b X_n\right)\quad.
+        \b X_{n+1} = \b X_n + \frac{1}{2}h\left(\b {\dot X_{n+1}} + \b {\dot X_n}\right)\quad.
 
 Applying the same treatment of turning this into a root finding problem and
 applying Newton's method gives the similar result:
