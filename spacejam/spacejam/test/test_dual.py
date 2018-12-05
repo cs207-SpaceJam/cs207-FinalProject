@@ -1,4 +1,4 @@
-import spacejam.dual as sj
+import spacejam as sj
 import pytest
 import numpy as np 
 
@@ -46,3 +46,34 @@ def test_cos():
 	z=x.cos()
 	assert z.r==np.cos(3.0)
 	assert z.d==-4.0*np.sin(3.0)
+
+def test_pow():
+	x=sj.Dual(1.0,2.0)
+	y=2
+	with pytest.raises(AttributeError):
+		x.__pow__(y)
+
+
+def test_pow_negative_case():
+	x=sj.Dual(-1.0, 2.0)
+	y=sj.Dual(3.0, 4.0)
+	with pytest.raises(Exception):
+		x.__pow__(y)
+
+def test_sqrt():
+	x=sj.Dual(4.0, 1.0)
+	z=x.sqrt()
+	assert z.r==2.0
+	assert z.d==0.25
+
+def test_repr():
+	x=sj.Dual([1,2],[3,4])
+	z=x.__repr__()
+	assert z.r==array([1.00, 2.00])
+	assert z.d==array([3.00, 4.00])
+'''
+def test_ad():
+	ad=sj.AutoDiff(np.array([x**3]), np.array([5]))
+	assert ad.r==[125.00]
+	assert ad.d==[75.00]
+
