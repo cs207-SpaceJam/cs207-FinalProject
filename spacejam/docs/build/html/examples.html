@@ -86,8 +86,7 @@
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation Details</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Example Applications</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#backward-euler-and-newton-raphson">Backward Euler and Newton-Raphson</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#s-1-adam-moulton-and-newton-raphson"><span class="math notranslate nohighlight">\((s=1)\)</span> Adam-Moulton and Newton-Raphson</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#lotkavolterra-equations">Lotka–Volterra Equations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#s-1-adams-moulton-and-newton-raphson"><span class="math notranslate nohighlight">\((s=1)\)</span> Adams-Moulton and Newton-Raphson</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
@@ -160,7 +159,7 @@
 <p><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> can be used to simulate a wide range of physical systems. Below
 are two applications of what you can do with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> and its automatic
 differentiation capabilities. These applications use the
-<a class="reference external" href="https://en.wikipedia.org/wiki/Backward_Euler_method">backward Euler</a> and <span class="math notranslate nohighlight">\((s=1)\)</span> <a class="reference external" href="https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods">Adam-Moulton</a> method.</p>
+<a class="reference external" href="https://en.wikipedia.org/wiki/Backward_Euler_method">backward Euler</a> and <span class="math notranslate nohighlight">\((s=1)\)</span> <a class="reference external" href="https://en.wikipedia.org/wiki/Linear_multistep_method#Adamss%E2%80%93Moulton_methods">Adams-Moulton</a> method.</p>
 <div class="section" id="backward-euler-and-newton-raphson">
 <h2>Backward Euler and Newton-Raphson<a class="headerlink" href="#backward-euler-and-newton-raphson" title="Permalink to this headline">¶</a></h2>
 <p>As we saw in <a class="reference internal" href="background.html#numerical"><span class="std std-ref">Numerical Integration: A brief crash couse</span></a>, this is a numerical scheme to solve the implicit
@@ -240,8 +239,8 @@ from <code class="docutils literal notranslate"><span class="pre">spacejam</span
 as <span class="math notranslate nohighlight">\(\b{J}\left[\left(\b {\dot X}_{n+1}\right)^{(i)}\right]\)</span> .</li>
 </ul>
 </div>
-<div class="section" id="s-1-adam-moulton-and-newton-raphson">
-<h2><span class="math notranslate nohighlight">\((s=1)\)</span> Adam-Moulton and Newton-Raphson<a class="headerlink" href="#s-1-adam-moulton-and-newton-raphson" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="s-1-adams-moulton-and-newton-raphson">
+<h2><span class="math notranslate nohighlight">\((s=1)\)</span> Adams-Moulton and Newton-Raphson<a class="headerlink" href="#s-1-adams-moulton-and-newton-raphson" title="Permalink to this headline">¶</a></h2>
 <p>A similar implementation can be made with the next order up in this family of
 implicit methods. In this scheme we have:</p>
 <div class="math notranslate nohighlight">
@@ -260,110 +259,6 @@ applying Newton’s method gives the similar result:</p>
 <p>In this new scheme, <span class="math notranslate nohighlight">\(\b D\)</span> has an extra factor of <span class="math notranslate nohighlight">\(1/2\)</span> on its
 Jacobian in the backward and now <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> will also be computing
 <span class="math notranslate nohighlight">\(\b {\dot X_n}\)</span> .</p>
-</div>
-<div class="section" id="lotkavolterra-equations">
-<h2>Lotka–Volterra Equations<a class="headerlink" href="#lotkavolterra-equations" title="Permalink to this headline">¶</a></h2>
-<p>These are a popular system of differential equations used to describe the
-<a class="reference external" href="https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations">dynamics of biological systems</a> where two sets of species (predator and prey)
-interact. The population of each can then be tracked with:</p>
-<div class="math notranslate nohighlight">
-\[ \begin{align}\begin{aligned}\newcommand{\od}[2]{\frac{\mathrm d #1}{\mathrm d #2}}
-\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}\\\begin{split}\od{x}{t} &amp;= \dot x = \alpha x - \beta xy\quad, \\
-\od{y}{t} &amp;= \dot y = \delta xy - \gamma y\quad,\end{split}\end{aligned}\end{align} \]</div>
-<p>where,</p>
-<ul class="simple">
-<li><span class="math notranslate nohighlight">\(x\)</span>: number of prey</li>
-<li><span class="math notranslate nohighlight">\(y\)</span>: number of predators</li>
-<li><span class="math notranslate nohighlight">\(\dot x\)</span> and <span class="math notranslate nohighlight">\(\dot y\)</span>: instantaneous growth rate of the prey and
-predator populations, respectively</li>
-<li>TODO: say more about <span class="math notranslate nohighlight">\(\alpha,\beta,\delta,\gamma\)</span></li>
-</ul>
-<p>Simulating how these two populations evolve over time with backward Euler
-could then be accomplished with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacejam</span> <span class="k">as</span> <span class="nn">sj</span>
-
-<span class="c1"># some useful packages for visualization</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
-
-<span class="n">sns</span><span class="o">.</span><span class="n">set_style</span><span class="p">(</span><span class="s1">&#39;darkgrid&#39;</span><span class="p">)</span>
-
-<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">4.</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">4.</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
-        <span class="n">f1</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">*</span><span class="n">x1</span> <span class="o">-</span> <span class="n">beta</span><span class="o">*</span><span class="n">x1</span><span class="o">*</span><span class="n">x2</span>
-        <span class="n">f2</span> <span class="o">=</span> <span class="n">delta</span><span class="o">*</span><span class="n">x1</span><span class="o">*</span><span class="n">x2</span> <span class="o">-</span> <span class="n">gamma</span><span class="o">*</span><span class="n">x2</span>
-        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">])</span>
-
-<span class="c1"># run simulation</span>
-<span class="n">X_old</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span> <span class="c1"># initial population conditions ([prey, predator])</span>
-<span class="n">h</span> <span class="o">=</span> <span class="o">.</span><span class="mi">01</span> <span class="c1"># timestep</span>
-<span class="n">t</span> <span class="o">=</span> <span class="mi">0</span> <span class="c1"># number of steps</span>
-<span class="n">T</span> <span class="o">=</span> <span class="mi">10</span>
-
-<span class="n">time</span><span class="p">,</span> <span class="n">x1_sols</span><span class="p">,</span> <span class="n">x2_sols</span> <span class="o">=</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[]</span> <span class="c1"># hold solutions for plotting later</span>
-<span class="k">while</span> <span class="n">t</span> <span class="o">&lt;</span> <span class="n">T</span><span class="p">:</span>
-    <span class="n">time</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">t</span><span class="p">)</span>
-    <span class="n">x1_sols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X_old</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">x2_sols</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">X_old</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
-
-    <span class="c1"># use forward Euler for initial guess for X_n+1 = X_new</span>
-    <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_old</span> <span class="o">+</span> <span class="n">h</span><span class="o">*</span><span class="n">f</span><span class="p">(</span><span class="o">*</span><span class="n">X_old</span><span class="p">)</span> <span class="c1"># X_{n+1}^(0)</span>
-
-    <span class="c1"># Iterate to better solution for X_new using Newton-Raphson method</span>
-    <span class="c1"># on backward Euler implementation</span>
-    <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_old</span>
-    <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_new</span>
-    <span class="n">idx</span><span class="p">,</span> <span class="n">idx_break</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="mf">1E4</span>
-    <span class="k">while</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">X_inew</span> <span class="o">-</span> <span class="n">X_iold</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1E-14</span><span class="p">:</span>
-        <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_inew</span>
-
-        <span class="k">if</span> <span class="n">idx</span> <span class="o">&gt;</span> <span class="n">idx_break</span><span class="p">:</span>
-                <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;solution did not converge&#39;</span><span class="p">)</span>
-
-        <span class="n">ad</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">X_iold</span><span class="p">)</span> <span class="c1"># get Jacobian (ad.d)</span>
-        <span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span> <span class="o">-</span> <span class="n">h</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">d</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="n">X_iold</span> <span class="o">-</span> <span class="n">X_old</span> <span class="o">-</span> <span class="n">h</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-        <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_iold</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">g</span><span class="p">)</span>
-        <span class="c1"># update</span>
-        <span class="n">idx</span> <span class="o">+=</span> <span class="mi">1</span>
-
-    <span class="c1"># update</span>
-    <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_iold</span>
-    <span class="n">X_old</span> <span class="o">=</span> <span class="n">X_new</span>
-    <span class="n">t</span> <span class="o">+=</span> <span class="n">h</span>
-</pre></div>
-</div>
-<p>And visualized with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot setup</span>
-<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
-<span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span> <span class="o">=</span> <span class="n">axes</span>
-
-<span class="c1"># solution plot</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">x1_sols</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;prey&#39;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">time</span><span class="p">,</span> <span class="n">x2_sols</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;predator&#39;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;time (arbitrary units)&#39;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;population&#39;</span><span class="p">)</span>
-<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
-
-<span class="c1"># phase plot</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">x1_sols</span><span class="p">,</span> <span class="n">x2_sols</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;prey population&#39;</span><span class="p">)</span>
-<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;predator population&#39;</span><span class="p">)</span>
-
-<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Lotka Volterra System Example&#39;</span><span class="p">)</span>
-</pre></div>
-</div>
-<img alt="_images/test.png" src="_images/test.png" />
-<p>In comparison, making the necessary modifications for the <span class="math notranslate nohighlight">\(s=1\)</span>
-Adam-Moulton method gives:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">ad_old</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">X_old</span><span class="p">)</span>
-<span class="n">D</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span> <span class="o">-</span> <span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">d</span>
-<span class="n">g</span> <span class="o">=</span> <span class="n">X_iold</span> <span class="o">-</span> <span class="n">X_old</span> <span class="o">-</span> <span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">-</span> <span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">ad_old</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-</pre></div>
-</div>
-<img alt="_images/test_ii.png" src="_images/test_ii.png" />
-<p>Using the same exact timestep, the phase curve converges for the higher order
-scheme.</p>
 </div>
 </div>
 

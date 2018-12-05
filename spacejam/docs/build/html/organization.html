@@ -85,7 +85,10 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Software Organization</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#overview-of-main-modules">Overview of main modules</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#tests">Tests</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#virtual-environment">Virtual Environment</a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation Details</a></li>
@@ -198,29 +201,18 @@ TravisCI and Coveralls integration.</p>
 </div>
 <div class="section" id="installation">
 <span id="install"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
-<p>Until <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> is made available on PyPI, the easiest way to install is to
-run everything in a virtual environment.</p>
-<p>First download the <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> repo anywhere onto your computer with:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>git clone git@github.com:cs207-SpaceJam/cs207-FinalProject.git
-</pre></div>
-</div>
-<p>A virtual environment can be created by using the following
-command:</p>
+<div class="section" id="virtual-environment">
+<h3>Virtual Environment<a class="headerlink" href="#virtual-environment" title="Permalink to this headline">¶</a></h3>
+<p>For development, or just to have a self contained enviroment to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code>
+in, run the following commands anywhere on your computer:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>python -m venv venv
-</pre></div>
-</div>
-<p>Next activate the environment by doing:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>source venv/bin/activate
-</pre></div>
-</div>
-<p>Finally, navigate into the root directory (cs207-FinalProject) and install the
-required dependencies (along with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code>).</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pip install -r requirements.txt
+source venv/bin/activate
 </pre></div>
 </div>
 <ul class="simple">
 <li>Check out <a class="reference internal" href="howtouse.html#howto"><span class="std std-ref">How to use</span></a> for a quick tutorial on what you can do.</li>
 </ul>
+</div>
 </div>
 </div>
 

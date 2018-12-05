@@ -179,7 +179,7 @@ an <span class="math notranslate nohighlight">\(m\times k\)</span> <code class="
 <span id="spacejam-autodiff"></span><h3><code class="docutils literal notranslate"><span class="pre">spacejam.autodiff</span></code><a class="headerlink" href="#module-spacejam.autodiff" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="spacejam.autodiff.AutoDiff">
-<em class="property">class </em><code class="descclassname">spacejam.autodiff.</code><code class="descname">AutoDiff</code><span class="sig-paren">(</span><em>func</em>, <em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/autodiff.html#AutoDiff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.autodiff.AutoDiff" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">spacejam.autodiff.</code><code class="descname">AutoDiff</code><span class="sig-paren">(</span><em>func</em>, <em>p</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/autodiff.html#AutoDiff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.autodiff.AutoDiff" title="Permalink to this definition">¶</a></dt>
 <dd><p>Performs automatic differentiation (AD) on functions input by user.</p>
 <p>AD if performed by transforming <cite>f(x1, x2, …)</cite> to <cite>f(p_x1, p_x2, …)</cite>,
 where <cite>p_xi</cite> is returned from <a class="reference internal" href="#spacejam.dual.Dual" title="spacejam.dual.Dual"><code class="xref any py py-class docutils literal notranslate"><span class="pre">spacejam.dual.Dual</span></code></a> .
@@ -217,7 +217,7 @@ functions(s).</p>
 
 <dl class="method">
 <dt id="spacejam.autodiff.AutoDiff.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>func</em>, <em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/autodiff.html#AutoDiff.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.autodiff.AutoDiff.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>func</em>, <em>p</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/autodiff.html#AutoDiff.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.autodiff.AutoDiff.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
@@ -234,7 +234,7 @@ functions(s).</p>
 
 <dl class="method">
 <dt id="spacejam.autodiff.AutoDiff._ad">
-<code class="descname">_ad</code><span class="sig-paren">(</span><em>func</em>, <em>p</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/autodiff.html#AutoDiff._ad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.autodiff.AutoDiff._ad" title="Permalink to this definition">¶</a></dt>
+<code class="descname">_ad</code><span class="sig-paren">(</span><em>func</em>, <em>p</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/autodiff.html#AutoDiff._ad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.autodiff.AutoDiff._ad" title="Permalink to this definition">¶</a></dt>
 <dd><p>Internally computes <cite>func(p)</cite> and its derivative(s).</p>
 <p class="rubric">Notes</p>
 <p><cite>_ad</cite> returns a nested 1D <cite>numpy.ndarray</cite> to be formatted internally
@@ -287,7 +287,7 @@ accordingly in <a class="reference internal" href="#spacejam.autodiff.AutoDiff._
 <span id="spacejam-dual"></span><h3><code class="docutils literal notranslate"><span class="pre">spacejam.dual</span></code><a class="headerlink" href="#module-spacejam.dual" title="Permalink to this headline">¶</a></h3>
 <dl class="class">
 <dt id="spacejam.dual.Dual">
-<em class="property">class </em><code class="descclassname">spacejam.dual.</code><code class="descname">Dual</code><span class="sig-paren">(</span><em>real</em>, <em>dual=1.0</em>, <em>idx=None</em>, <em>x=array(1)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual" title="Permalink to this definition">¶</a></dt>
+<em class="property">class </em><code class="descclassname">spacejam.dual.</code><code class="descname">Dual</code><span class="sig-paren">(</span><em>real</em>, <em>dual=None</em>, <em>idx=None</em>, <em>x=array(1)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual" title="Permalink to this definition">¶</a></dt>
 <dd><p>Creates dual numbers and defines dual number math.</p>
 <p>A real number <cite>a</cite> is taken in and its dual counterpart <cite>a + eps [1.00]</cite> is
 returned to facilitate automatic differentiation in
@@ -359,7 +359,7 @@ derivative <span class="math notranslate nohighlight">\(\partial f / \partial x_
 
 <dl class="method">
 <dt id="spacejam.dual.Dual.__init__">
-<code class="descname">__init__</code><span class="sig-paren">(</span><em>real</em>, <em>dual=1.0</em>, <em>idx=None</em>, <em>x=array(1)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.__init__" title="Permalink to this definition">¶</a></dt>
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>real</em>, <em>dual=None</em>, <em>idx=None</em>, <em>x=array(1)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.__init__" title="Permalink to this definition">¶</a></dt>
 <dd><table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
