@@ -112,12 +112,12 @@ algorithm, but one of its steps requires the computation of the
                          \end{pmatrix} \quad.
 
 .. note:: 
-        We have avoided using superscript notation here because that will be
+        We avoid using superscript notation here because that will be
         reserved for identifying iterates in Newton's method, which we discuss
-        in later sections. 
+        in :ref:`examples`. 
         
         ``spacejam`` can also support systems with a different number of
-        equations than variables, i.e. non-square Jacobians. See :ref:`diii` .
+        equations than variables, i.e. non-square Jacobians. See :ref:`diii`.
 
 Accurately computing the elements of the Jacobian can be numerically expensive,
 so a method to quickly and accurately compute derivatives would be extremely
@@ -129,12 +129,13 @@ differentiation for numerically stable solutions.
 
 We walk through using 
 ``spacejam`` to implement Newton's method for the Backward Euler method and
-its slightly more sophisticated sibling, the :math:`s=1` 
-`Adams Moulton method`_ in :ref:`examples`. Note: :math:`s=0` is just the
+its slightly more sophisticated siblings, the :math:`s=1` and :math:`s=2`
+`Adams-Moulton methods`_ in :ref:`examples`. Note: :math:`s=0` is just the
 original backward Euler method and :math:`s=1` is also know as the famous
-trapezoid rule.
+trapezoid rule. To the best of our knowledge, there is not a cool name for the
+:math:`s=2` method.
 
-.. _Adams Moulton method: https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods
+.. _Adams-Moulton methods: https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods
 
 .. _ad:
 
@@ -202,7 +203,11 @@ where we now have:
 
 This is accomplished internally in ``spacejam.autodiff.Autodiff._ad`` with:
 
-::
+.. literalinclude:: ../../spacejam/autodiff.py
+   :start-at: def _ad
+   :end-at: return result
+
+.. ::
 
         def _ad(self, func, p):                                                                                                     
         """ Internally computes `func(p)` and its derivative(s).                                                                
@@ -222,7 +227,7 @@ This is accomplished internally in ``spacejam.autodiff.Autodiff._ad`` with:
         if len(p) == 1: # scalar p                                                                                              
             p_mult = np.array([dual.Dual(p)])                                                                                   
                                                                                                                                 
-        else:# vector p                                                                                                         
+        else: # vector p                                                                                                         
             p_mult = [dual.Dual(pi, idx=i, x=p) for i, pi in enumerate(p)]                                                      
             p_mult = np.array(p_mult) # convert list to numpy array                                                             
                                                                                                                                 

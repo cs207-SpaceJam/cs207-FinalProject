@@ -88,7 +88,7 @@
 </li>
 <li class="toctree-l1"><a class="reference internal" href="organization.html">Software Organization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation Details</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Application</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
 </ul>
 
@@ -237,11 +237,11 @@ algorithm, but one of its steps requires the computation of the
                  \end{pmatrix} \quad.\end{split}\end{aligned}\end{align} \]</div>
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>We have avoided using superscript notation here because that will be
+<p>We avoid using superscript notation here because that will be
 reserved for identifying iterates in Newton’s method, which we discuss
-in later sections.</p>
+in <a class="reference internal" href="examples.html#examples"><span class="std std-ref">Example Application</span></a>.</p>
 <p class="last"><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> can also support systems with a different number of
-equations than variables, i.e. non-square Jacobians. See <a class="reference internal" href="howtouse.html#diii"><span class="std std-ref">Demo III: Vector function with vector input</span></a> .</p>
+equations than variables, i.e. non-square Jacobians. See <a class="reference internal" href="howtouse.html#diii"><span class="std std-ref">Demo III: Vector function with vector input</span></a>.</p>
 </div>
 <p>Accurately computing the elements of the Jacobian can be numerically expensive,
 so a method to quickly and accurately compute derivatives would be extremely
@@ -252,10 +252,11 @@ which can be used to solve a wide class of problems that depend on implicit
 differentiation for numerically stable solutions.</p>
 <p>We walk through using
 <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> to implement Newton’s method for the Backward Euler method and
-its slightly more sophisticated sibling, the <span class="math notranslate nohighlight">\(s=1\)</span>
-<a class="reference external" href="https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods">Adams Moulton method</a> in <a class="reference internal" href="examples.html#examples"><span class="std std-ref">Example Applications</span></a>. Note: <span class="math notranslate nohighlight">\(s=0\)</span> is just the
+its slightly more sophisticated siblings, the <span class="math notranslate nohighlight">\(s=1\)</span> and <span class="math notranslate nohighlight">\(s=2\)</span>
+<a class="reference external" href="https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods">Adams-Moulton methods</a> in <a class="reference internal" href="examples.html#examples"><span class="std std-ref">Example Application</span></a>. Note: <span class="math notranslate nohighlight">\(s=0\)</span> is just the
 original backward Euler method and <span class="math notranslate nohighlight">\(s=1\)</span> is also know as the famous
-trapezoid rule.</p>
+trapezoid rule. To the best of our knowledge, there is not a cool name for the
+<span class="math notranslate nohighlight">\(s=2\)</span> method.</p>
 </div>
 <div class="section" id="automatic-differentiation-a-brief-overview">
 <span id="ad"></span><h2>Automatic Differentiation: A brief overview<a class="headerlink" href="#automatic-differentiation-a-brief-overview" title="Permalink to this headline">¶</a></h2>
@@ -307,30 +308,34 @@ f(x, y) \quad\longrightarrow\quad&amp; f(\b p) = (x + \epsilon_x + \epsilon_y\ 0
 = f(x, y) + \epsilon \left[\pd{f}{x},\ \pd{f}{y}\right] \\
 &amp;= f(x, y) + \epsilon \nabla f(x, y)\quad.\end{split}\]</div>
 <p>This is accomplished internally in <code class="docutils literal notranslate"><span class="pre">spacejam.autodiff.Autodiff._ad</span></code> with:</p>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_ad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">):</span>
-<span class="sd">&quot;&quot;&quot; Internally computes `func(p)` and its derivative(s).</span>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">_ad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Internally computes `func(p)` and its derivative(s).</span>
+<span class="sd">        </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        `_ad` returns a nested 1D `numpy.ndarray` to be formatted internally</span>
+<span class="sd">        accordingly in :any:`spacejam.autodiff.AutoDiff.__init__`  .</span>
 
-<span class="sd">Notes</span>
-<span class="sd">-----</span>
-<span class="sd">`_ad` returns a nested 1D `numpy.ndarray` to be formatted internally</span>
-<span class="sd">accordingly in :any:`spacejam.autodiff.AutoDiff.__init__`  .</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        func : numpy.ndarray</span>
+<span class="sd">            function(s) specified by user.</span>
+<span class="sd">        p : numpy.ndarray</span>
+<span class="sd">            point(s) specified by user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># scalar p</span>
+            <span class="n">p_mult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dual</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="n">p</span><span class="p">)])</span> 
 
-<span class="sd">Parameters</span>
-<span class="sd">----------</span>
-<span class="sd">func : numpy.ndarray</span>
-<span class="sd">    function(s) specified by user.</span>
-<span class="sd">p : numpy.ndarray</span>
-<span class="sd">    point(s) specified by user.</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># scalar p</span>
-    <span class="n">p_mult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dual</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="n">p</span><span class="p">)])</span>
+        <span class="k">else</span><span class="p">:</span><span class="c1"># vector p</span>
+            <span class="n">p_mult</span> <span class="o">=</span> <span class="p">[</span><span class="n">dual</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
+            <span class="n">p_mult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p_mult</span><span class="p">)</span> <span class="c1"># convert list to numpy array</span>
 
-<span class="k">else</span><span class="p">:</span><span class="c1"># vector p</span>
-    <span class="n">p_mult</span> <span class="o">=</span> <span class="p">[</span><span class="n">dual</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
-    <span class="n">p_mult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p_mult</span><span class="p">)</span> <span class="c1"># convert list to numpy array</span>
-
-<span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">p_mult</span><span class="p">)</span> <span class="c1"># perform AD with specified function(s)</span>
-<span class="k">return</span> <span class="n">result</span>
+        <span class="c1"># perform AD with specified function(s)</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">p_mult</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">p_mult</span><span class="p">)</span> 
+        <span class="k">return</span> <span class="n">result</span>
 </pre></div>
 </div>
 <p>The <code class="docutils literal notranslate"><span class="pre">x</span></code> argument in the <code class="docutils literal notranslate"><span class="pre">spacejam.dual.Dual</span></code> class above sets the length of

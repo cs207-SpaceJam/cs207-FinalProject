@@ -225,7 +225,7 @@ where:
         [5.00 + eps [4.00 1.00] 9.00 + eps [10.00 12.00] 29.00 + eps [1.00 48.00]]
 
 .. note::
-        
+
         You are also free to make your own dual numbers (for example 
         :math:`z = 3 + \epsilon 4`) by doing:
 

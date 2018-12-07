@@ -25,3 +25,9 @@ API
 .. automodule:: spacejam.dual
    :members:
 
+.. _integrators:
+
+``spacejam.integrators``
+~~~~~~~~~~~~~~~~~~~~~~~~
+.. automodule:: spacejam.integrators
+   :members:

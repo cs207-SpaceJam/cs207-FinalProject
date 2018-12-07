@@ -6,8 +6,8 @@ system in question that you would like to evolve can be expressed as a series
 of differential equations. For example, one use in ecology could be the
 modelling the evolution of animal populations, outlined below.
 
-Lotka–Volterra Equations
-------------------------
+Other Systems: Lotka–Volterra Equations
+---------------------------------------
 These are a popular system of differential equations used to describe the
 `dynamics of biological systems`_ where two sets of species (predator and prey)
 interact. The population of each can then be tracked with:
