@@ -4,25 +4,33 @@ Cool tree cartoon of main files:
 
 .. code-block:: text
 
-        ├── LICENSE.rtf
-        ├── MANIFEST.in¶
-        ├── README.md
-        ├── docs
-        │   ├── Makefile
-        │   └── _images
-        │       └── spring.png
+        ├── README.md 
+        ├── setup.py¶
         ├── readthedocs.yml
-        ├── requirements.txt
-        ├── setup.cfg
-        ├── setup.py
-        └── spacejam
-            ├── __init__.py
-            ├── autodiff.py
-            ├── dual.py
-            └── tests
-                ├── dualnumbers_test.py
-                └── init.py
-
+        ├── spacejam 
+        │     └── _pychache_
+   	      ├──build
+	      ├──spacejam
+		    └──_init_.py
+		    └──_pycache_
+		    └──autodiff.py
+		    ├──dual.py
+		    ├──intergrators.py
+		    ├──test
+			└──init.py
+			└──test_autodiff.py
+			└──test_dual.py
+			└──test_integrators.py	
+	      ├──spacejam.egg-info 
+	      ├──docs
+	      ├──LICENSE.txt
+	      ├──MANIFEST.in
+	      ├──README.md
+	      ├──requirements.txt
+	      ├──setup.cfg
+	      ├──setup.py 
+       
+   
 Overview of main modules
 ------------------------
 * ``Dual.py``: Overloads basic math operations and returns an 
