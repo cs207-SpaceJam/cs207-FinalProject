@@ -84,9 +84,9 @@
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Software Organization</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#overview-of-main-modules">Overview of main modules</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#tests">Tests</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#virtual-environment">Virtual Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tests">Tests</a></li>
 </ul>
 </li>
 </ul>
@@ -161,14 +161,18 @@
   <div class="section" id="software-organization">
 <h1>Software Organization<a class="headerlink" href="#software-organization" title="Permalink to this headline">¶</a></h1>
 <p>Cool tree cartoon of main files:</p>
-<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>├── LICENSE.rtf
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>spacejam
+├── LICENSE.txt
 ├── MANIFEST.in¶
 ├── README.md
+├── dist
+│   ├── spacejam-0.0.3-py3-none-any.whl
+│   └── spacejam-0.0.3.tar.gz
 ├── docs
 │   ├── Makefile
-│   └── _images
-│       └── spring.png
-├── readthedocs.yml
+│   └── figs
+│       ├── test.png
+│       └── test_ii.png
 ├── requirements.txt
 ├── setup.cfg
 ├── setup.py
@@ -176,28 +180,25 @@
     ├── __init__.py
     ├── autodiff.py
     ├── dual.py
-    └── tests
-        ├── dualnumbers_test.py
-        └── init.py
+    ├── integrators.py
+    └── test
+        ├── __init__.py
+        ├── test_autodiff.py
+        └── test_dual.py
 </pre></div>
 </div>
 <div class="section" id="overview-of-main-modules">
 <h2>Overview of main modules<a class="headerlink" href="#overview-of-main-modules" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><code class="docutils literal notranslate"><span class="pre">Dual.py</span></code>: Overloads basic math operations and returns an
+<li><code class="docutils literal notranslate"><span class="pre">autodiff.py</span></code>: Performs automatic differentiation of user-specified
+functions by following dual number rules provided by <code class="docutils literal notranslate"><span class="pre">dual.py</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">dual.py</span></code>: Overloads basic math operations and returns an
 automatic differentiation <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> object</li>
-<li><code class="docutils literal notranslate"><span class="pre">DualNumbers_test.py</span></code>: Test harness for class methods in <code class="docutils literal notranslate"><span class="pre">Dual.py</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">integrators.py</span></code>: Suite of implicit integration schemes</li>
+<li><code class="docutils literal notranslate"><span class="pre">test_autodiff.py</span></code>: Test harness for class methods in <code class="docutils literal notranslate"><span class="pre">autodiff.py</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">test_dual.py</span></code>: Test harness for class methods in <code class="docutils literal notranslate"><span class="pre">dual.py</span></code></li>
+<li><code class="docutils literal notranslate"><span class="pre">test_integrators.py</span></code>: coming soon</li>
 </ul>
-</div>
-<div class="section" id="tests">
-<h2>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h2>
-<p>Unit tests are stored in <code class="docutils literal notranslate"><span class="pre">spacejam/tests/DualNumbers.py</span></code> and each
-method in <code class="docutils literal notranslate"><span class="pre">spacejam/Dual.py</span></code> have their own doctests. <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> also has
-TravisCI and Coveralls integration.</p>
-<p>These tests can be run with the following command in the root directory:</p>
-<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>pytest --doctest-modules --cov=. --cov-report term-missing
-</pre></div>
-</div>
 </div>
 <div class="section" id="installation">
 <span id="install"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
@@ -207,11 +208,20 @@ TravisCI and Coveralls integration.</p>
 in, run the following commands anywhere on your computer:</p>
 <div class="highlight-none notranslate"><div class="highlight"><pre><span></span>python -m venv venv
 source venv/bin/activate
+pip install spacejam
 </pre></div>
 </div>
-<ul class="simple">
-<li>Check out <a class="reference internal" href="howtouse.html#howto"><span class="std std-ref">How to use</span></a> for a quick tutorial on what you can do.</li>
-</ul>
+</div>
+<div class="section" id="tests">
+<h3>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h3>
+<p>Unit tests are stored in <code class="docutils literal notranslate"><span class="pre">spacejam/tests</span></code> and each module mentioned above
+has its own doctests. TravisCI and Coveralls integration is also provided. You
+can run these tests and coverage reports yourself by doing the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd venv/lib/python3.7/site-packages/spacejam
+pytest --doctest-modules --cov=. --cov-report term-missing
+</pre></div>
+</div>
+<p>Check out <a class="reference internal" href="howtouse.html#howto"><span class="std std-ref">How to use</span></a> for a quickstart tutorial.</p>
 </div>
 </div>
 </div>

@@ -1,9 +1,10 @@
 Introduction
 ============
-Our problem is to solve a system of equations given initial conditions of the
-system. Our solution to this problem is to use Automatic Differentiation for 
-machine precision computation of derivatives which can be used in the 
-computation of Jacobians involved in implicit differentiation.
+Numerical integration is a powerful tool that can be used to simulate the
+evolution of a wide range of systems. Given the initial conditions of your
+particular system, ``spacejam`` numerically integrates your system using
+pre-baked implicit schemes that are powered by automatic differentiation.
 
-``spacejam`` will apply automatic differentiation to implicitly integrate 
-the orbit of a low mass planet around a massive star.
+In this documentation, we outline the technique of automatic differentiation
+and numerical integration, go through the implicit schemes included in our
+library, and show some neat applications to astronomy and ecology.

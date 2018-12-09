@@ -4,7 +4,7 @@
    contain the root `toctree` directive.
 
 ``spacejam``
-====================================
+============
 for automatic differentiation and other looney things
 
 .. toctree::

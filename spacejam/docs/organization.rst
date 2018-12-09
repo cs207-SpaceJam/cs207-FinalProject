@@ -4,51 +4,46 @@ Cool tree cartoon of main files:
 
 .. code-block:: text
 
-        ├── README.md 
-        ├── setup.py¶
-        ├── readthedocs.yml
-        ├── spacejam 
-        │     └── _pychache_
-   	      ├──build
-	      ├──spacejam
-		    └──_init_.py
-		    └──_pycache_
-		    └──autodiff.py
-		    ├──dual.py
-		    ├──intergrators.py
-		    ├──test
-			└──init.py
-			└──test_autodiff.py
-			└──test_dual.py
-			└──test_integrators.py	
-	      ├──spacejam.egg-info 
-	      ├──docs
-	      ├──LICENSE.txt
-	      ├──MANIFEST.in
-	      ├──README.md
-	      ├──requirements.txt
-	      ├──setup.cfg
-	      ├──setup.py 
-       
-   
+	spacejam
+	├── LICENSE.txt
+	├── MANIFEST.in¶
+	├── README.md
+	├── dist
+	│   ├── spacejam-0.0.3-py3-none-any.whl
+	│   └── spacejam-0.0.3.tar.gz
+	├── docs
+	│   ├── Makefile
+	│   └── figs
+	│       ├── test.png
+	│       └── test_ii.png
+	├── requirements.txt
+	├── setup.cfg
+	├── setup.py
+	└── spacejam
+	    ├── __init__.py
+	    ├── autodiff.py
+	    ├── dual.py
+	    ├── integrators.py
+	    └── test
+		├── __init__.py
+		├── test_autodiff.py
+		└── test_dual.py
+
 Overview of main modules
 ------------------------
-* ``Dual.py``: Overloads basic math operations and returns an 
+* ``autodiff.py``: Performs automatic differentiation of user-specified
+  functions by following dual number rules provided by ``dual.py``
+
+* ``dual.py``: Overloads basic math operations and returns an 
   automatic differentiation ``spacejam`` object
 
-* ``DualNumbers_test.py``: Test harness for class methods in ``Dual.py``
+* ``integrators.py``: Suite of implicit integration schemes
 
-Tests
------
-Unit tests are stored in ``spacejam/tests/DualNumbers.py`` and each
-method in ``spacejam/Dual.py`` have their own doctests. ``spacejam`` also has
-TravisCI and Coveralls integration.
+* ``test_autodiff.py``: Test harness for class methods in ``autodiff.py``
 
-These tests can be run with the following command in the root directory:
+* ``test_dual.py``: Test harness for class methods in ``dual.py``
 
-.. code-block:: none
-
-        pytest --doctest-modules --cov=. --cov-report term-missing
+* ``test_integrators.py``: coming soon
 
 .. _install:
 
@@ -63,6 +58,17 @@ in, run the following commands anywhere on your computer:
                                                                                     
         python -m venv venv                                                         
         source venv/bin/activate                                                    
+        pip install spacejam
 
+Tests
+~~~~~
+Unit tests are stored in ``spacejam/tests`` and each module mentioned above
+has its own doctests. TravisCI and Coveralls integration is also provided. You
+can run these tests and coverage reports yourself by doing the following:
 
-* Check out :ref:`howto` for a quick tutorial on what you can do.
+.. code-block:: none
+
+        cd venv/lib/python3.7/site-packages/spacejam
+        pytest --doctest-modules --cov=. --cov-report term-missing
+
+Check out :ref:`howto` for a quickstart tutorial.

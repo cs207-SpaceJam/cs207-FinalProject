@@ -155,14 +155,18 @@
 <span class="sd">    Adams-Moulton orders (i.e. s = 0, 1, 2).</span>
 <span class="sd">    See: https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods</span>
 
-<span class="sd">    Attributes</span>
-<span class="sd">    ----------</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="k">pass</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pass</span> <span class="o">=</span> <span class="mi">0</span>
 
-    <span class="k">def</span> <span class="nf">amso</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">1E-3</span><span class="p">,</span> <span class="n">X_tol</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span> <span class="n">i_tol</span><span class="o">=</span><span class="mf">1E2</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Integrators.amso"><a class="viewcode-back" href="../../implementation.html#spacejam.integrators.Integrators.amso">[docs]</a>    <span class="k">def</span> <span class="nf">amso</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">1E-3</span><span class="p">,</span> <span class="n">X_tol</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span> <span class="n">i_tol</span><span class="o">=</span><span class="mf">1E2</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; (s=0) Adams-Moulton method</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        yea: yea yea</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -195,9 +199,9 @@
 
         <span class="c1"># update</span>
         <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_iold</span>
-        <span class="k">return</span> <span class="n">X_new</span>
+        <span class="k">return</span> <span class="n">X_new</span></div>
 
-    <span class="k">def</span> <span class="nf">amsi</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">1E-3</span><span class="p">,</span> <span class="n">X_tol</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span> <span class="n">i_tol</span><span class="o">=</span><span class="mf">1E2</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">amsi</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">1E-3</span><span class="p">,</span> <span class="n">X_tol</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span> <span class="n">i_tol</span><span class="o">=</span><span class="mf">1E2</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
@@ -232,7 +236,7 @@
         <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_iold</span>
         <span class="k">return</span> <span class="n">X_new</span>
 
-    <span class="k">def</span> <span class="nf">amsii</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_n</span><span class="p">,</span> <span class="n">X_nn</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">1E-3</span><span class="p">,</span> <span class="n">X_tol</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span> <span class="n">i_tol</span><span class="o">=</span><span class="mf">1E2</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">def</span> <span class="nf">amsii</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">X_n</span><span class="p">,</span> <span class="n">X_nn</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">1E-3</span><span class="p">,</span> <span class="n">X_tol</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span> <span class="n">i_tol</span><span class="o">=</span><span class="mf">1E2</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
             <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_n</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>

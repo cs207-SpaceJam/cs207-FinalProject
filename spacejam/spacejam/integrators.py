@@ -6,14 +6,18 @@ class Integrators():
     Adams-Moulton orders (i.e. s = 0, 1, 2).
     See: https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods
 
-    Attributes
-    ----------
     """
 
     def __init__(self):
-        pass
+        self._pass = 0
 
-    def amso(func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
+    def amso(self, func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
+        """ (s=0) Adams-Moulton method
+
+        Parameters
+        ----------
+        yea: yea yea
+        """
         if kwargs:
             ad = autodiff.AutoDiff(func, X_old, kwargs=kwargs)
         else:
@@ -48,7 +52,7 @@ class Integrators():
         X_new = X_iold
         return X_new
 
-    def amsi(func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
+    def amsi(self, func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
         if kwargs:
             ad = autodiff.AutoDiff(func, X_old, kwargs=kwargs)
         else:
@@ -83,7 +87,7 @@ class Integrators():
         X_new = X_iold
         return X_new
 
-    def amsii(func, X_n, X_nn, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
+    def amsii(self, func, X_n, X_nn, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
         if kwargs:
             ad = autodiff.AutoDiff(func, X_n, kwargs=kwargs)
         else:
