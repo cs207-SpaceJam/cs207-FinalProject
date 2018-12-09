@@ -569,5 +569,5 @@ Conclusions about predator/prey system here.
         examples in our main `repo`_
 
         .. _`ffmeg`: https://www.ffmpeg.org/
-        .. _`notebook`: 
+        .. _`notebook`: http://nbviewer.jupyter.org/github/cs207-SpaceJam/cs207-FinalProject/blob/master/demo.ipynb?flush_cache=true
         .. _`repo`: https://github.com/cs207-SpaceJam/cs207-FinalProject 
