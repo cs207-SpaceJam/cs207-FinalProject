@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Example Application &mdash; spacejam 0.0.1 documentation</title>
+  <title>Example Applications &mdash; spacejam 0.0.1 documentation</title>
   
 
   
@@ -84,14 +84,15 @@
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="organization.html">Software Organization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation Details</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Example Application</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Example Applications</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#background">Background</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#s-0-method">(s = 0) Method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#s-1-method">(s = 1) Method</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#s-2-method">(s = 2) Method</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#exomoon">Exomoon</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#astronomy-example">Astronomy Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id1">Background</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#initial-conditions">Initial Conditions</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#equations-of-motion">Equations of Motion</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#simulation">Simulation</a><ul>
@@ -100,6 +101,18 @@
 <li class="toctree-l4"><a class="reference internal" href="#s-2">(s = 2)</a></li>
 </ul>
 </li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#ecology-example">Ecology Example</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id2">Background</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">Initial Conditions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#equations-of-population-growth">Equations of population growth?</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">Simulation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#id5">(s = 0) Method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id6">(s = 1) Method</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id7">(s = 2) Method</a></li>
 </ul>
 </li>
 </ul>
@@ -150,7 +163,7 @@
     
       <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Example Application</li>
+      <li>Example Applications</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -169,35 +182,16 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="example-application">
-<span id="examples"></span><h1>Example Application<a class="headerlink" href="#example-application" title="Permalink to this headline">¶</a></h1>
+  <div class="section" id="example-applications">
+<span id="examples"></span><h1>Example Applications<a class="headerlink" href="#example-applications" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="background">
 <h2>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> can be used to simulate a wide range of physical systems. Below
-we look at one particular application: integrating the orbits of a hypothetical
-three-body star-planet-moon exoplanetary system. This exercise is motivated by
-the first potential discovery of an exomoon made <a class="reference external" href="https://www.space.com/42008-first-exomoon-discovery-kepler-1625b.html">not too long ago</a>.</p>
-<p>In 2D Cartesian coordinates, the equations of motion that govern the orbit of
-body <span class="math notranslate nohighlight">\(A\)</span> due to bodies <span class="math notranslate nohighlight">\(B\)</span> and <span class="math notranslate nohighlight">\(C\)</span> are:</p>
-<div class="math notranslate nohighlight">
-\[\begin{split}&amp;\bullet \dot x_A = v_{x_A} \\
-&amp;\bullet \dot y_A = v_{y_A} \\
-&amp;\bullet \dot v_{x_A} = \frac{G m_B}{d_{AB}^3}(x_B - x_A)
-                      + \frac{G m_C}{d_{AC}}(x_C - x_A) \\
-&amp;\bullet \dot v_{y_A} = \frac{G m_B}{d_{AB}^3}(y_B - y_A)
-                      + \frac{G m_C}{d_{AC}}(y_C - y_A) \quad,\end{split}\]</div>
-<p>where the following definitions are given:</p>
-<ul class="simple">
-<li><span class="math notranslate nohighlight">\((x_i, y_i)\)</span>: positional coordinates of body <span class="math notranslate nohighlight">\(i\)</span>, with
-mass <span class="math notranslate nohighlight">\(m_i\)</span></li>
-<li><span class="math notranslate nohighlight">\((v_{x_i}, v_{y_i})\)</span>: components of bodi <span class="math notranslate nohighlight">\(i\)</span>’s velocity</li>
-<li><span class="math notranslate nohighlight">\(d_{ij}\)</span>: distance between body <span class="math notranslate nohighlight">\(i\)</span> and body <span class="math notranslate nohighlight">\(j\)</span></li>
-<li><span class="math notranslate nohighlight">\(G\)</span>: Universal Gravitational Constant (as far as we know)</li>
-</ul>
-<p>We provide an integration suite of implicit solvers that draw from the first
-three orders of the <a class="reference external" href="https://en.wikipedia.org/wiki/Linear_multistep_method#Adamss%E2%80%93Moulton_methods">Adams-Moulton</a> methods in <a class="reference internal" href="implementation.html#module-spacejam.integrators" title="spacejam.integrators"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">spacejam.integrators</span></code></a>. We use the
-root finding Newton-Raphson method with an initial forward Euler guess solve
-each implicit scheme, which we outline in the section below.</p>
+<p><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> can be used to simulate a wide range of physical systems. To
+accomplish this, we provide an integration suite of implicit solvers that draw
+from the first three orders of the <a class="reference external" href="https://en.wikipedia.org/wiki/Linear_multistep_method#Adamss%E2%80%93Moulton_methods">Adams-Moulton</a> methods. These methods can
+be accessed from <a class="reference internal" href="implementation.html#module-spacejam.integrators" title="spacejam.integrators"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">spacejam.integrators</span></code></a> and each use the root finding
+Newton-Raphson method with an initial forward Euler guess. We will now describe
+each implicit scheme and how to go about using it with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code>.</p>
 <div class="section" id="s-0-method">
 <h3>(s = 0) Method<a class="headerlink" href="#s-0-method" title="Permalink to this headline">¶</a></h3>
 <p>As we saw in <a class="reference internal" href="background.html#numerical"><span class="std std-ref">Numerical Integration: A brief crash couse</span></a>, this is a numerical scheme to solve the implicit
@@ -313,14 +307,37 @@ Jacobian in the backward and now <code class="docutils literal notranslate"><spa
 - \frac{1}{12} \b{\dot X_{n-1}}\right) \quad, \\
 \b D &amp;= \b I - \frac{5h}{12}
 \b J\left[\left(\b {\dot X_{n+1}}\right)^{(i)}\right] \quad .\end{split}\]</div>
-<p>We demonstrate each method for our toy exomoon system next.</p>
+<p>We demonstrate each method in our example systems below.</p>
 </div>
 </div>
-<div class="section" id="exomoon">
-<h2>Exomoon<a class="headerlink" href="#exomoon" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="astronomy-example">
+<h2>Astronomy Example<a class="headerlink" href="#astronomy-example" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id1">
+<h3>Background<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h3>
+<p>In this example, we will integrate the orbits of a hypothetical
+three-body star-planet-moon system. This exercise is motivated by
+the first potential discovery of an exomoon made <a class="reference external" href="https://www.space.com/42008-first-exomoon-discovery-kepler-1625b.html">not too long ago</a>.</p>
+<p>In 2D Cartesian coordinates, the equations of motion that govern the orbit of
+body <span class="math notranslate nohighlight">\(A\)</span> due to bodies <span class="math notranslate nohighlight">\(B\)</span> and <span class="math notranslate nohighlight">\(C\)</span> are:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}&amp;\bullet \dot x_A = v_{x_A} \\
+&amp;\bullet \dot y_A = v_{y_A} \\
+&amp;\bullet \dot v_{x_A} = \frac{G m_B}{d_{AB}^3}(x_B - x_A)
+                      + \frac{G m_C}{d_{AC}}(x_C - x_A) \\
+&amp;\bullet \dot v_{y_A} = \frac{G m_B}{d_{AB}^3}(y_B - y_A)
+                      + \frac{G m_C}{d_{AC}}(y_C - y_A) \quad,\end{split}\]</div>
+<p>where the following definitions are given:</p>
+<ul class="simple">
+<li><span class="math notranslate nohighlight">\((x_i, y_i)\)</span>: positional coordinates of body <span class="math notranslate nohighlight">\(i\)</span>, with
+mass <span class="math notranslate nohighlight">\(m_i\)</span></li>
+<li><span class="math notranslate nohighlight">\((v_{x_i}, v_{y_i})\)</span>: components of bodi <span class="math notranslate nohighlight">\(i\)</span>’s velocity</li>
+<li><span class="math notranslate nohighlight">\(d_{ij}\)</span>: distance between body <span class="math notranslate nohighlight">\(i\)</span> and body <span class="math notranslate nohighlight">\(j\)</span></li>
+<li><span class="math notranslate nohighlight">\(G\)</span>: Universal Gravitational Constant (as far as we know)</li>
+</ul>
 <p>We will be using an external package <a class="reference external" href="http://www.astropy.org/">(astropy)</a> that is not included in
 <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> for this demonstration. This step is totally optional, but it
 makes using units and physical constants a lot more convenient.</p>
+</div>
 <div class="section" id="initial-conditions">
 <h3>Initial Conditions<a class="headerlink" href="#initial-conditions" title="Permalink to this headline">¶</a></h3>
 <p>For this toy model, let’s place a <span class="math notranslate nohighlight">\(10\)</span> Jupiter mass exoplanet
@@ -337,11 +354,11 @@ direction. note: this would be the sum of the exoplanet’s velocity and the
 Keplerian speed of the moon due to just the gravitational influence of the
 exoplanet.</p>
 <p>Finally, let’s pick a time step that goes something like a tenth of the time it
-would initially take the exomoon to fall straight into the planet if it didn’t happen to
-have any Keplerian speed. To a certain extent, this choice is pretty arbitrary
-because of implicit scheme’s relative insensitivity to time step size relative to
-those for explicit schemes, although our implicit solving implementation does
-partially rely on an explicit scheme.</p>
+would initially take the exomoon to fall straight into the planet if it didn’t
+happen to have any Keplerian speed. To a certain extent, this choice is pretty
+arbitrary because of implicit schemes’ relative insensitivity to time step size
+relative to those for explicit schemes, but our implicit solving implementation
+does partially rely on an explicit scheme, so it’s still important to consider.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
 <span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">units</span> <span class="k">as</span> <span class="n">u</span>
 <span class="kn">from</span> <span class="nn">astropy</span> <span class="kn">import</span> <span class="n">constants</span> <span class="k">as</span> <span class="n">c</span>
@@ -579,7 +596,55 @@ with the following snippet below:</p>
 </pre></div>
 </div>
 </div>
+<p>Interestingly, all things being equal, the <span class="math notranslate nohighlight">\(s=1\)</span> method happens to
+perform the best.</p>
 </div>
+</div>
+</div>
+<div class="section" id="ecology-example">
+<h2>Ecology Example<a class="headerlink" href="#ecology-example" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id2">
+<h3>Background<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h3>
+<p>In this example, we look at a popular system of differential equations used to
+describe the <a class="reference external" href="https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations">dynamics of biological systems</a> where two sets of species
+(predator and prey) interact. The population of each can be tracked with:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\od}[2]{\frac{\mathrm d #1}{\mathrm d #2}}
+\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}\\\begin{split}\od{x}{t} &amp;= \dot x = \alpha x - \beta xy\quad, \\
+\od{y}{t} &amp;= \dot y = \delta xy - \gamma y\quad,\end{split}\end{aligned}\end{align} \]</div>
+<p>where,</p>
+<ul class="simple">
+<li><span class="math notranslate nohighlight">\(x\)</span>: number of prey</li>
+<li><span class="math notranslate nohighlight">\(y\)</span>: number of predators</li>
+<li><span class="math notranslate nohighlight">\(\dot x\)</span> and <span class="math notranslate nohighlight">\(\dot y\)</span>: instantaneous growth rate of the prey and
+predator populations, respectively</li>
+<li>TODO: say more about <span class="math notranslate nohighlight">\(\alpha,\beta,\delta,\gamma\)</span></li>
+</ul>
+</div>
+</div>
+<div class="section" id="id3">
+<h2>Initial Conditions<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>prey and predator stuff</p>
+</div>
+<div class="section" id="equations-of-population-growth">
+<h2>Equations of population growth?<a class="headerlink" href="#equations-of-population-growth" title="Permalink to this headline">¶</a></h2>
+<p>code for L-V system</p>
+</div>
+<div class="section" id="id4">
+<h2>Simulation<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>code for sim run</p>
+<div class="section" id="id5">
+<h3>(s = 0) Method<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<p>rinse</p>
+</div>
+<div class="section" id="id6">
+<h3>(s = 1) Method<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<p>and</p>
+</div>
+<div class="section" id="id7">
+<h3>(s = 2) Method<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<p>repeat</p>
+<p>Conclusions about predator/prey system here.</p>
 </div>
 </div>
 </div>

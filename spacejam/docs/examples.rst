@@ -1,41 +1,16 @@
 .. _examples:
 
-Example Application
-===================
+Example Applications
+====================
 
 Background
 ----------
-``spacejam`` can be used to simulate a wide range of physical systems. Below
-we look at one particular application: integrating the orbits of a hypothetical 
-three-body star-planet-moon exoplanetary system. This exercise is motivated by
-the first potential discovery of an exomoon made `not too long ago`_.
-
-.. _not too long ago: https://www.space.com/42008-first-exomoon-discovery-kepler-1625b.html
-
-In 2D Cartesian coordinates, the equations of motion that govern the orbit of
-body :math:`A` due to bodies :math:`B` and :math:`C` are:
-
-.. math::
-        &\bullet \dot x_A = v_{x_A} \\
-        &\bullet \dot y_A = v_{y_A} \\
-        &\bullet \dot v_{x_A} = \frac{G m_B}{d_{AB}^3}(x_B - x_A) 
-                              + \frac{G m_C}{d_{AC}}(x_C - x_A) \\
-        &\bullet \dot v_{y_A} = \frac{G m_B}{d_{AB}^3}(y_B - y_A) 
-                              + \frac{G m_C}{d_{AC}}(y_C - y_A) \quad,
-
-where the following definitions are given: 
-
-* :math:`(x_i, y_i)`: positional coordinates of body :math:`i`, with
-  mass :math:`m_i`
-* :math:`(v_{x_i}, v_{y_i})`: components of bodi :math:`i`'s velocity
-* :math:`d_{ij}`: distance between body :math:`i` and body :math:`j`
-* :math:`G`: Universal Gravitational Constant (as far as we know)
-
-
-We provide an integration suite of implicit solvers that draw from the first
-three orders of the `Adams-Moulton`_ methods in :any:`spacejam.integrators`. We use the
-root finding Newton-Raphson method with an initial forward Euler guess solve
-each implicit scheme, which we outline in the section below.
+``spacejam`` can be used to simulate a wide range of physical systems. To
+accomplish this, we provide an integration suite of implicit solvers that draw
+from the first three orders of the `Adams-Moulton`_ methods. These methods can
+be accessed from :any:`spacejam.integrators` and each use the root finding
+Newton-Raphson method with an initial forward Euler guess. We will now describe
+each implicit scheme and how to go about using it with ``spacejam``.
 
 .. _`Adams-Moulton`: https://en.wikipedia.org/wiki/Linear_multistep_method#Adamss%E2%80%93Moulton_methods
 
@@ -186,10 +161,38 @@ The corresponding :math:`\b g` and :math:`\b D` are then:
         \b D &= \b I - \frac{5h}{12} 
         \b J\left[\left(\b {\dot X_{n+1}}\right)^{(i)}\right] \quad .
 
-We demonstrate each method for our toy exomoon system next.
+We demonstrate each method in our example systems below.
 
-Exomoon
--------
+Astronomy Example
+-----------------
+
+Background
+~~~~~~~~~~
+In this example, we will integrate the orbits of a hypothetical 
+three-body star-planet-moon system. This exercise is motivated by
+the first potential discovery of an exomoon made `not too long ago`_.
+
+.. _not too long ago: https://www.space.com/42008-first-exomoon-discovery-kepler-1625b.html
+
+In 2D Cartesian coordinates, the equations of motion that govern the orbit of
+body :math:`A` due to bodies :math:`B` and :math:`C` are:
+
+.. math::
+        &\bullet \dot x_A = v_{x_A} \\
+        &\bullet \dot y_A = v_{y_A} \\
+        &\bullet \dot v_{x_A} = \frac{G m_B}{d_{AB}^3}(x_B - x_A) 
+                              + \frac{G m_C}{d_{AC}}(x_C - x_A) \\
+        &\bullet \dot v_{y_A} = \frac{G m_B}{d_{AB}^3}(y_B - y_A) 
+                              + \frac{G m_C}{d_{AC}}(y_C - y_A) \quad,
+
+where the following definitions are given: 
+
+* :math:`(x_i, y_i)`: positional coordinates of body :math:`i`, with
+  mass :math:`m_i`
+* :math:`(v_{x_i}, v_{y_i})`: components of bodi :math:`i`'s velocity
+* :math:`d_{ij}`: distance between body :math:`i` and body :math:`j`
+* :math:`G`: Universal Gravitational Constant (as far as we know)
+
 We will be using an external package `(astropy)`_ that is not included in
 ``spacejam`` for this demonstration. This step is totally optional, but it
 makes using units and physical constants a lot more convenient. 
@@ -214,11 +217,11 @@ Keplerian speed of the moon due to just the gravitational influence of the
 exoplanet.
 
 Finally, let's pick a time step that goes something like a tenth of the time it
-would initially take the exomoon to fall straight into the planet if it didn't happen to
-have any Keplerian speed. To a certain extent, this choice is pretty arbitrary
-because of implicit scheme's relative insensitivity to time step size relative to
-those for explicit schemes, although our implicit solving implementation does
-partially rely on an explicit scheme.
+would initially take the exomoon to fall straight into the planet if it didn't
+happen to have any Keplerian speed. To a certain extent, this choice is pretty
+arbitrary because of implicit schemes' relative insensitivity to time step size
+relative to those for explicit schemes, but our implicit solving implementation
+does partially rely on an explicit scheme, so it's still important to consider.
 
 .. _gravitational sphere of influence: https://en.wikipedia.org/wiki/Hill_sphere
 
@@ -473,3 +476,59 @@ integrators to produce the following orbits.
                 ax.plot(X_3[:,0]/a_0, X_3[:,1]/a_0, label='exomoon')
 
                 ax.legend()
+
+Interestingly, all things being equal, the :math:`s=1` method happens to
+perform the best.
+
+Ecology Example
+---------------
+
+Background
+~~~~~~~~~~
+In this example, we look at a popular system of differential equations used to
+describe the `dynamics of biological systems`_ where two sets of species
+(predator and prey) interact. The population of each can be tracked with:
+
+.. _dynamics of biological systems: https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations
+
+.. math::
+        \newcommand{\od}[2]{\frac{\mathrm d #1}{\mathrm d #2}}
+        \newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
+
+        \od{x}{t} &= \dot x = \alpha x - \beta xy\quad, \\
+        \od{y}{t} &= \dot y = \delta xy - \gamma y\quad,
+
+where,
+
+- :math:`x`: number of prey
+- :math:`y`: number of predators
+- :math:`\dot x` and :math:`\dot y`: instantaneous growth rate of the prey and
+  predator populations, respectively 
+- TODO: say more about :math:`\alpha,\beta,\delta,\gamma`
+
+
+Initial Conditions
+------------------
+prey and predator stuff
+
+Equations of population growth?
+-------------------------------
+code for L-V system
+
+Simulation
+----------
+code for sim run
+
+(s = 0) Method
+~~~~~~~~~~~~~~
+rinse
+
+(s = 1) Method
+~~~~~~~~~~~~~~
+and
+
+(s = 2) Method
+~~~~~~~~~~~~~~
+repeat
+
+Conclusions about predator/prey system here.

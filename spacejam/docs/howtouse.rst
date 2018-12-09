@@ -188,7 +188,7 @@ Internally, for each :math:`i` th entry, in the 1D ``numpy`` array
 the Jacobian :math:`\mathbf J` evaluated at 
 :math:`\mathbf p = (x_1, x_2) = (1,2)` .
 
-This is done in ``spacejam._matrix`` for you with:
+This is done in :any:`spacejam.autodiff.AutoDiff._matrix` for you with:
 
 .. testcode::
 
@@ -214,7 +214,7 @@ This is done in ``spacejam._matrix`` for you with:
          [10.00 12.00]
          [1.00 48.00]]
 
-where:
+where ``ad._full`` looks like:
 
 .. testcode::
 
@@ -227,7 +227,7 @@ where:
 .. note::
 
         You are also free to make your own dual numbers (for example 
-        :math:`z = 3 + \epsilon 4`) by doing:
+        :math:`z = 3 + \epsilon\ 4`) by doing:
 
         .. testcode::
 

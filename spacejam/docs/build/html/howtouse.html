@@ -89,7 +89,7 @@
 <li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="organization.html">Software Organization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation Details</a></li>
-<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Application</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Applications</a></li>
 <li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
 </ul>
 
@@ -309,7 +309,7 @@ Jacobian of F(x) evaluated at p:
 <span class="math notranslate nohighlight">\(\mathbf{F}(\mathbf{p})\)</span> and the dual part is the corresponding row in
 the Jacobian <span class="math notranslate nohighlight">\(\mathbf J\)</span> evaluated at
 <span class="math notranslate nohighlight">\(\mathbf p = (x_1, x_2) = (1,2)\)</span> .</p>
-<p>This is done in <code class="docutils literal notranslate"><span class="pre">spacejam._matrix</span></code> for you with:</p>
+<p>This is done in <a class="reference internal" href="implementation.html#spacejam.autodiff.AutoDiff._matrix" title="spacejam.autodiff.AutoDiff._matrix"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">spacejam.autodiff.AutoDiff._matrix</span></code></a> for you with:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Fs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">F</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># initialze empty F(p)</span>
 <span class="n">jac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">F</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="p">))</span> <span class="c1"># initialize empty J F(p)</span>
 
@@ -331,7 +331,7 @@ formated J F(p):
  [1.00 48.00]]
 </pre></div>
 </div>
-<p>where:</p>
+<p>where <code class="docutils literal notranslate"><span class="pre">ad._full</span></code> looks like:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">_full</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -341,7 +341,7 @@ formated J F(p):
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>You are also free to make your own dual numbers (for example
-<span class="math notranslate nohighlight">\(z = 3 + \epsilon 4\)</span>) by doing:</p>
+<span class="math notranslate nohighlight">\(z = 3 + \epsilon\ 4\)</span>) by doing:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
 
 <span class="k">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
