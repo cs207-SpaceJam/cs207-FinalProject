@@ -4,15 +4,31 @@ from . import dual, autodiff
 """ Suite of implicit integrators. These methods include the first three
 Adams-Moulton orders (i.e. s = 0, 1, 2).
 See: https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods
-
 """
 
 def amso(func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
-    """ (s=0) Adams-Moulton method
+    """ Zeroth order Adams-Moulton method (AKA Backward Euler)
 
     Parameters
     ----------
-    yea: yea yea
+    func : function
+        User defined function to be integrated.
+    X_old : numpy.ndarray
+            Initial input to user function
+    h : float (default 1E-3)
+        Timestep
+    X_tol : float (default 1E-1)
+            Minimum difference between Newton-Raphson iterates to terminate on.
+    i_tol : int (default 1E2)
+            Maximum number of Newton-Raphson iterations. Entire simulation
+            terminates if this number is exceeded.
+    kwargs : dict (default None)
+             optional arguments to be supplied to user defined function. 
+
+    Returns
+    -------
+    X_new : numpy.ndarray
+            Final X_n+1 found from root finding of implicit method
     """
     if kwargs:
         ad = autodiff.AutoDiff(func, X_old, kwargs=kwargs)
@@ -49,6 +65,29 @@ def amso(func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
     return X_new
 
 def amsi(func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
+    """ First order Adams-Moulton method (AKA Trapezoid)
+
+    Parameters
+    ----------
+    func : function
+        User defined function to be integrated.
+    X_old : numpy.ndarray
+            Initial input to user function
+    h : float (default 1E-3)
+        Timestep
+    X_tol : float (default 1E-1)
+            Minimum difference between Newton-Raphson iterates to terminate on.
+    i_tol : int (default 1E2)
+            Maximum number of Newton-Raphson iterations. Entire simulation
+            terminates if this number is exceeded.
+    kwargs : dict (default None)
+             optional arguments to be supplied to user defined function. 
+
+    Returns
+    -------
+    X_new : numpy.ndarray
+            Final X_n+1 found from root finding of implicit method
+    """
     if kwargs:
         ad = autodiff.AutoDiff(func, X_old, kwargs=kwargs)
     else:
@@ -84,6 +123,31 @@ def amsi(func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
     return X_new
 
 def amsii(func, X_n, X_nn, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
+    """ Second order Adams-Moulton method
+
+    Parameters
+    ----------
+    func : function
+        User defined function to be integrated.
+    X_n : numpy.ndarray
+          X_n
+    X_nn : numpy.ndarray
+           X_n-1
+    h : float (default 1E-3)
+        Timestep
+    X_tol : float (default 1E-1)
+            Minimum difference between Newton-Raphson iterates to terminate on.
+    i_tol : int (default 1E2)
+            Maximum number of Newton-Raphson iterations. Entire simulation
+            terminates if this number is exceeded.
+    kwargs : dict (default None)
+             optional arguments to be supplied to user defined function. 
+
+    Returns
+    -------
+    X_new : numpy.ndarray
+            Final X_n+1 found from root finding of implicit method
+    """
     if kwargs:
         ad = autodiff.AutoDiff(func, X_n, kwargs=kwargs)
     else:
@@ -104,8 +168,8 @@ def amsii(func, X_n, X_nn, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
             sys.exit('solution did not converge')
 
         ad = autodiff.AutoDiff(func, X_iold, kwargs=kwargs) # get Jacobian (ad.d)
-        ad_n = autodiff.AutoDiff(func, X_n, kwargs=kwargs) # for X_n
-        ad_nn = autodiff.AutoDiff(func, X_nn, kwargs=kwargs) # for X_n-1
+        ad_n = autodiff.AutoDiff(func, X_n, kwargs=kwargs) # X_n
+        ad_nn = autodiff.AutoDiff(func, X_nn, kwargs=kwargs) # X_n-1
         I = np.eye(len(ad.r.flatten()))
         D = I - (5*h/12)*ad.d
         g1 = X_iold
@@ -115,6 +179,7 @@ def amsii(func, X_n, X_nn, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
         g5 = -(h/12)*ad_nn.r.flatten()
         g = g1 + g2 + g3 + g4 + g5
         X_inew = X_iold - np.dot(np.linalg.pinv(D), g)
+
         # update
         i += 1
 

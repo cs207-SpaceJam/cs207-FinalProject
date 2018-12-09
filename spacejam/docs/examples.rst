@@ -161,6 +161,14 @@ The corresponding :math:`\b g` and :math:`\b D` are then:
         \b D &= \b I - \frac{5h}{12} 
         \b J\left[\left(\b {\dot X_{n+1}}\right)^{(i)}\right] \quad .
 
+.. note:: 
+        
+        Each of the three methods above are implemented in
+        :any:`spacejam.integrators`. The tolerance determining when to end
+        Newton-Raphsons iterations and the break point in number of iterations
+        can also respectively be controlled by the keyword arguments ``X_tol``
+        and ``i_tol`` in all integrator functions.
+
 We demonstrate each method in our example systems below.
 
 Astronomy Example
@@ -189,7 +197,7 @@ where the following definitions are given:
 
 * :math:`(x_i, y_i)`: positional coordinates of body :math:`i`, with
   mass :math:`m_i`
-* :math:`(v_{x_i}, v_{y_i})`: components of bodi :math:`i`'s velocity
+* :math:`(v_{x_i}, v_{y_i})`: components of body :math:`i`'s velocity
 * :math:`d_{ij}`: distance between body :math:`i` and body :math:`j`
 * :math:`G`: Universal Gravitational Constant (as far as we know)
 
@@ -507,7 +515,7 @@ of energy of the fact that this initial conditions truly lead to a stable
 system is up for further investigation. An analysis of the change in total
 energy and angular momentum of the system each step in the simulation would be
 a good diagnostic to see which integration scheme is giving the most accurate
-results.
+results. 
 
 Ecology Example
 ---------------

@@ -307,6 +307,14 @@ Jacobian in the backward and now <code class="docutils literal notranslate"><spa
 - \frac{1}{12} \b{\dot X_{n-1}}\right) \quad, \\
 \b D &amp;= \b I - \frac{5h}{12}
 \b J\left[\left(\b {\dot X_{n+1}}\right)^{(i)}\right] \quad .\end{split}\]</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Each of the three methods above are implemented in
+<a class="reference internal" href="implementation.html#module-spacejam.integrators" title="spacejam.integrators"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">spacejam.integrators</span></code></a>. The tolerance determining when to end
+Newton-Raphsons iterations and the break point in number of iterations
+can also respectively be controlled by the keyword arguments <code class="docutils literal notranslate"><span class="pre">X_tol</span></code>
+and <code class="docutils literal notranslate"><span class="pre">i_tol</span></code> in all integrator functions.</p>
+</div>
 <p>We demonstrate each method in our example systems below.</p>
 </div>
 </div>
@@ -330,7 +338,7 @@ body <span class="math notranslate nohighlight">\(A\)</span> due to bodies <span
 <ul class="simple">
 <li><span class="math notranslate nohighlight">\((x_i, y_i)\)</span>: positional coordinates of body <span class="math notranslate nohighlight">\(i\)</span>, with
 mass <span class="math notranslate nohighlight">\(m_i\)</span></li>
-<li><span class="math notranslate nohighlight">\((v_{x_i}, v_{y_i})\)</span>: components of bodi <span class="math notranslate nohighlight">\(i\)</span>’s velocity</li>
+<li><span class="math notranslate nohighlight">\((v_{x_i}, v_{y_i})\)</span>: components of body <span class="math notranslate nohighlight">\(i\)</span>’s velocity</li>
 <li><span class="math notranslate nohighlight">\(d_{ij}\)</span>: distance between body <span class="math notranslate nohighlight">\(i\)</span> and body <span class="math notranslate nohighlight">\(j\)</span></li>
 <li><span class="math notranslate nohighlight">\(G\)</span>: Universal Gravitational Constant (as far as we know)</li>
 </ul>

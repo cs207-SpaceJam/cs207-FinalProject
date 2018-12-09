@@ -785,14 +785,88 @@ A specialized __rsub__ is required.</p>
 <div class="section" id="module-spacejam.integrators">
 <span id="spacejam-integrators"></span><span id="integrators"></span><h3><code class="docutils literal notranslate"><span class="pre">spacejam.integrators</span></code><a class="headerlink" href="#module-spacejam.integrators" title="Permalink to this headline">¶</a></h3>
 <dl class="function">
-<dt id="spacejam.integrators.amso">
-<code class="descclassname">spacejam.integrators.</code><code class="descname">amso</code><span class="sig-paren">(</span><em>func</em>, <em>X_old</em>, <em>h=0.001</em>, <em>X_tol=0.1</em>, <em>i_tol=100.0</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/integrators.html#amso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.integrators.amso" title="Permalink to this definition">¶</a></dt>
-<dd><p>(s=0) Adams-Moulton method</p>
+<dt id="spacejam.integrators.amsi">
+<code class="descclassname">spacejam.integrators.</code><code class="descname">amsi</code><span class="sig-paren">(</span><em>func</em>, <em>X_old</em>, <em>h=0.001</em>, <em>X_tol=0.1</em>, <em>i_tol=100.0</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/integrators.html#amsi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.integrators.amsi" title="Permalink to this definition">¶</a></dt>
+<dd><p>First order Adams-Moulton method (AKA Trapezoid)</p>
 <table class="docutils field-list" frame="void" rules="none">
 <col class="field-name" />
 <col class="field-body" />
 <tbody valign="top">
-<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>yea</strong> (<em>yea yea</em>) – </td>
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>func</strong> (<em>function</em>) – User defined function to be integrated.</li>
+<li><strong>X_old</strong> (<em>numpy.ndarray</em>) – Initial input to user function</li>
+<li><strong>h</strong> (<em>float</em><em> (</em><em>default 1E-3</em><em>)</em>) – Timestep</li>
+<li><strong>X_tol</strong> (<em>float</em><em> (</em><em>default 1E-1</em><em>)</em>) – Minimum difference between Newton-Raphson iterates to terminate on.</li>
+<li><strong>i_tol</strong> (<em>int</em><em> (</em><em>default 1E2</em><em>)</em>) – Maximum number of Newton-Raphson iterations. Entire simulation
+terminates if this number is exceeded.</li>
+<li><strong>kwargs</strong> (<em>dict</em><em> (</em><em>default None</em><em>)</em>) – optional arguments to be supplied to user defined function.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X_new</strong> – Final X_n+1 found from root finding of implicit method</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="spacejam.integrators.amsii">
+<code class="descclassname">spacejam.integrators.</code><code class="descname">amsii</code><span class="sig-paren">(</span><em>func</em>, <em>X_n</em>, <em>X_nn</em>, <em>h=0.001</em>, <em>X_tol=0.1</em>, <em>i_tol=100.0</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/integrators.html#amsii"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.integrators.amsii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Second order Adams-Moulton method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>func</strong> (<em>function</em>) – User defined function to be integrated.</li>
+<li><strong>X_n</strong> (<em>numpy.ndarray</em>) – X_n</li>
+<li><strong>X_nn</strong> (<em>numpy.ndarray</em>) – X_n-1</li>
+<li><strong>h</strong> (<em>float</em><em> (</em><em>default 1E-3</em><em>)</em>) – Timestep</li>
+<li><strong>X_tol</strong> (<em>float</em><em> (</em><em>default 1E-1</em><em>)</em>) – Minimum difference between Newton-Raphson iterates to terminate on.</li>
+<li><strong>i_tol</strong> (<em>int</em><em> (</em><em>default 1E2</em><em>)</em>) – Maximum number of Newton-Raphson iterations. Entire simulation
+terminates if this number is exceeded.</li>
+<li><strong>kwargs</strong> (<em>dict</em><em> (</em><em>default None</em><em>)</em>) – optional arguments to be supplied to user defined function.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X_new</strong> – Final X_n+1 found from root finding of implicit method</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="spacejam.integrators.amso">
+<code class="descclassname">spacejam.integrators.</code><code class="descname">amso</code><span class="sig-paren">(</span><em>func</em>, <em>X_old</em>, <em>h=0.001</em>, <em>X_tol=0.1</em>, <em>i_tol=100.0</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/integrators.html#amso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.integrators.amso" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zeroth order Adams-Moulton method (AKA Backward Euler)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>func</strong> (<em>function</em>) – User defined function to be integrated.</li>
+<li><strong>X_old</strong> (<em>numpy.ndarray</em>) – Initial input to user function</li>
+<li><strong>h</strong> (<em>float</em><em> (</em><em>default 1E-3</em><em>)</em>) – Timestep</li>
+<li><strong>X_tol</strong> (<em>float</em><em> (</em><em>default 1E-1</em><em>)</em>) – Minimum difference between Newton-Raphson iterates to terminate on.</li>
+<li><strong>i_tol</strong> (<em>int</em><em> (</em><em>default 1E2</em><em>)</em>) – Maximum number of Newton-Raphson iterations. Entire simulation
+terminates if this number is exceeded.</li>
+<li><strong>kwargs</strong> (<em>dict</em><em> (</em><em>default None</em><em>)</em>) – optional arguments to be supplied to user defined function.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X_new</strong> – Final X_n+1 found from root finding of implicit method</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
 </tr>
 </tbody>
 </table>
