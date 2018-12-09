@@ -33,7 +33,7 @@ where the following definitions are given:
 
 
 We provide an integration suite of implicit solvers that draw from the first
-three orders of the `Adams-Moulton`_ methods in :ref:`integrators`. We use the
+three orders of the `Adams-Moulton`_ methods in :any:`spacejam.integrators`. We use the
 root finding Newton-Raphson method with an initial forward Euler guess solve
 each implicit scheme, which we outline in the section below.
 

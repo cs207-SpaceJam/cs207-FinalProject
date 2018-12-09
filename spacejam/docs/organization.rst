@@ -31,19 +31,13 @@ Cool tree cartoon of main files:
 
 Overview of main modules
 ------------------------
-* ``autodiff.py``: Performs automatic differentiation of user-specified
-  functions by following dual number rules provided by ``dual.py``
+* :any:`spacejam.autodiff`: Performs automatic differentiation of user-specified
+  functions by following dual number rules provided by :any:`spacejam.dual`
 
-* ``dual.py``: Overloads basic math operations and returns an 
+* :any:`spacejam.dual`: Overloads basic math operations and returns an 
   automatic differentiation ``spacejam`` object
 
-* ``integrators.py``: Suite of implicit integration schemes
-
-* ``test_autodiff.py``: Test harness for class methods in ``autodiff.py``
-
-* ``test_dual.py``: Test harness for class methods in ``dual.py``
-
-* ``test_integrators.py``: coming soon
+* :any:`spacejam.integrators`: Suite of implicit integration schemes
 
 .. _install:
 
