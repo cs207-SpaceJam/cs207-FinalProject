@@ -29,7 +29,7 @@ setuptools.setup(
                           'pytest-cov~=2.6.0',
                           'python-dateutil~=2.7.5',
                           'six~=1.11.0'
-        ]
+        ],
         classifiers=[
         "Programming Language :: Python :: 3",
         "License :: OSI Approved :: MIT License",
