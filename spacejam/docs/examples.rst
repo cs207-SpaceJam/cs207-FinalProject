@@ -361,19 +361,24 @@ integrators to produce the following orbits.
 
         for n in range(N-1): 
             kwargs_1 = {'uold_b': X_2[n], 'mb': m_2, 'uold_c': X_3[n], 'mc': m_3}
-            X_1[n+1] = sj.Integrators.amso(f, X_1[n], h=h, kwargs=kwargs_1)
+            X_1[n+1] = sj.integrators.amso(f, X_1[n], h=h, kwargs=kwargs_1)
 
             kwargs_2 = {'uold_b': X_1[n], 'mb': m_1, 'uold_c': X_3[n], 'mc': m_3}
-            X_2[n+1] = sj.Integrators.amso(f, X_2[n], h=h, kwargs=kwargs_2)
+            X_2[n+1] = sj.integrators.amso(f, X_2[n], h=h, kwargs=kwargs_2)
 
             kwargs_3 = {'uold_b': X_1[n], 'mb': m_1, 'uold_c': X_2[n], 'mc': m_2}
-            X_3[n+1] = sj.Integrators.amso(f, X_3[n], h=h, kwargs=kwargs_3)
+            X_3[n+1] = sj.integrators.amso(f, X_3[n], h=h, kwargs=kwargs_3)
 
             # stop iterating if Newton-Raphson method does not converge
             if X_1[n+1] is None or X_2[n+1] is None or X_3[n+1] is None:
                 break
 
 .. image:: _static/s0.png
+
+.. note::
+
+        Axes are scaled by the initial distance of the exoplanet from its host
+        star and oriented in the usual XY fashion.
 
 
 (s = 1)
@@ -390,13 +395,13 @@ integrators to produce the following orbits.
 
         for n in range(N-1): 
             kwargs_1 = {'uold_b': X_2[n], 'mb': m_2, 'uold_c': X_3[n], 'mc': m_3}
-            X_1[n+1] = sj.Integrators.amsi(f, X_1[n], h=h, kwargs=kwargs_1)
+            X_1[n+1] = sj.integrators.amsi(f, X_1[n], h=h, kwargs=kwargs_1)
 
             kwargs_2 = {'uold_b': X_1[n], 'mb': m_1, 'uold_c': X_3[n], 'mc': m_3}
-            X_2[n+1] = sj.Integrators.amsi(f, X_2[n], h=h, kwargs=kwargs_2)
+            X_2[n+1] = sj.integrators.amsi(f, X_2[n], h=h, kwargs=kwargs_2)
 
             kwargs_3 = {'uold_b': X_1[n], 'mb': m_1, 'uold_c': X_2[n], 'mc': m_2}
-            X_3[n+1] = sj.Integrators.amsi(f, X_3[n], h=h, kwargs=kwargs_3)
+            X_3[n+1] = sj.integrators.amsi(f, X_3[n], h=h, kwargs=kwargs_3)
 
             # stop iterating if Newton-Raphson method does not converge
             if X_1[n+1] is None or X_2[n+1] is None or X_3[n+1] is None:
@@ -404,6 +409,20 @@ integrators to produce the following orbits.
 
 
 .. image:: _static/s1.png
+
+
+Static images can be a bit difficult to interpret, so we also included a
+stylized movie. 
+
+.. raw:: html
+
+   <video controls src="_static/orb.mp4" width="620" height="620">
+           </video>
+
+.. note::
+
+        Everything is still scaled by the initial distance of the exoplanet
+        from its star.
 
 (s = 2)
 +++++++
@@ -433,15 +452,15 @@ integrators to produce the following orbits.
 
         for n in range(1, N-1): 
             kwargs_1 = {'uold_b': X_2[n], 'mb': m_2, 'uold_c': X_3[n], 'mc': m_3}
-            X_1[n+1] = sj.Integrators.amsii(f, X_1[n], X_1[n-1], 
+            X_1[n+1] = sj.integrators.amsii(f, X_1[n], X_1[n-1], 
                                             h=h, kwargs=kwargs_1)
 
             kwargs_2 = {'uold_b': X_1[n], 'mb': m_1, 'uold_c': X_3[n], 'mc': m_3}
-            X_2[n+1] = sj.Integrators.amsii(f, X_2[n], X_2[n-1], 
+            X_2[n+1] = sj.integrators.amsii(f, X_2[n], X_2[n-1], 
                                             h=h, kwargs=kwargs_2)
 
             kwargs_3 = {'uold_b': X_1[n], 'mb': m_1, 'uold_c': X_2[n], 'mc': m_2}
-            X_3[n+1] = sj.Integrators.amsii(f, X_3[n], X_3[n-1], 
+            X_3[n+1] = sj.integrators.amsii(f, X_3[n], X_3[n-1], 
                                             h=h, kwargs=kwargs_3)
 
             # stop iterating if Newton-Raphson method does not converge
@@ -464,21 +483,31 @@ integrators to produce the following orbits.
                 import seaborn as sns
 
                 sns.set_style('darkgrid')
-                sns.set_palette('colorblind')
 
                 fig, ax = plt.subplots(figsize=(6, 6))
                 ax.set_aspect('equal', 'datalim')
 
+                # normalize plot axes
                 a_0 = np.linalg.norm(m2_coord)
 
-                ax.plot(X_1[:,0]/a_0, X_1[:,1]/a_0, label='star')
-                ax.plot(X_2[:,0]/a_0, X_2[:,1]/a_0, label='exoplanet')
-                ax.plot(X_3[:,0]/a_0, X_3[:,1]/a_0, label='exomoon')
+                # custom colors
+                c1 = sns.xkcd_palette(["pinkish orange"])[0]
+                c2 = sns.xkcd_palette(["amber"])[0]
+                c3 = sns.xkcd_palette(["windows blue"])[0]
+
+                ax.plot(X_1[:,0]/a_0, X_1[:,1]/a_0, c=c1, label='star')
+                ax.plot(X_2[:,0]/a_0, X_2[:,1]/a_0, c=c2, label='exoplanet')
+                ax.plot(X_3[:,0]/a_0, X_3[:,1]/a_0, c=c3, label='exomoon')
 
                 ax.legend()
 
-Interestingly, all things being equal, the :math:`s=1` method happens to
-perform the best.
+Interestingly, all things being equal, the :math:`s=1` method happens to be the
+only method that gives stable orbits. Whether this is due to numerical damping
+of energy of the fact that this initial conditions truly lead to a stable
+system is up for further investigation. An analysis of the change in total
+energy and angular momentum of the system each step in the simulation would be
+a good diagnostic to see which integration scheme is giving the most accurate
+results.
 
 Ecology Example
 ---------------
@@ -532,3 +561,13 @@ and
 repeat
 
 Conclusions about predator/prey system here.
+
+.. note::
+
+        Movies were made with ``matplotlib.animation`` using its `ffmeg`_
+        integration. We have included a sample `notebook`_ demoing the above
+        examples in our main `repo`_
+
+        .. _`ffmeg`: https://www.ffmpeg.org/
+        .. _`notebook`: 
+        .. _`repo`: https://github.com/cs207-SpaceJam/cs207-FinalProject 

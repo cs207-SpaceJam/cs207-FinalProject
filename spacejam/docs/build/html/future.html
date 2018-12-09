@@ -151,7 +151,29 @@
             
   <div class="section" id="future">
 <h1>Future<a class="headerlink" href="#future" title="Permalink to this headline">¶</a></h1>
-<p>Copy from presentation slide</p>
+<ul class="simple">
+<li>Improve UI<ul>
+<li>Read in user-defined equations (e.g. json, yaml)</li>
+</ul>
+</li>
+<li>Generalize algorithms<ul>
+<li>Add support for systems with time-dependent system of equations</li>
+<li>Add IMEX schemes to integration suite</li>
+</ul>
+</li>
+<li>Add vector support<ul>
+<li>Make <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> object indexable so you can do stuff like this:</li>
+</ul>
+</li>
+</ul>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Z</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">Dual</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">z</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mf">1.00</span> <span class="o">+</span> <span class="n">eps</span> <span class="mf">3.00</span><span class="p">,</span> <span class="mf">2.00</span> <span class="o">+</span> <span class="n">eps</span> <span class="mf">4.00</span>
+</pre></div>
+</div>
 </div>
 
 
