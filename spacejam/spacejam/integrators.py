@@ -39,7 +39,6 @@ def amso(func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
     X_new = X_old + h*ad.r.flatten() # X_{n+1}^(0)
     
     # Iterate to better solution for X_new using Newton-Raphson method
-    # on backward Euler implementation
     X_iold = X_old
     X_inew = X_new
     i = 0
@@ -97,7 +96,6 @@ def amsi(func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
     X_new = X_old + h*ad.r.flatten() # X_{n+1}^(0)
     
     # Iterate to better solution for X_new using Newton-Raphson method
-    # on backward Euler implementation
     X_iold = X_old
     X_inew = X_new
     i = 0
@@ -157,7 +155,6 @@ def amsii(func, X_n, X_nn, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
     X_new = X_n + h*ad.r.flatten() # X_{n+1}^(0)
     
     # Iterate to better solution for X_new using Newton-Raphson method
-    # on backward Euler implementation
     X_iold = X_n
     X_inew = X_new
     i = 0
