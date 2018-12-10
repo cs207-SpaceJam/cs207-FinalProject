@@ -148,6 +148,7 @@
             
   <h1>Source code for spacejam.integrators</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">dual</span><span class="p">,</span> <span class="n">autodiff</span>
 
 <span class="sd">&quot;&quot;&quot; Suite of implicit integrators. These methods include the first three</span>
@@ -178,7 +179,11 @@
 <span class="sd">    -------</span>
 <span class="sd">    X_new : numpy.ndarray</span>
 <span class="sd">            Final X_n+1 found from root finding of implicit method</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; </span>
+<span class="sd">    &quot;&quot;&quot;</span> 
     <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
         <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
@@ -188,7 +193,6 @@
     <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_old</span> <span class="o">+</span> <span class="n">h</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="c1"># X_{n+1}^(0)</span>
     
     <span class="c1"># Iterate to better solution for X_new using Newton-Raphson method</span>
-    <span class="c1"># on backward Euler implementation</span>
     <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_old</span>
     <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_new</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -196,8 +200,9 @@
         <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_inew</span>
 
         <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">i_tol</span><span class="p">:</span>
-            <span class="c1"># print(&#39;solution did not converge&#39;)</span>
-            <span class="k">return</span> <span class="kc">None</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Sorry, spacejam did not converge for s=0 A-M method.</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;Try adjusting X_tol or i_tol.&quot;</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_iold</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># get Jacobian (ad.d)</span>
         <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
@@ -246,7 +251,6 @@
     <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_old</span> <span class="o">+</span> <span class="n">h</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="c1"># X_{n+1}^(0)</span>
     
     <span class="c1"># Iterate to better solution for X_new using Newton-Raphson method</span>
-    <span class="c1"># on backward Euler implementation</span>
     <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_old</span>
     <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_new</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -254,7 +258,10 @@
         <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_inew</span>
 
         <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">i_tol</span><span class="p">:</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;solution did not converge&#39;</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Sorry, spacejam did not converge for s=1 A-M method.</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;Try adjusting X_tol or i_tol.&quot;</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+             
 
         <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_iold</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># get Jacobian (ad.d)</span>
         <span class="n">ad_n</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># for X_n</span>
@@ -306,7 +313,6 @@
     <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_n</span> <span class="o">+</span> <span class="n">h</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="c1"># X_{n+1}^(0)</span>
     
     <span class="c1"># Iterate to better solution for X_new using Newton-Raphson method</span>
-    <span class="c1"># on backward Euler implementation</span>
     <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_n</span>
     <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_new</span>
     <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
@@ -314,7 +320,9 @@
         <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_inew</span>
 
         <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">i_tol</span><span class="p">:</span>
-            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="s1">&#39;solution did not converge&#39;</span><span class="p">)</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Sorry, spacejam did not converge for s=2 A-M method.</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;Try adjusting X_tol or i_tol.&quot;</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_iold</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># get Jacobian (ad.d)</span>
         <span class="n">ad_n</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_n</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># X_n</span>
@@ -322,11 +330,11 @@
         <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
         <span class="n">D</span> <span class="o">=</span> <span class="n">I</span> <span class="o">-</span> <span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="n">h</span><span class="o">/</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">d</span>
         <span class="n">g1</span> <span class="o">=</span> <span class="n">X_iold</span>
-        <span class="n">g2</span> <span class="o">=</span> <span class="o">-</span><span class="n">X_n</span>
-        <span class="n">g3</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="n">h</span><span class="o">/</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-        <span class="n">g4</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="mi">2</span><span class="o">*</span><span class="n">h</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">ad_n</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-        <span class="n">g5</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="n">ad_nn</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
-        <span class="n">g</span> <span class="o">=</span> <span class="n">g1</span> <span class="o">+</span> <span class="n">g2</span> <span class="o">+</span> <span class="n">g3</span> <span class="o">+</span> <span class="n">g4</span> <span class="o">+</span> <span class="n">g5</span>
+        <span class="n">g2</span> <span class="o">=</span> <span class="n">X_n</span>
+        <span class="n">g3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="o">/</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">g4</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">ad_n</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">g5</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="n">ad_nn</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">g1</span> <span class="o">-</span> <span class="n">g2</span> <span class="o">-</span> <span class="n">h</span><span class="o">*</span><span class="p">(</span><span class="n">g3</span> <span class="o">+</span> <span class="n">g4</span> <span class="o">-</span> <span class="n">g5</span><span class="p">)</span>
         <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_iold</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">g</span><span class="p">)</span>
 
         <span class="c1"># update</span>

@@ -165,7 +165,7 @@ The corresponding :math:`\b g` and :math:`\b D` are then:
         
         Each of the three methods above are implemented in
         :any:`spacejam.integrators`. The tolerance determining when to end
-        Newton-Raphsons iterations and the break point in number of iterations
+        Newton-Raphson iterations and the break point in number of iterations
         can also respectively be controlled by the keyword arguments ``X_tol``
         and ``i_tol`` in all integrator functions.
 
@@ -545,27 +545,28 @@ where,
 
 
 Initial Conditions
-------------------
+~~~~~~~~~~~~~~~~~~
 prey and predator stuff
 
+
 Equations of population growth?
--------------------------------
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 code for L-V system
 
 Simulation
-----------
+~~~~~~~~~~
 code for sim run
 
 (s = 0) Method
-~~~~~~~~~~~~~~
+++++++++++++++
 rinse
 
 (s = 1) Method
-~~~~~~~~~~~~~~
+++++++++++++++
 and
 
 (s = 2) Method
-~~~~~~~~~~~~~~
+++++++++++++++
 repeat
 
 Conclusions about predator/prey system here.

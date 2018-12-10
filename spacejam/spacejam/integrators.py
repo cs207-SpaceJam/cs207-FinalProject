@@ -1,4 +1,5 @@
 import numpy as np
+import sys
 from . import dual, autodiff
 
 """ Suite of implicit integrators. These methods include the first three
@@ -50,8 +51,9 @@ def amso(func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
         X_iold = X_inew
 
         if i > i_tol:
-            # print('solution did not converge')
-            return None
+            msg = "\nSorry, spacejam did not converge for s=0 A-M method.\n" \
+                  "Try adjusting X_tol or i_tol."
+            sys.exit(msg)
 
         ad = autodiff.AutoDiff(func, X_iold, kwargs=kwargs) # get Jacobian (ad.d)
         I = np.eye(len(ad.r.flatten()))
@@ -107,7 +109,10 @@ def amsi(func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
         X_iold = X_inew
 
         if i > i_tol:
-            sys.exit('solution did not converge')
+            msg = "\nSorry, spacejam did not converge for s=1 A-M method.\n" \
+                  "Try adjusting X_tol or i_tol."
+            sys.exit(msg)
+             
 
         ad = autodiff.AutoDiff(func, X_iold, kwargs=kwargs) # get Jacobian (ad.d)
         ad_n = autodiff.AutoDiff(func, X_old, kwargs=kwargs) # for X_n
@@ -166,7 +171,9 @@ def amsii(func, X_n, X_nn, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
         X_iold = X_inew
 
         if i > i_tol:
-            sys.exit('solution did not converge')
+            msg = "\nSorry, spacejam did not converge for s=2 A-M method.\n" \
+                  "Try adjusting X_tol or i_tol."
+            sys.exit(msg)
 
         ad = autodiff.AutoDiff(func, X_iold, kwargs=kwargs) # get Jacobian (ad.d)
         ad_n = autodiff.AutoDiff(func, X_n, kwargs=kwargs) # X_n
@@ -174,11 +181,11 @@ def amsii(func, X_n, X_nn, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
         I = np.eye(len(ad.r.flatten()))
         D = I - (5*h/12)*ad.d
         g1 = X_iold
-        g2 = -X_n
-        g3 = -(5*h/12)*ad.r.flatten()
-        g4 = -(2*h/3)*ad_n.r.flatten()
-        g5 = -(h/12)*ad_nn.r.flatten()
-        g = g1 + g2 + g3 + g4 + g5
+        g2 = X_n
+        g3 = (5/12)*ad.r.flatten()
+        g4 = (2/3)*ad_n.r.flatten()
+        g5 = (1/12)*ad_nn.r.flatten()
+        g = g1 - g2 - h*(g3 + g4 - g5)
         X_inew = X_iold - np.dot(np.linalg.pinv(D), g)
 
         # update

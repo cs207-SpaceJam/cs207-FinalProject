@@ -105,14 +105,14 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#ecology-example">Ecology Example</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id2">Background</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id3">Initial Conditions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#equations-of-population-growth">Equations of population growth?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#id4">Simulation</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#id5">(s = 0) Method</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id6">(s = 1) Method</a></li>
+<li class="toctree-l4"><a class="reference internal" href="#id7">(s = 2) Method</a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">Initial Conditions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#equations-of-population-growth">Equations of population growth?</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id4">Simulation</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#id5">(s = 0) Method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id6">(s = 1) Method</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#id7">(s = 2) Method</a></li>
 </ul>
 </li>
 </ul>
@@ -311,7 +311,7 @@ Jacobian in the backward and now <code class="docutils literal notranslate"><spa
 <p class="first admonition-title">Note</p>
 <p class="last">Each of the three methods above are implemented in
 <a class="reference internal" href="implementation.html#module-spacejam.integrators" title="spacejam.integrators"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">spacejam.integrators</span></code></a>. The tolerance determining when to end
-Newton-Raphsons iterations and the break point in number of iterations
+Newton-Raphson iterations and the break point in number of iterations
 can also respectively be controlled by the keyword arguments <code class="docutils literal notranslate"><span class="pre">X_tol</span></code>
 and <code class="docutils literal notranslate"><span class="pre">i_tol</span></code> in all integrator functions.</p>
 </div>
@@ -652,28 +652,27 @@ predator populations, respectively</li>
 <li>TODO: say more about <span class="math notranslate nohighlight">\(\alpha,\beta,\delta,\gamma\)</span></li>
 </ul>
 </div>
-</div>
 <div class="section" id="id3">
-<h2>Initial Conditions<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<h3>Initial Conditions<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
 <p>prey and predator stuff</p>
 </div>
 <div class="section" id="equations-of-population-growth">
-<h2>Equations of population growth?<a class="headerlink" href="#equations-of-population-growth" title="Permalink to this headline">¶</a></h2>
+<h3>Equations of population growth?<a class="headerlink" href="#equations-of-population-growth" title="Permalink to this headline">¶</a></h3>
 <p>code for L-V system</p>
 </div>
 <div class="section" id="id4">
-<h2>Simulation<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<h3>Simulation<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
 <p>code for sim run</p>
 <div class="section" id="id5">
-<h3>(s = 0) Method<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h3>
+<h4>(s = 0) Method<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
 <p>rinse</p>
 </div>
 <div class="section" id="id6">
-<h3>(s = 1) Method<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h3>
+<h4>(s = 1) Method<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
 <p>and</p>
 </div>
 <div class="section" id="id7">
-<h3>(s = 2) Method<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h3>
+<h4>(s = 2) Method<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
 <p>repeat</p>
 <p>Conclusions about predator/prey system here.</p>
 <div class="admonition note">
@@ -681,6 +680,7 @@ predator populations, respectively</li>
 <p class="last">Movies were made with <code class="docutils literal notranslate"><span class="pre">matplotlib.animation</span></code> using its <a class="reference external" href="https://www.ffmpeg.org/">ffmeg</a>
 integration. We have included a sample <a class="reference external" href="http://nbviewer.jupyter.org/github/cs207-SpaceJam/cs207-FinalProject/blob/master/demo.ipynb?flush_cache=true">notebook</a> demoing the above
 examples in our main <a class="reference external" href="https://github.com/cs207-SpaceJam/cs207-FinalProject">repo</a></p>
+</div>
 </div>
 </div>
 </div>
