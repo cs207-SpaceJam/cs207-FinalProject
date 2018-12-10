@@ -52,7 +52,7 @@ def amso(func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
 
         if i > i_tol:
             msg = "\nSorry, spacejam did not converge for s=0 A-M method.\n" \
-                  "Try adjusting X_tol or i_tol."
+                  "Try adjusting X_tol, i_tol, or using another integrator."
             sys.exit(msg)
 
         ad = autodiff.AutoDiff(func, X_iold, kwargs=kwargs) # get Jacobian (ad.d)
@@ -110,7 +110,7 @@ def amsi(func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
 
         if i > i_tol:
             msg = "\nSorry, spacejam did not converge for s=1 A-M method.\n" \
-                  "Try adjusting X_tol or i_tol."
+                  "Try adjusting X_tol, i_tol, or using another integrator."
             sys.exit(msg)
              
 
@@ -172,7 +172,7 @@ def amsii(func, X_n, X_nn, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
 
         if i > i_tol:
             msg = "\nSorry, spacejam did not converge for s=2 A-M method.\n" \
-                  "Try adjusting X_tol or i_tol."
+                  "Try adjusting X_tol, i_tol, or using another integrator."
             sys.exit(msg)
 
         ad = autodiff.AutoDiff(func, X_iold, kwargs=kwargs) # get Jacobian (ad.d)
