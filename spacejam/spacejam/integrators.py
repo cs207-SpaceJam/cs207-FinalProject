@@ -29,7 +29,11 @@ def amso(func, X_old, h=1E-3, X_tol=1E-1, i_tol=1E2, kwargs=None):
     -------
     X_new : numpy.ndarray
             Final X_n+1 found from root finding of implicit method
-    """
+
+    Examples
+    --------
+    >>> 
+    """ 
     if kwargs:
         ad = autodiff.AutoDiff(func, X_old, kwargs=kwargs)
     else:
