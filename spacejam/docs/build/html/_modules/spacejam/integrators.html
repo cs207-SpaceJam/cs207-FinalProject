@@ -201,7 +201,7 @@
 
         <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">i_tol</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Sorry, spacejam did not converge for s=0 A-M method.</span><span class="se">\n</span><span class="s2">&quot;</span> \
-                  <span class="s2">&quot;Try adjusting X_tol or i_tol.&quot;</span>
+                  <span class="s2">&quot;Try adjusting X_tol, i_tol, or using another integrator.&quot;</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_iold</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># get Jacobian (ad.d)</span>
@@ -259,7 +259,7 @@
 
         <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">i_tol</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Sorry, spacejam did not converge for s=1 A-M method.</span><span class="se">\n</span><span class="s2">&quot;</span> \
-                  <span class="s2">&quot;Try adjusting X_tol or i_tol.&quot;</span>
+                  <span class="s2">&quot;Try adjusting X_tol, i_tol, or using another integrator.&quot;</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
              
 
@@ -321,7 +321,7 @@
 
         <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">i_tol</span><span class="p">:</span>
             <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Sorry, spacejam did not converge for s=2 A-M method.</span><span class="se">\n</span><span class="s2">&quot;</span> \
-                  <span class="s2">&quot;Try adjusting X_tol or i_tol.&quot;</span>
+                  <span class="s2">&quot;Try adjusting X_tol, i_tol, or using another integrator.&quot;</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
         <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_iold</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># get Jacobian (ad.d)</span>

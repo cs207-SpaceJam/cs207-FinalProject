@@ -517,6 +517,15 @@ integrators to produce the following orbits.</p>
 <p class="last">Axes are scaled by the initial distance of the exoplanet from its host
 star and oriented in the usual XY fashion.</p>
 </div>
+<p>This integratin scheme actually fails partway through the simulation.
+<code class="docutils literal notranslate"><span class="pre">spacejam</span></code> provides the following suggestions to fix this in its error
+message:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>SystemExit:
+Sorry, spacejam did not converge for s=0 A-M method.
+Try adjusting X_tol, i_tol, or using another integrator.
+</pre></div>
+</div>
+<p>We will follow the last suggestion and use the higher order s=1 scheme instead.</p>
 </div>
 <div class="section" id="s-1">
 <h4>(s = 1)<a class="headerlink" href="#s-1" title="Permalink to this headline">¶</a></h4>
@@ -543,14 +552,7 @@ star and oriented in the usual XY fashion.</p>
 </pre></div>
 </div>
 <img alt="_images/s1.png" src="_images/s1.png" />
-<p>Static images can be a bit difficult to interpret, so we also included a
-stylized movie.</p>
-<video controls src="_static/orb.mp4" width="620" height="620">
-        </video><div class="admonition note">
-<p class="first admonition-title">Note</p>
-<p class="last">Everything is still scaled by the initial distance of the exoplanet
-from its star.</p>
-</div>
+<p>It works! Let’s go up another order.</p>
 </div>
 <div class="section" id="s-2">
 <h4>(s = 2)<a class="headerlink" href="#s-2" title="Permalink to this headline">¶</a></h4>
@@ -622,13 +624,17 @@ with the following snippet below:</p>
 </pre></div>
 </div>
 </div>
-<p>Interestingly, all things being equal, the <span class="math notranslate nohighlight">\(s=1\)</span> method happens to be the
-only method that gives stable orbits. Whether this is due to numerical damping
-of energy of the fact that this initial conditions truly lead to a stable
-system is up for further investigation. An analysis of the change in total
-energy and angular momentum of the system each step in the simulation would be
-a good diagnostic to see which integration scheme is giving the most accurate
-results.</p>
+<p>Static images can be a bit difficult to interpret, so we also included a
+stylized movie.</p>
+<video controls src="_static/orb.mp4" width="620" height="620">
+        </video><div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last">Everything is still scaled by the initial distance of the exoplanet
+from its star.</p>
+</div>
+<p>An analysis of the change in total energy and angular momentum of the system
+each step in the simulation would be a good diagnostic to see which integration
+scheme is actually giving the most accurate results.</p>
 </div>
 </div>
 </div>

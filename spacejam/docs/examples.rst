@@ -388,6 +388,17 @@ integrators to produce the following orbits.
         Axes are scaled by the initial distance of the exoplanet from its host
         star and oriented in the usual XY fashion.
 
+This integratin scheme actually fails partway through the simulation.
+``spacejam`` provides the following suggestions to fix this in its error
+message:
+
+.. code-block:: none
+
+        SystemExit: 
+        Sorry, spacejam did not converge for s=0 A-M method.
+        Try adjusting X_tol, i_tol, or using another integrator.
+
+We will follow the last suggestion and use the higher order s=1 scheme instead.
 
 (s = 1)
 +++++++
@@ -418,19 +429,7 @@ integrators to produce the following orbits.
 
 .. image:: _static/s1.png
 
-
-Static images can be a bit difficult to interpret, so we also included a
-stylized movie. 
-
-.. raw:: html
-
-   <video controls src="_static/orb.mp4" width="620" height="620">
-           </video>
-
-.. note::
-
-        Everything is still scaled by the initial distance of the exoplanet
-        from its star.
+It works! Let's go up another order.
 
 (s = 2)
 +++++++
@@ -509,13 +508,22 @@ stylized movie.
 
                 ax.legend()
 
-Interestingly, all things being equal, the :math:`s=1` method happens to be the
-only method that gives stable orbits. Whether this is due to numerical damping
-of energy of the fact that this initial conditions truly lead to a stable
-system is up for further investigation. An analysis of the change in total
-energy and angular momentum of the system each step in the simulation would be
-a good diagnostic to see which integration scheme is giving the most accurate
-results. 
+Static images can be a bit difficult to interpret, so we also included a
+stylized movie for the final plot. 
+
+.. raw:: html
+
+   <video controls src="_static/orb.mp4" width="620" height="620">
+           </video>
+
+.. note::
+
+        Everything is still scaled by the initial distance of the exoplanet
+        from its star.
+
+An analysis of the change in total energy and angular momentum of the system
+each step in the simulation would be a good diagnostic to see which integration
+scheme is actually giving the most accurate results. 
 
 Ecology Example
 ---------------
