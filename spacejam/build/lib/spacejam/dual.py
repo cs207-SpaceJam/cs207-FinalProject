@@ -265,7 +265,10 @@ class Dual():
             instance_check = other.r, other.d
         except AttributeError:
             other = Dual(other, 0)
-       
+            
+        if self.r < 0:
+            raise Exception("The real value should be positive") 
+            
         real = self.r**other.r
         dual = self.r**(other.r - 1)*self.d*other.r
         if other.d != 0:
