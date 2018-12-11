@@ -636,14 +636,14 @@ this system tracking the in-spiraling of the phase plot.
 
 .. raw:: html
 
-   <video controls src="_static/lv.mp4" width="700" height="420">
+   <video controls src="_static/lv.mp4" width="700" height="250">
            </video>
 
 .. note::
 
         All plots for this example were made with the following snippet below:
 
-        .. testcode:
+        .. testcode::
 
                 # plot setup
                 sns.set_palette('colorblind')
@@ -675,8 +675,8 @@ this system tracking the in-spiraling of the phase plot.
                 plt.suptitle('Lotka Volterra System Example')
 
         Movies were made with ``matplotlib.animation`` using its `ffmeg`_
-        integration. We have included a sample `notebook`_ demoing the above
-        examples in our main `repo`_.
+        integration. We have included a sample `notebook`_ demoing this and the
+        above examples in our main `repo`_.
 
         .. _`ffmeg`: https://www.ffmpeg.org/
         .. _`notebook`: http://nbviewer.jupyter.org/github/cs207-SpaceJam/cs207-FinalProject/blob/master/demo.ipynb?flush_cache=true

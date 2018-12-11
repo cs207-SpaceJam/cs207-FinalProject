@@ -721,13 +721,43 @@ for high order schemes.</p>
 <p>As expected, the higher order scheme maintains stability as well, assuming same
 initial conditions. Below is an animation of the s=0 implicit simulation of
 this system tracking the in-spiraling of the phase plot.</p>
-<video controls src="_static/lv.mp4" width="700" height="420">
+<video controls src="_static/lv.mp4" width="700" height="250">
         </video><div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p>All plots for this example were made with the following snippet below:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># plot setup</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_palette</span><span class="p">(</span><span class="s1">&#39;colorblind&#39;</span><span class="p">)</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_color_codes</span><span class="p">(</span><span class="s1">&#39;colorblind&#39;</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+<span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span> <span class="o">=</span> <span class="n">axes</span>
+
+<span class="c1"># solution plot</span>
+<span class="n">n</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">N</span><span class="p">)</span>
+<span class="n">prey</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span>
+<span class="n">pred</span> <span class="o">=</span> <span class="n">X</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">prey</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;prey&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">prey</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">pred</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">pred</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;predator&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;step&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;population&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="c1"># phase plot</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">prey</span><span class="p">,</span> <span class="n">pred</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">prey</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">pred</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="s1">&#39;r.&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;prey population&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;predator population&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_xlim</span><span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">2.1</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_ylim</span><span class="p">(</span><span class="mf">0.6</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span><span class="s1">&#39;Lotka Volterra System Example&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
 <p class="last">Movies were made with <code class="docutils literal notranslate"><span class="pre">matplotlib.animation</span></code> using its <a class="reference external" href="https://www.ffmpeg.org/">ffmeg</a>
-integration. We have included a sample <a class="reference external" href="http://nbviewer.jupyter.org/github/cs207-SpaceJam/cs207-FinalProject/blob/master/demo.ipynb?flush_cache=true">notebook</a> demoing the above
-examples in our main <a class="reference external" href="https://github.com/cs207-SpaceJam/cs207-FinalProject">repo</a>.</p>
+integration. We have included a sample <a class="reference external" href="http://nbviewer.jupyter.org/github/cs207-SpaceJam/cs207-FinalProject/blob/master/demo.ipynb?flush_cache=true">notebook</a> demoing this and the
+above examples in our main <a class="reference external" href="https://github.com/cs207-SpaceJam/cs207-FinalProject">repo</a>.</p>
 </div>
 </div>
 </div>
