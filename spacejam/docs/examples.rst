@@ -479,8 +479,8 @@ It works! Let's go up another order.
 
 .. note::
 
-        All plots were styled with the external package `seaborn`_ and created
-        with the following snippet below:
+        All plots for this example were styled with the external package
+        `seaborn`_ and created with the following snippet below:
 
         .. _seaborn: https://seaborn.pydata.org/index.html
 
@@ -513,7 +513,7 @@ stylized movie for the final plot.
 
 .. raw:: html
 
-   <video controls src="_static/orb.mp4" width="620" height="620">
+   <video controls src="_static/orb.mp4" width="700" height="700">
            </video>
 
 .. note::
@@ -524,6 +524,9 @@ stylized movie for the final plot.
 An analysis of the change in total energy and angular momentum of the system
 each step in the simulation would be a good diagnostic to see which integration
 scheme is actually giving the most accurate results. 
+
+Now we turn to a completely different example that can also be handled with 
+``spacejam``.
 
 Ecology Example
 ---------------
@@ -549,41 +552,131 @@ where,
 - :math:`y`: number of predators
 - :math:`\dot x` and :math:`\dot y`: instantaneous growth rate of the prey and
   predator populations, respectively 
-- TODO: say more about :math:`\alpha,\beta,\delta,\gamma`
+- :math:`\alpha, \beta, \delta, \gamma`: parameters describing `interactions`_ 
+  of the two species
 
+.. _interactions: https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations#Physical_meaning_of_the_equations
 
 Initial Conditions
 ~~~~~~~~~~~~~~~~~~
-prey and predator stuff
+We will test this system with the initial conditions that are `known`_ to
+produce a stable system.
+
+.. _known: https://www.mathstat.dal.ca/~iron/math3210/backwardeuler.pdf
+
+.. testcode::
+
+        import numpy as np
+
+        N = 1000
+        h = .01 # timestep
+        X_0 = np.array([2., 1.]) # initial population conditions ([prey, predator])
+        X = np.zeros((N, X_0.size))
+        X[0] = X_0
 
 
-Equations of population growth?
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-code for L-V system
+Equations of population growth
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+The system can be created with the following:
+
+.. testcode::
+
+        def f(x1, x2, alpha=4., beta=4., delta=1., gamma=1.):
+            f1 = alpha*x1 - beta*x1*x2
+            f2 = delta*x1*x2 - gamma*x2
+            return np.array([f1, f2])
 
 Simulation
 ~~~~~~~~~~
-code for sim run
+Running this with the suite of integrators in ``spacejam`` then gives the
+following:
 
 (s = 0) Method
 ++++++++++++++
-rinse
 
+.. testcode::
+
+        for n in range(N-1):
+            X[n+1] = sj.integrators.amso(f, X[n], h=h, X_tol=1E-14)
+
+.. image:: _static/lv_0.png
+
+In the plots above, we see the hallmark numerical damping of implicit schemes,
+which causes the overall prey and predator population to artificially decrease
+each step.  This is especially apparent in the phase plot of the two
+populations where an in-spiral is present. Let's see if this is still the case
+for high order schemes.
+    
 (s = 1) Method
 ++++++++++++++
-and
+
+.. testcode::
+
+        for n in range(N-1):
+            X[n+1] = sj.integrators.amsi(f, X[n], h=h, X_tol=1E-14)
+
+
+.. image:: _static/lv_1.png
+
+The spiral is gone and the ecological system is stable!
 
 (s = 2) Method
 ++++++++++++++
-repeat
+.. testcode::
 
-Conclusions about predator/prey system here.
+        for n in range(N-1):
+            X[n+1] = sj.integrators.amsi(f, X[n], h=h, X_tol=1E-14)
+
+
+.. image:: _static/lv_2.png
+
+As expected, the higher order scheme maintains stability as well, assuming same
+initial conditions. Below is an animation of the s=0 implicit simulation of
+this system tracking the in-spiraling of the phase plot.
+
+.. raw:: html
+
+   <video controls src="_static/lv.mp4" width="700" height="420">
+           </video>
 
 .. note::
 
+        All plots for this example were made with the following snippet below:
+
+        .. testcode:
+
+                # plot setup
+                sns.set_palette('colorblind')
+                sns.set_color_codes('colorblind')
+                fig, axes = plt.subplots(1, 2, figsize=(10, 3))
+                ax1, ax2 = axes
+
+                # solution plot
+                n = np.arange(N)
+                prey = X[:, 0]
+                pred = X[:, 1]
+
+                ax1.plot(n, prey, label='prey')
+                ax1.plot(n[-1], prey[-1], 'r.')
+                ax1.plot(n[-1], pred[-1], 'r.')
+                ax1.plot(n, pred, label='predator')
+                ax1.set_xlabel('step')
+                ax1.set_ylabel('population')
+                ax1.legend(ncol=2)
+
+                # phase plot
+                ax2.plot(prey, pred)
+                ax2.plot(prey[-1], pred[-1], 'r.')
+                ax2.set_xlabel('prey population')
+                ax2.set_ylabel('predator population')
+                ax2.set_xlim(0.3, 2.1)
+                ax2.set_ylim(0.6, 1.5)
+
+                plt.suptitle('Lotka Volterra System Example')
+
         Movies were made with ``matplotlib.animation`` using its `ffmeg`_
         integration. We have included a sample `notebook`_ demoing the above
-        examples in our main `repo`_
+        examples in our main `repo`_.
 
         .. _`ffmeg`: https://www.ffmpeg.org/
         .. _`notebook`: http://nbviewer.jupyter.org/github/cs207-SpaceJam/cs207-FinalProject/blob/master/demo.ipynb?flush_cache=true

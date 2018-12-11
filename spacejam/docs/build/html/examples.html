@@ -106,7 +106,7 @@
 <li class="toctree-l2"><a class="reference internal" href="#ecology-example">Ecology Example</a><ul>
 <li class="toctree-l3"><a class="reference internal" href="#id2">Background</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id3">Initial Conditions</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#equations-of-population-growth">Equations of population growth?</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#equations-of-population-growth">Equations of population growth</a></li>
 <li class="toctree-l3"><a class="reference internal" href="#id4">Simulation</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#id5">(s = 0) Method</a></li>
 <li class="toctree-l4"><a class="reference internal" href="#id6">(s = 1) Method</a></li>
@@ -598,8 +598,8 @@ Try adjusting X_tol, i_tol, or using another integrator.
 <img alt="_images/s2.png" src="_images/s2.png" />
 <div class="admonition note">
 <p class="first admonition-title">Note</p>
-<p>All plots were styled with the external package <a class="reference external" href="https://seaborn.pydata.org/index.html">seaborn</a> and created
-with the following snippet below:</p>
+<p>All plots for this example were styled with the external package
+<a class="reference external" href="https://seaborn.pydata.org/index.html">seaborn</a> and created with the following snippet below:</p>
 <div class="last highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="kn">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">seaborn</span> <span class="kn">as</span> <span class="nn">sns</span>
 
@@ -625,8 +625,8 @@ with the following snippet below:</p>
 </div>
 </div>
 <p>Static images can be a bit difficult to interpret, so we also included a
-stylized movie.</p>
-<video controls src="_static/orb.mp4" width="620" height="620">
+stylized movie for the final plot.</p>
+<video controls src="_static/orb.mp4" width="700" height="700">
         </video><div class="admonition note">
 <p class="first admonition-title">Note</p>
 <p class="last">Everything is still scaled by the initial distance of the exoplanet
@@ -635,6 +635,8 @@ from its star.</p>
 <p>An analysis of the change in total energy and angular momentum of the system
 each step in the simulation would be a good diagnostic to see which integration
 scheme is actually giving the most accurate results.</p>
+<p>Now we turn to a completely different example that can also be handled with
+<code class="docutils literal notranslate"><span class="pre">spacejam</span></code>.</p>
 </div>
 </div>
 </div>
@@ -655,37 +657,77 @@ describe the <a class="reference external" href="https://en.wikipedia.org/wiki/L
 <li><span class="math notranslate nohighlight">\(y\)</span>: number of predators</li>
 <li><span class="math notranslate nohighlight">\(\dot x\)</span> and <span class="math notranslate nohighlight">\(\dot y\)</span>: instantaneous growth rate of the prey and
 predator populations, respectively</li>
-<li>TODO: say more about <span class="math notranslate nohighlight">\(\alpha,\beta,\delta,\gamma\)</span></li>
+<li><span class="math notranslate nohighlight">\(\alpha, \beta, \delta, \gamma\)</span>: parameters describing <a class="reference external" href="https://en.wikipedia.org/wiki/Lotka%E2%80%93Volterra_equations#Physical_meaning_of_the_equations">interactions</a>
+of the two species</li>
 </ul>
 </div>
 <div class="section" id="id3">
 <h3>Initial Conditions<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h3>
-<p>prey and predator stuff</p>
+<p>We will test this system with the initial conditions that are <a class="reference external" href="https://www.mathstat.dal.ca/~iron/math3210/backwardeuler.pdf">known</a> to
+produce a stable system.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="n">N</span> <span class="o">=</span> <span class="mi">1000</span>
+<span class="n">h</span> <span class="o">=</span> <span class="o">.</span><span class="mo">01</span> <span class="c1"># timestep</span>
+<span class="n">X_0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">2.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">])</span> <span class="c1"># initial population conditions ([prey, predator])</span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">N</span><span class="p">,</span> <span class="n">X_0</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+<span class="n">X</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">=</span> <span class="n">X_0</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="equations-of-population-growth">
-<h3>Equations of population growth?<a class="headerlink" href="#equations-of-population-growth" title="Permalink to this headline">¶</a></h3>
-<p>code for L-V system</p>
+<h3>Equations of population growth<a class="headerlink" href="#equations-of-population-growth" title="Permalink to this headline">¶</a></h3>
+<p>The system can be created with the following:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x1</span><span class="p">,</span> <span class="n">x2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">4.</span><span class="p">,</span> <span class="n">beta</span><span class="o">=</span><span class="mf">4.</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="mf">1.</span><span class="p">,</span> <span class="n">gamma</span><span class="o">=</span><span class="mf">1.</span><span class="p">):</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">alpha</span><span class="o">*</span><span class="n">x1</span> <span class="o">-</span> <span class="n">beta</span><span class="o">*</span><span class="n">x1</span><span class="o">*</span><span class="n">x2</span>
+    <span class="n">f2</span> <span class="o">=</span> <span class="n">delta</span><span class="o">*</span><span class="n">x1</span><span class="o">*</span><span class="n">x2</span> <span class="o">-</span> <span class="n">gamma</span><span class="o">*</span><span class="n">x2</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f1</span><span class="p">,</span> <span class="n">f2</span><span class="p">])</span>
+</pre></div>
+</div>
 </div>
 <div class="section" id="id4">
 <h3>Simulation<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h3>
-<p>code for sim run</p>
+<p>Running this with the suite of integrators in <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> then gives the
+following:</p>
 <div class="section" id="id5">
 <h4>(s = 0) Method<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h4>
-<p>rinse</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">integrators</span><span class="o">.</span><span class="n">amso</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">X_tol</span><span class="o">=</span><span class="mf">1E-14</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/lv_0.png" src="_images/lv_0.png" />
+<p>In the plots above, we see the hallmark numerical damping of implicit schemes,
+which causes the overall prey and predator population to artificially decrease
+each step.  This is especially apparent in the phase plot of the two
+populations where an in-spiral is present. Let’s see if this is still the case
+for high order schemes.</p>
 </div>
 <div class="section" id="id6">
 <h4>(s = 1) Method<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h4>
-<p>and</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">integrators</span><span class="o">.</span><span class="n">amsi</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">X_tol</span><span class="o">=</span><span class="mf">1E-14</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/lv_1.png" src="_images/lv_1.png" />
+<p>The spiral is gone and the ecological system is stable!</p>
 </div>
 <div class="section" id="id7">
 <h4>(s = 2) Method<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h4>
-<p>repeat</p>
-<p>Conclusions about predator/prey system here.</p>
-<div class="admonition note">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">n</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">N</span><span class="o">-</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="o">+</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">integrators</span><span class="o">.</span><span class="n">amsi</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">X</span><span class="p">[</span><span class="n">n</span><span class="p">],</span> <span class="n">h</span><span class="o">=</span><span class="n">h</span><span class="p">,</span> <span class="n">X_tol</span><span class="o">=</span><span class="mf">1E-14</span><span class="p">)</span>
+</pre></div>
+</div>
+<img alt="_images/lv_2.png" src="_images/lv_2.png" />
+<p>As expected, the higher order scheme maintains stability as well, assuming same
+initial conditions. Below is an animation of the s=0 implicit simulation of
+this system tracking the in-spiraling of the phase plot.</p>
+<video controls src="_static/lv.mp4" width="700" height="420">
+        </video><div class="admonition note">
 <p class="first admonition-title">Note</p>
+<p>All plots for this example were made with the following snippet below:</p>
 <p class="last">Movies were made with <code class="docutils literal notranslate"><span class="pre">matplotlib.animation</span></code> using its <a class="reference external" href="https://www.ffmpeg.org/">ffmeg</a>
 integration. We have included a sample <a class="reference external" href="http://nbviewer.jupyter.org/github/cs207-SpaceJam/cs207-FinalProject/blob/master/demo.ipynb?flush_cache=true">notebook</a> demoing the above
-examples in our main <a class="reference external" href="https://github.com/cs207-SpaceJam/cs207-FinalProject">repo</a></p>
+examples in our main <a class="reference external" href="https://github.com/cs207-SpaceJam/cs207-FinalProject">repo</a>.</p>
 </div>
 </div>
 </div>
