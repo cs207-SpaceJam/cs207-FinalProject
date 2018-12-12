@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>How to use &mdash; spacejam 0.0.1 documentation</title>
+  <title>How to use &mdash; spacejam 0.1.0 documentation</title>
   
 
   
@@ -199,10 +199,13 @@ derivative of f(x) evaluated at p:
 [75.00]
 </pre></div>
 </div>
-<p>Note: <code class="docutils literal notranslate"><span class="pre">numpy</span></code> arrays are used when defining your function and returning
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal notranslate"><span class="pre">numpy</span></code> arrays are used when defining your function and returning
 results because <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> can also operate on multivariable functions and
 parameters, which we outline in <a class="reference internal" href="#demo-ii-scalar-function-with-vector-input">Demo II: Scalar function with vector input</a>.
 and <a class="reference internal" href="#demo-iii-vector-function-with-vector-input">Demo III: Vector function with vector input</a>.</p>
+</div>
 </div>
 <div class="section" id="demo-ii-scalar-function-with-vector-input">
 <h2>Demo II: Scalar function with vector input<a class="headerlink" href="#demo-ii-scalar-function-with-vector-input" title="Permalink to this headline">¶</a></h2>
@@ -347,9 +350,21 @@ formated J F(p):
 <span class="k">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="last highlight-none notranslate"><div class="highlight"><pre><span></span>3.00 + eps 4.00
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>3.00 + eps 4.00
 </pre></div>
 </div>
+<p>We also use <code class="docutils literal notranslate"><span class="pre">numpy</span></code> to overload basic trig functions, exponential,
+and natural log, which are not builtins in python. This is accessed by
+doing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>-0.99 - eps 0.56
+</pre></div>
+</div>
+<p class="last"><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> formats all numbers to two decimal places but internally
+the whole number is stored.</p>
 </div>
 </div>
 </div>

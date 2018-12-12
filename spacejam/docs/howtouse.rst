@@ -56,10 +56,13 @@ attributes in ``ad`` and can easily be printed to examine:
         derivative of f(x) evaluated at p:
         [75.00]
 
-Note: ``numpy`` arrays are used when defining your function and returning
-results because ``spacejam`` can also operate on multivariable functions and
-parameters, which we outline in `Demo II: Scalar function with vector input`_.
-and `Demo III: Vector function with vector input`_.
+.. note:: 
+        
+        ``numpy`` arrays are used when defining your function and returning
+        results because ``spacejam`` can also operate on multivariable functions and
+        parameters, which we outline in `Demo II: Scalar function with vector input`_.
+        and `Demo III: Vector function with vector input`_.
+
 
 Demo II: Scalar function with vector input
 ------------------------------------------
@@ -238,3 +241,19 @@ where ``ad._full`` looks like:
         .. testoutput::
 
                 3.00 + eps 4.00
+
+        We also use ``numpy`` to overload basic trig functions, exponential,
+        and natural log, which are not builtins in python. This is accessed by
+        doing:
+
+        .. testcode::
+
+                result = np.cos(z)
+                print(result)
+
+        .. testoutput::
+
+                -0.99 - eps 0.56
+
+        ``spacejam`` formats all numbers to two decimal places but internally
+        the whole number is stored.

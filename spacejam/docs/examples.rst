@@ -356,7 +356,7 @@ integrators to produce the following orbits.
 (s = 0)
 +++++++
 
-.. testcode::
+::
 
         import spacejam as sj
 
@@ -403,7 +403,7 @@ We will follow the last suggestion and use the higher order s=1 scheme instead.
 (s = 1)
 +++++++
 
-.. testcode::
+::
 
         X_1 = np.zeros((N, uold_1.size))
         X_1[0] = uold_1
@@ -434,7 +434,7 @@ It works! Let's go up another order.
 (s = 2)
 +++++++
 
-.. testcode::
+::
 
         X_1 = np.zeros((N, uold_1.size))
         X_1[0] = uold_1
@@ -484,7 +484,7 @@ It works! Let's go up another order.
 
         .. _seaborn: https://seaborn.pydata.org/index.html
 
-        .. testcode::
+        ::
 
                 import matplotlib.pyplot as plt
                 import seaborn as sns
@@ -594,7 +594,7 @@ following:
 (s = 0) Method
 ++++++++++++++
 
-.. testcode::
+::
 
         for n in range(N-1):
             X[n+1] = sj.integrators.amso(f, X[n], h=h, X_tol=1E-14)
@@ -610,7 +610,7 @@ for high order schemes.
 (s = 1) Method
 ++++++++++++++
 
-.. testcode::
+::
 
         for n in range(N-1):
             X[n+1] = sj.integrators.amsi(f, X[n], h=h, X_tol=1E-14)
@@ -622,7 +622,7 @@ The spiral is gone and the ecological system is stable!
 
 (s = 2) Method
 ++++++++++++++
-.. testcode::
+::
 
         for n in range(N-1):
             X[n+1] = sj.integrators.amsi(f, X[n], h=h, X_tol=1E-14)
@@ -643,7 +643,7 @@ this system tracking the in-spiraling of the phase plot.
 
         All plots for this example were made with the following snippet below:
 
-        .. testcode::
+        ::
 
                 # plot setup
                 sns.set_palette('colorblind')
