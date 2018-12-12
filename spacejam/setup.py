@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
         name='spacejam',
-        version='0.1.0',
+        version='1.0.0',
         author='Ian Weaver, Sherif Gerges, Lauren Yoo',
         author_email='iweaver@cfa.harvard.edu',
         license='MIT',
