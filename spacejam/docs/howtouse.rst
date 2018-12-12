@@ -40,7 +40,7 @@ derivative with ``spacejam`` at this point is as easy as:
 The real part of ``ad`` is now :math:`f(x=5) = 125` and the dual part is
 :math:`\left.\frac{\mathrm d f}{\mathrm d x}\right|_{x=5} = 75` .
 
-Theses real and dual parts are conveniently stored, respectively, as the ``r`` and ``d``
+These real and dual parts are conveniently stored, respectively, as the ``r`` and ``d``
 attributes in ``ad`` and can easily be printed to examine:
 
 .. testcode::
