@@ -3,31 +3,25 @@ Software Organization
 Cool tree cartoon of main files:
 
 .. code-block:: text
+        
+        spacejam   
+        ├── LICENSE.txt
+        ├── MANIFEST.in¶
+        ├── README.md
+        ├── requirements.txt
+        ├── setup.cfg
+        ├── setup.py
+        └── spacejam
+            ├── __init__.py
+            ├── autodiff.py
+            ├── dual.py
+            ├── integrators.py
+            └── test
+                ├── __init__.py
+                ├── test_autodiff.py
+                ├── test_dual.py
+                └── test_integrators.py
 
-	spacejam
-	├── LICENSE.txt
-	├── MANIFEST.in¶
-	├── README.md
-	├── dist
-	│   ├── spacejam-0.0.3-py3-none-any.whl
-	│   └── spacejam-0.0.3.tar.gz
-	├── docs
-	│   ├── Makefile
-	│   └── figs
-	│       ├── test.png
-	│       └── test_ii.png
-	├── requirements.txt
-	├── setup.cfg
-	├── setup.py
-	└── spacejam
-	    ├── __init__.py
-	    ├── autodiff.py
-	    ├── dual.py
-	    ├── integrators.py
-	    └── test
-		├── __init__.py
-		├── test_autodiff.py
-		└── test_dual.py
 
 Overview of main modules
 ------------------------
@@ -53,6 +47,8 @@ in, run the following commands anywhere on your computer:
         python -m venv venv                                                         
         source venv/bin/activate                                                    
         pip install spacejam
+
+Optional: If you prefer working in a Jupyter notebook, you can also
 
 Tests
 ~~~~~

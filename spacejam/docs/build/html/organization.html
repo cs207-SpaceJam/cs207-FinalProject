@@ -165,14 +165,6 @@
 ├── LICENSE.txt
 ├── MANIFEST.in¶
 ├── README.md
-├── dist
-│   ├── spacejam-0.0.3-py3-none-any.whl
-│   └── spacejam-0.0.3.tar.gz
-├── docs
-│   ├── Makefile
-│   └── figs
-│       ├── test.png
-│       └── test_ii.png
 ├── requirements.txt
 ├── setup.cfg
 ├── setup.py
@@ -184,7 +176,8 @@
     └── test
         ├── __init__.py
         ├── test_autodiff.py
-        └── test_dual.py
+        ├── test_dual.py
+        └── test_integrators.py
 </pre></div>
 </div>
 <div class="section" id="overview-of-main-modules">
@@ -208,6 +201,7 @@ source venv/bin/activate
 pip install spacejam
 </pre></div>
 </div>
+<p>Optional: If you prefer working in a Jupyter notebook, you can also</p>
 </div>
 <div class="section" id="tests">
 <h3>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h3>
