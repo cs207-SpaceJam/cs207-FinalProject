@@ -388,7 +388,7 @@ integrators to produce the following orbits.
         Axes are scaled by the initial distance of the exoplanet from its host
         star and oriented in the usual XY fashion.
 
-This integratin scheme actually fails partway through the simulation.
+This integration scheme actually fails partway through the simulation.
 ``spacejam`` provides the following suggestions to fix this in its error
 message:
 

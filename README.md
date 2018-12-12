@@ -9,6 +9,5 @@
 Ian Weaver<br>
 Sherif Gerges<br>
 Lauren Yoo<br>
-Tamilyn Chen
 
 Check out the [docs](https://spacejam.readthedocs.io/en/latest/index.html)!
