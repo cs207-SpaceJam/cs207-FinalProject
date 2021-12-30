@@ -1,0 +1,397 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>spacejam.integrators &mdash; spacejam 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> spacejam
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howtouse.html">How to use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../background.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../organization.html">Software Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../implementation.html">Implementation Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../future.html">Future</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">spacejam</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>spacejam.integrators</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spacejam.integrators</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">dual</span><span class="p">,</span> <span class="n">autodiff</span>
+
+<span class="sd">&quot;&quot;&quot; Suite of implicit integrators. These methods include the first three</span>
+<span class="sd">Adams-Moulton orders (i.e. s = 0, 1, 2).</span>
+<span class="sd">See: https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="amso"><a class="viewcode-back" href="../../implementation.html#spacejam.integrators.amso">[docs]</a><span class="k">def</span> <span class="nf">amso</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">1E-3</span><span class="p">,</span> <span class="n">X_tol</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span> <span class="n">i_tol</span><span class="o">=</span><span class="mf">1E2</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Zeroth order Adams-Moulton method (AKA Backward Euler)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func : function</span>
+<span class="sd">        User defined function to be integrated.</span>
+<span class="sd">    X_old : numpy.ndarray</span>
+<span class="sd">            Initial input to user function</span>
+<span class="sd">    h : float (default 1E-3)</span>
+<span class="sd">        Timestep</span>
+<span class="sd">    X_tol : float (default 1E-1)</span>
+<span class="sd">            Minimum difference between Newton-Raphson iterates to terminate on.</span>
+<span class="sd">    i_tol : int (default 1E2)</span>
+<span class="sd">            Maximum number of Newton-Raphson iterations. Entire simulation</span>
+<span class="sd">            terminates if this number is exceeded.</span>
+<span class="sd">    kwargs : dict (default None)</span>
+<span class="sd">             optional arguments to be supplied to user defined function. </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    X_new : numpy.ndarray</span>
+<span class="sd">            Final X_n+1 found from root finding of implicit method</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+<span class="sd">    &gt;&gt;&gt; </span>
+<span class="sd">    &quot;&quot;&quot;</span> 
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">)</span>
+    
+    <span class="c1"># Initial guess with forward Euler</span>
+    <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_old</span> <span class="o">+</span> <span class="n">h</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="c1"># X_{n+1}^(0)</span>
+    
+    <span class="c1"># Iterate to better solution for X_new using Newton-Raphson method</span>
+    <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_old</span>
+    <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_new</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">X_inew</span> <span class="o">-</span> <span class="n">X_iold</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">X_tol</span><span class="p">:</span>
+        <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_inew</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">i_tol</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Sorry, spacejam did not converge for s=0 A-M method.</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;Try adjusting X_tol, i_tol, or using another integrator.&quot;</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_iold</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># get Jacobian (ad.d)</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">I</span> <span class="o">-</span> <span class="n">h</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">d</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">X_iold</span> <span class="o">-</span> <span class="n">X_old</span> <span class="o">-</span> <span class="n">h</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_iold</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">g</span><span class="p">)</span>
+
+        <span class="c1"># update</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># update</span>
+    <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_iold</span>
+    <span class="k">return</span> <span class="n">X_new</span></div>
+
+<div class="viewcode-block" id="amsi"><a class="viewcode-back" href="../../implementation.html#spacejam.integrators.amsi">[docs]</a><span class="k">def</span> <span class="nf">amsi</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">1E-3</span><span class="p">,</span> <span class="n">X_tol</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span> <span class="n">i_tol</span><span class="o">=</span><span class="mf">1E2</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; First order Adams-Moulton method (AKA Trapezoid)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func : function</span>
+<span class="sd">        User defined function to be integrated.</span>
+<span class="sd">    X_old : numpy.ndarray</span>
+<span class="sd">            Initial input to user function</span>
+<span class="sd">    h : float (default 1E-3)</span>
+<span class="sd">        Timestep</span>
+<span class="sd">    X_tol : float (default 1E-1)</span>
+<span class="sd">            Minimum difference between Newton-Raphson iterates to terminate on.</span>
+<span class="sd">    i_tol : int (default 1E2)</span>
+<span class="sd">            Maximum number of Newton-Raphson iterations. Entire simulation</span>
+<span class="sd">            terminates if this number is exceeded.</span>
+<span class="sd">    kwargs : dict (default None)</span>
+<span class="sd">             optional arguments to be supplied to user defined function. </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    X_new : numpy.ndarray</span>
+<span class="sd">            Final X_n+1 found from root finding of implicit method</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">)</span>
+    
+    <span class="c1"># Initial guess with forward Euler</span>
+    <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_old</span> <span class="o">+</span> <span class="n">h</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="c1"># X_{n+1}^(0)</span>
+    
+    <span class="c1"># Iterate to better solution for X_new using Newton-Raphson method</span>
+    <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_old</span>
+    <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_new</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">X_inew</span> <span class="o">-</span> <span class="n">X_iold</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">X_tol</span><span class="p">:</span>
+        <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_inew</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">i_tol</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Sorry, spacejam did not converge for s=1 A-M method.</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;Try adjusting X_tol, i_tol, or using another integrator.&quot;</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+             
+
+        <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_iold</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># get Jacobian (ad.d)</span>
+        <span class="n">ad_n</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_old</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># for X_n</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">I</span> <span class="o">-</span> <span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">d</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">X_iold</span> <span class="o">-</span> <span class="n">X_old</span> <span class="o">-</span> <span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="o">-</span> <span class="p">(</span><span class="n">h</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="n">ad_n</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+
+        <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_iold</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">g</span><span class="p">)</span>
+
+        <span class="c1"># update</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># update</span>
+    <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_iold</span>
+    <span class="k">return</span> <span class="n">X_new</span></div>
+
+<div class="viewcode-block" id="amsii"><a class="viewcode-back" href="../../implementation.html#spacejam.integrators.amsii">[docs]</a><span class="k">def</span> <span class="nf">amsii</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_n</span><span class="p">,</span> <span class="n">X_nn</span><span class="p">,</span> <span class="n">h</span><span class="o">=</span><span class="mf">1E-3</span><span class="p">,</span> <span class="n">X_tol</span><span class="o">=</span><span class="mf">1E-1</span><span class="p">,</span> <span class="n">i_tol</span><span class="o">=</span><span class="mf">1E2</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Second order Adams-Moulton method</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+<span class="sd">    func : function</span>
+<span class="sd">        User defined function to be integrated.</span>
+<span class="sd">    X_n : numpy.ndarray</span>
+<span class="sd">          X_n</span>
+<span class="sd">    X_nn : numpy.ndarray</span>
+<span class="sd">           X_n-1</span>
+<span class="sd">    h : float (default 1E-3)</span>
+<span class="sd">        Timestep</span>
+<span class="sd">    X_tol : float (default 1E-1)</span>
+<span class="sd">            Minimum difference between Newton-Raphson iterates to terminate on.</span>
+<span class="sd">    i_tol : int (default 1E2)</span>
+<span class="sd">            Maximum number of Newton-Raphson iterations. Entire simulation</span>
+<span class="sd">            terminates if this number is exceeded.</span>
+<span class="sd">    kwargs : dict (default None)</span>
+<span class="sd">             optional arguments to be supplied to user defined function. </span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+<span class="sd">    X_new : numpy.ndarray</span>
+<span class="sd">            Final X_n+1 found from root finding of implicit method</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+        <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_n</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_n</span><span class="p">)</span>
+    
+    <span class="c1"># Initial guess with forward Euler</span>
+    <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_n</span> <span class="o">+</span> <span class="n">h</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span> <span class="c1"># X_{n+1}^(0)</span>
+    
+    <span class="c1"># Iterate to better solution for X_new using Newton-Raphson method</span>
+    <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_n</span>
+    <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_new</span>
+    <span class="n">i</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="k">while</span> <span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">norm</span><span class="p">(</span><span class="n">X_inew</span> <span class="o">-</span> <span class="n">X_iold</span><span class="p">)</span> <span class="o">&gt;</span> <span class="n">X_tol</span><span class="p">:</span>
+        <span class="n">X_iold</span> <span class="o">=</span> <span class="n">X_inew</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="n">i_tol</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Sorry, spacejam did not converge for s=2 A-M method.</span><span class="se">\n</span><span class="s2">&quot;</span> \
+                  <span class="s2">&quot;Try adjusting X_tol, i_tol, or using another integrator.&quot;</span>
+            <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+        <span class="n">ad</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_iold</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># get Jacobian (ad.d)</span>
+        <span class="n">ad_n</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_n</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># X_n</span>
+        <span class="n">ad_nn</span> <span class="o">=</span> <span class="n">autodiff</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">func</span><span class="p">,</span> <span class="n">X_nn</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="n">kwargs</span><span class="p">)</span> <span class="c1"># X_n-1</span>
+        <span class="n">I</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">eye</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()))</span>
+        <span class="n">D</span> <span class="o">=</span> <span class="n">I</span> <span class="o">-</span> <span class="p">(</span><span class="mi">5</span><span class="o">*</span><span class="n">h</span><span class="o">/</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">d</span>
+        <span class="n">g1</span> <span class="o">=</span> <span class="n">X_iold</span>
+        <span class="n">g2</span> <span class="o">=</span> <span class="n">X_n</span>
+        <span class="n">g3</span> <span class="o">=</span> <span class="p">(</span><span class="mi">5</span><span class="o">/</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="n">ad</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">g4</span> <span class="o">=</span> <span class="p">(</span><span class="mi">2</span><span class="o">/</span><span class="mi">3</span><span class="p">)</span><span class="o">*</span><span class="n">ad_n</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">g5</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">/</span><span class="mi">12</span><span class="p">)</span><span class="o">*</span><span class="n">ad_nn</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">flatten</span><span class="p">()</span>
+        <span class="n">g</span> <span class="o">=</span> <span class="n">g1</span> <span class="o">-</span> <span class="n">g2</span> <span class="o">-</span> <span class="n">h</span><span class="o">*</span><span class="p">(</span><span class="n">g3</span> <span class="o">+</span> <span class="n">g4</span> <span class="o">-</span> <span class="n">g5</span><span class="p">)</span>
+        <span class="n">X_inew</span> <span class="o">=</span> <span class="n">X_iold</span> <span class="o">-</span> <span class="n">np</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linalg</span><span class="o">.</span><span class="n">pinv</span><span class="p">(</span><span class="n">D</span><span class="p">),</span> <span class="n">g</span><span class="p">)</span>
+
+        <span class="c1"># update</span>
+        <span class="n">i</span> <span class="o">+=</span> <span class="mi">1</span>
+
+    <span class="c1"># update</span>
+    <span class="n">X_new</span> <span class="o">=</span> <span class="n">X_iold</span>
+    <span class="k">return</span> <span class="n">X_new</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Ian Weaver, Sherif Gerges, Lauren Yoo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

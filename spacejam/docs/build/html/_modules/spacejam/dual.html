@@ -1,0 +1,625 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>spacejam.dual &mdash; spacejam 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+
+  
+  <script src="../../_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="../../index.html" class="icon icon-home"> spacejam
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../howtouse.html">How to use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../background.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../organization.html">Software Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../implementation.html">Implementation Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../future.html">Future</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">spacejam</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="../index.html">Module code</a> &raquo;</li>
+        
+      <li>spacejam.dual</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for spacejam.dual</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<div class="viewcode-block" id="Dual"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual">[docs]</a><span class="k">class</span> <span class="nc">Dual</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Creates dual numbers and defines dual number math.</span>
+
+<span class="sd">    A real number `a` is taken in and its dual counterpart `a + eps [1.00]` is</span>
+<span class="sd">    returned to facilitate automatic differentiation in </span>
+<span class="sd">    :any:`spacejam.autodiff` .</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    The dual part can optionally be returned as a &quot;dual basis vector&quot;</span>
+<span class="sd">    [0 1 0] if the user function `f` is multivariable and the partial</span>
+<span class="sd">    derivative :math:`\partial f / \partial x_2` is desired, for example.</span>
+
+<span class="sd">    Attributes</span>
+<span class="sd">    ----------</span>
+<span class="sd">    r : float</span>
+<span class="sd">        real part of :any:`spacejam.dual.Dual` .</span>
+<span class="sd">    d : numpy.ndarray</span>
+<span class="sd">        dual part of :any:`spacejam.dual.Dual` .</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="Dual.__init__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__init__">[docs]</a>    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">real</span><span class="p">,</span> <span class="n">dual</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="mi">1</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        real : int/float</span>
+<span class="sd">            real part of :any:`spacejam.dual.Dual` .</span>
+<span class="sd">        dual : float</span>
+<span class="sd">            dual part of :any:`spacejam.dual.Dual` (default 1.00) .</span>
+<span class="sd">        idx : int (default None)</span>
+<span class="sd">            index in dual part of dual basis vector.</span>
+<span class="sd">        x : numpy.ndarray (default [1])</span>
+<span class="sd">            set size of pre-allocated array for dual basis vector.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># set numpy display output to be formatted to two decimal places</span>
+        <span class="c1"># for easier doctesting and dedicated user dual number creation</span>
+        <span class="n">formatter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">x</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">formatter</span><span class="o">=</span><span class="p">{</span>
+                                <span class="s1">&#39;int_kind&#39;</span><span class="p">:</span><span class="n">formatter</span><span class="p">,</span>
+                                <span class="s1">&#39;float_kind&#39;</span><span class="p">:</span><span class="n">formatter</span>
+                                <span class="p">})</span>
+
+        <span class="c1"># load func(p) into self.r</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">real</span><span class="p">)</span>
+
+        <span class="c1"># prepare self.d for differentiation</span>
+        <span class="k">if</span> <span class="n">idx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span> <span class="c1"># dual basis vector</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">size</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="mf">1.00</span>
+        <span class="k">else</span><span class="p">:</span> <span class="c1"># regular dual vector</span>
+            <span class="k">if</span> <span class="n">dual</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">dual</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Dual.__add__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__add__">[docs]</a>    <span class="k">def</span> <span class="nf">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the addition of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self: Dual object</span>
+<span class="sd">        other: Dual object, float, or int</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ------- </span>
+<span class="sd">        z: Dual object that is the sum of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        -------- </span>
+<span class="sd">        &gt;&gt;&gt; z = Dual(1, 2) + Dual(3, 4)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        4.00 + eps 6.00</span>
+<span class="sd">        &gt;&gt;&gt; z = 2 + Dual(1, 2)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        3.00 + eps 2.00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Recast other as Dual object if not created already</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">instance_check</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">d</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+
+        <span class="n">real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">r</span>
+        <span class="n">dual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">+</span> <span class="n">other</span><span class="o">.</span><span class="n">d</span>
+
+        <span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">dual</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span></div>
+    
+    <span class="fm">__radd__</span> <span class="o">=</span> <span class="fm">__add__</span> <span class="c1"># addition commutes</span>
+    
+<div class="viewcode-block" id="Dual.__sub__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__sub__">[docs]</a>    <span class="k">def</span> <span class="nf">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the subtraction of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self: Dual object</span>
+<span class="sd">        other: Dual object, float, or int</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ------- </span>
+<span class="sd">        z: Dual object</span>
+<span class="sd">           difference of self and other</span>
+<span class="sd">           </span>
+<span class="sd">        NOTES</span>
+<span class="sd">        ----- </span>
+<span class="sd">        Subtraction does not commute in general. </span>
+<span class="sd">        A specialized __rsub__ is required.</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        -------- </span>
+<span class="sd">        &gt;&gt;&gt; z = Dual(1, 2) - Dual(3, 4)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        -2.00 - eps 2.00</span>
+<span class="sd">        &gt;&gt;&gt; z = Dual(1, 2) - 2</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        -1.00 + eps 2.00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">r</span>
+            <span class="n">dual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">d</span>
+        
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">-</span> <span class="n">other</span>
+            <span class="n">dual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> 
+        
+        <span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">dual</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span></div>
+    
+<div class="viewcode-block" id="Dual.__rsub__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__rsub__">[docs]</a>    <span class="k">def</span> <span class="nf">__rsub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the subtraction of other from self</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self: Dual object</span>
+<span class="sd">        other: Dual object, float, or int</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ------- </span>
+<span class="sd">        z: Dual object</span>
+<span class="sd">           difference of other and self</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        -------- </span>
+<span class="sd">        &gt;&gt;&gt; z = 2 - Dual(1, 2)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        1.00 - eps 2.00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">other</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span>
+        <span class="n">dual</span> <span class="o">=</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span>
+        
+        <span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">dual</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span></div>
+    
+<div class="viewcode-block" id="Dual.__mul__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__mul__">[docs]</a>    <span class="k">def</span> <span class="nf">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the product of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self: Dual object</span>
+<span class="sd">        other: Dual object, float, or int</span>
+
+<span class="sd">        Returns</span>
+<span class="sd">        ------- </span>
+<span class="sd">        z: Dual object that is the product of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        -------- </span>
+<span class="sd">        &gt;&gt;&gt; z = Dual(1, 2) * Dual(3, 4)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        3.00 + eps 10.00</span>
+<span class="sd">        &gt;&gt;&gt; z = 2 * Dual(1, 2)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        2.00 + eps 4.00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">r</span> 
+            <span class="n">dual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">d</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">r</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">*</span><span class="n">other</span>
+            <span class="n">dual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="o">*</span><span class="n">other</span>
+        
+        <span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">dual</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span></div>
+
+    <span class="fm">__rmul__</span> <span class="o">=</span> <span class="fm">__mul__</span> <span class="c1"># multiplication commutes	</span>
+    
+<div class="viewcode-block" id="Dual.__truediv__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__truediv__">[docs]</a>    <span class="k">def</span> <span class="nf">__truediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the quotient of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self: Dual object</span>
+<span class="sd">        other: Dual object, float, or int</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ------- </span>
+<span class="sd">        z: Dual object that is the quotient of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        -------- </span>
+<span class="sd">        &gt;&gt;&gt; z = Dual(1, 2) / 2</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        0.50 + eps 1.00</span>
+<span class="sd">        &gt;&gt;&gt; z = Dual(3, 4) / Dual(1, 2)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        3.00 - eps 2.00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">r</span><span class="p">)</span><span class="o">/</span><span class="n">other</span><span class="o">.</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">dual</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">r</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">d</span><span class="p">)</span><span class="o">/</span><span class="n">other</span><span class="o">.</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">real</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">*</span><span class="n">other</span><span class="p">)</span><span class="o">/</span><span class="n">other</span><span class="o">**</span><span class="mi">2</span>
+            <span class="n">dual</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="o">*</span><span class="n">other</span><span class="p">)</span><span class="o">/</span><span class="n">other</span><span class="o">**</span><span class="mi">2</span>
+        
+        <span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">dual</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span></div>
+    
+<div class="viewcode-block" id="Dual.__rtruediv__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__rtruediv__">[docs]</a>    <span class="k">def</span> <span class="nf">__rtruediv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the quotient of other and self</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self: Dual object</span>
+<span class="sd">        other: Dual object, float, or int</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ------- </span>
+<span class="sd">        z: Dual object that is the product of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        --------  </span>
+<span class="sd">        &gt;&gt;&gt; z = 2 / Dual(1, 2)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        2.00 - eps 4.00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="p">(</span><span class="n">other</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">dual</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">other</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">)</span><span class="o">/</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">**</span><span class="mi">2</span>
+        
+        <span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">dual</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span></div>
+
+<div class="viewcode-block" id="Dual.__pow__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__pow__">[docs]</a>    <span class="k">def</span> <span class="nf">__pow__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Performs (self.r + eps self.d) ** (other.r + eps other.d)</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self: Dual object</span>
+<span class="sd">        other: Dual object, float, or int</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ------- </span>
+<span class="sd">        z: Dual object that is self raised to the other power</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        -------- </span>
+<span class="sd">        &gt;&gt;&gt; z = Dual(1, 2) ** Dual(3, 4)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        1.00 + eps 6.00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># Recast other as Dual object if not created already</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">instance_check</span> <span class="o">=</span> <span class="n">other</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">d</span>
+        <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+            
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;The real value should be positive&quot;</span><span class="p">)</span> 
+            
+        <span class="n">real</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">**</span><span class="n">other</span><span class="o">.</span><span class="n">r</span>
+        <span class="n">dual</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">**</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">r</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">r</span>
+        <span class="k">if</span> <span class="n">other</span><span class="o">.</span><span class="n">d</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">dual</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">**</span><span class="n">other</span><span class="o">.</span><span class="n">r</span><span class="o">*</span><span class="n">other</span><span class="o">.</span><span class="n">d</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">)</span>
+
+        <span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">dual</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span></div>
+            
+    <span class="k">def</span> <span class="nf">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">**</span><span class="p">(</span><span class="mf">0.5</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">z</span>
+
+
+<div class="viewcode-block" id="Dual.__pos__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__pos__">[docs]</a>    <span class="k">def</span> <span class="nf">__pos__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns self</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        -------- </span>
+<span class="sd">        &gt;&gt;&gt; z = Dual(1, 2)</span>
+<span class="sd">        &gt;&gt;&gt; print(+z)</span>
+<span class="sd">        1.00 + eps 2.00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Dual</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Dual.__neg__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__neg__">[docs]</a>    <span class="k">def</span> <span class="nf">__neg__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns negation of self</span>
+
+<span class="sd">        Examples</span>
+<span class="sd">        -------- </span>
+<span class="sd">        &gt;&gt;&gt; z = Dual(1, 2)</span>
+<span class="sd">        &gt;&gt;&gt; print(-z)</span>
+<span class="sd">        -1.00 - eps 2.00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Dual</span><span class="p">(</span><span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Dual.exp"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.exp">[docs]</a>    <span class="k">def</span> <span class="nf">exp</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns e**self</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self: Dual object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ------- </span>
+<span class="sd">        z: e**self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        -------- </span>
+<span class="sd">        &gt;&gt;&gt; z = np.exp(Dual(1, 2))</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        2.72 + eps 5.44</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">real</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span>
+        <span class="n">dual</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">e</span><span class="o">**</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span>
+        <span class="k">return</span> <span class="n">Dual</span><span class="p">(</span><span class="n">real</span><span class="p">,</span> <span class="n">dual</span><span class="p">)</span></div>
+
+    <span class="c1">#Trigonometric functions that numpy looks for</span>
+<div class="viewcode-block" id="Dual.sin"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.sin">[docs]</a>    <span class="k">def</span> <span class="nf">sin</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the sine of a</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self: Dual object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ------- </span>
+<span class="sd">        z: sine of self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        -------- </span>
+<span class="sd">        &gt;&gt;&gt; z = np.sin(Dual(0, 1))</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        0.00 + eps 1.00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Dual</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">),</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">))</span></div>
+        
+<div class="viewcode-block" id="Dual.cos"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.cos">[docs]</a>    <span class="k">def</span> <span class="nf">cos</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the cosine of a</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self: Dual object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ------- </span>
+<span class="sd">        z: cosine of self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        -------- </span>
+<span class="sd">        &gt;&gt;&gt; z = np.cos(Dual(0, 1))</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        1.00 + eps -0.00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Dual</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">),</span> <span class="o">-</span><span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="p">))</span></div>
+
+<div class="viewcode-block" id="Dual.tan"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.tan">[docs]</a>    <span class="k">def</span> <span class="nf">tan</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Returns the tangent of a</span>
+<span class="sd">        </span>
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        self: Dual object</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ------- </span>
+<span class="sd">        z: tangent of self</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        -------- </span>
+<span class="sd">        &gt;&gt;&gt; z = np.tan(Dual(0,1))</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        0.00 + eps 1.00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">z</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sin</span><span class="p">()</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">cos</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">Dual</span><span class="p">(</span><span class="n">z</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">z</span><span class="o">.</span><span class="n">d</span><span class="p">)</span></div>
+        <span class="c1">#return Dual(tan(self.r), self.d / np.cos(self.r)**2)</span>
+        
+<div class="viewcode-block" id="Dual.__repr__"><a class="viewcode-back" href="../../implementation.html#spacejam.dual.Dual.__repr__">[docs]</a>    <span class="k">def</span> <span class="nf">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Prints self in the form a_r + eps a_d, where self = Dual(a_r, a_d),</span>
+<span class="sd">        a_r and a_d are the real and dual part of self, respectively,</span>
+<span class="sd">        and both terms are automatically rounded to two decimal places</span>
+<span class="sd">        </span>
+<span class="sd">        Returns</span>
+<span class="sd">        ------- </span>
+<span class="sd">        z: Dual object that is the product of self and other</span>
+<span class="sd">        </span>
+<span class="sd">        Examples</span>
+<span class="sd">        -------- </span>
+<span class="sd">        &gt;&gt;&gt; z = Dual(1, 2)</span>
+<span class="sd">        &gt;&gt;&gt; print(z)</span>
+<span class="sd">        1.00 + eps 2.00</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="c1"># set numpy display output to be formatted to two decimal places</span>
+        <span class="c1"># for easier doctesting</span>
+        <span class="n">float_formatter</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;</span><span class="si">%.2f</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">x</span>
+        <span class="n">np</span><span class="o">.</span><span class="n">set_printoptions</span><span class="p">(</span><span class="n">formatter</span><span class="o">=</span><span class="p">{</span>
+                                <span class="s1">&#39;int_kind&#39;</span><span class="p">:</span><span class="n">float_formatter</span><span class="p">,</span>
+                                <span class="s1">&#39;float_kind&#39;</span><span class="p">:</span><span class="n">float_formatter</span>
+                                <span class="p">})</span>
+
+        <span class="c1"># format dual numbers accordingly if p is scalar or vector</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">r</span><span class="o">.</span><span class="n">size</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.r}</span><span class="s1"> + eps </span><span class="si">{self.d}</span><span class="s1">&#39;</span> 
+            <span class="k">return</span> <span class="n">s</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span><span class="o">.</span><span class="n">size</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">d</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.r:.2f}</span><span class="s1"> + eps </span><span class="si">{self.d:.2f}</span><span class="s1">&#39;</span> 
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.r:.2f}</span><span class="s1"> - eps {np.abs(self.d):.2f}&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">s</span> <span class="o">=</span> <span class="n">f</span><span class="s1">&#39;</span><span class="si">{self.r:.2f}</span><span class="s1"> + eps </span><span class="si">{self.d}</span><span class="s1">&#39;</span> 
+
+        <span class="k">return</span> <span class="n">s</span></div></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Ian Weaver, Sherif Gerges, Lauren Yoo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
+        <script type="text/javascript" src="../../_static/jquery.js"></script>
+        <script type="text/javascript" src="../../_static/underscore.js"></script>
+        <script type="text/javascript" src="../../_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="../../_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

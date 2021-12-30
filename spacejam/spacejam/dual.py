@@ -12,7 +12,7 @@ class Dual:
     -----
     The dual part can optionally be returned as a "dual basis vector"
     [0 1 0] if the user function `f` is multivariable and the partial
-    derivative :math:`\partial f / \partial x_2` is desired, for example.
+    derivative :math:`\\partial f / \\partial x_2` is desired, for example.
 
     Attributes
     ----------
@@ -400,7 +400,12 @@ class Dual:
         # set numpy display output to be formatted to two decimal places
         # for easier doctesting
         float_formatter = lambda x: "%.2f" % x
-        np.set_printoptions(formatter={"int_kind": float_formatter, "float_kind": float_formatter})
+        np.set_printoptions(
+            formatter={
+                "int_kind": float_formatter,
+                "float_kind": float_formatter,
+            }
+        )
 
         # format dual numbers accordingly if p is scalar or vector
         if self.r.size > 1:

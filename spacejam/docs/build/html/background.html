@@ -1,0 +1,406 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Background &mdash; spacejam 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Software Organization" href="organization.html" />
+    <link rel="prev" title="How to use" href="howtouse.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> spacejam
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howtouse.html">How to use</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Background</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#numerical-integration-a-brief-crash-couse">Numerical Integration: A brief crash couse</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#automatic-differentiation-a-brief-overview">Automatic Differentiation: A brief overview</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="organization.html">Software Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">spacejam</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Background</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/background.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="background">
+<h1>Background<a class="headerlink" href="#background" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="numerical-integration-a-brief-crash-couse">
+<span id="numerical"></span><h2>Numerical Integration: A brief crash couse<a class="headerlink" href="#numerical-integration-a-brief-crash-couse" title="Permalink to this headline">¶</a></h2>
+<p>Many physical systems can be expressed as a series of differential equations.
+Euler’s method is the simplest numerical procedure for solving these equations
+given some initial conditions. In the case of our problem statement:</p>
+<ul class="simple">
+<li>We have some initial conditions (such as position and velocity of a planet)
+and we want to know what kind of orbit this planet will trace out, given that
+only the force acting on it is gravity.</li>
+<li>Using the physical insight that
+the “slope” of position over time is velocity, and the “slope” of velocity
+over time is acceleration, we can predict, or integrate, how the quantities
+will change over time.</li>
+<li>More explicitly, we can use the acceleration
+supplied by gravity to predict the velocity of our planet, and then use this
+velocity to predict its position a timestep <span class="math notranslate nohighlight">\(\Delta t\)</span> later.</li>
+<li>This gives us a new position and the whole process starts over again at the
+next timestep. Here is a schematic of the Euler integration method.</li>
+</ul>
+<img alt="http://jmahaffy.sdsu.edu/courses/f00/math122/lectures/num_method_diff_equations/images/euler_ani.gif" src="http://jmahaffy.sdsu.edu/courses/f00/math122/lectures/num_method_diff_equations/images/euler_ani.gif" />
+<p>This plot above could represent the component of the planet’s velocity varies
+over time. Specifically, we have some solution curve (black) that we want to
+approximate (red), given that we only know two things:</p>
+<ul class="simple">
+<li>where we started <span class="math notranslate nohighlight">\((t_0, y_0)\)</span></li>
+<li>the rate of how where we were changes with time
+<span class="math notranslate nohighlight">\(\left(\dot{y}_0 \equiv \frac{\mathrm d y_0}{\mathrm{d} t}
+= \frac{y_1 - y_0}{h}\right)\)</span></li>
+</ul>
+<p>The cool thing about this is that even though we do not explicity know what
+<span class="math notranslate nohighlight">\(y_1\)</span> is, the fact that we are given <span class="math notranslate nohighlight">\(\dot{y}_0\)</span> from the initial
+conditions allows us to bootstrap our way around this. Starting with the
+definition of slope, we can use the timestep <span class="math notranslate nohighlight">\(h \equiv \Delta t = t_{n+1}
+- t_n\)</span>, to find where we will be a timestep later <span class="math notranslate nohighlight">\(\dot{y}_1\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[\dot y_0 = \frac{y_1 - y_0}{h}\quad\longrightarrow\quad y_1
+= y_0 + h \dot{y}_0\quad.\]</div>
+<p>Generalizing to any timestep <span class="math notranslate nohighlight">\(n\)</span>:</p>
+<div class="math notranslate nohighlight">
+\[y_{n+1} = y_n + h \dot{y}_n \quad.\]</div>
+<p>Whenever all of the <span class="math notranslate nohighlight">\(n+1\)</span> terms are on one side of the equation and the
+<span class="math notranslate nohighlight">\(n\)</span> terms are on the other, we have an <strong>explicit
+numerical method</strong>. This can also be extended to <span class="math notranslate nohighlight">\(k\)</span> components
+for <span class="math notranslate nohighlight">\(y_n\)</span> with the simple substitution:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\newcommand{b}[1]{\mathbf{#1}}
+y_n \longrightarrow \b X_n
+= \begin{pmatrix}x_1 \\ x_2 \\ \vdots \\ x_k\end{pmatrix},\quad
+\dot{y}_n \longrightarrow \b {\dot X}_n
+= \begin{pmatrix}\dot{x}_1 \\ \dot{x}_2 \\ \vdots \\ \dot{x}_k\end{pmatrix},\quad
+y_{n+1} \longrightarrow \b X_{n+1} = \b X_{n} + h \dot{\b X}_n \quad.\end{split}\]</div>
+<p>This is intuitively straightforward and easy to implement, but there is a
+downside: the solutions <strong>do not converge</strong> for any given timestep. If the
+steps are too large, our numerical estimations are essentially dominated by
+progation of error and would return results that are non-physical, and if they
+are too small the simulation would take too long to run.</p>
+<p>We need a scheme that remains stable and accurate for a wide range of
+timesteps, which is what <strong>implicit differentiation</strong> can accomplish. An
+example of one such scheme is:</p>
+<div class="math notranslate nohighlight">
+\[\b X_{n+1} = \b X_{n} + h \dot{\b X}_{n+1} \quad.\]</div>
+<p>Now we have <span class="math notranslate nohighlight">\(n+1\)</span> terms on both sides, making this an implicit scheme.
+This is know as the <a class="reference external" href="https://en.wikipedia.org/wiki/Backward_Euler_method">backward Euler method</a> and a common way of solving this
+and many other similar schemes that build of off this one is by re-casting it
+as a root finding problem. For the backward Euler method, this would look like:</p>
+<div class="math notranslate nohighlight">
+\[\b g(\b X_{n+1}) = \b X_{n+1} - \b X_n - h \dot{\b X}_{n+1}\quad.\]</div>
+<p>Here, the root of the new function <span class="math notranslate nohighlight">\(\b g\)</span> is the solution to our original
+implicit integration equation. The <a class="reference external" href="https://en.wikipedia.org/wiki/Newton%27s_method">Newton-Raphson method</a> is a useful root finding
+algorithm, but one of its steps requires the computation of the
+<span class="math notranslate nohighlight">\(k \times k\)</span> Jacobian:</p>
+<div class="math notranslate nohighlight">
+\[ \begin{align}\begin{aligned}\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}\\\begin{split}\b{J}(\b {\dot X}_{n+1})
+= \pd{\b {\dot X}_{n+1}}{\b X_{n+1}}
+= \begin{pmatrix} \nabla (\dot x_1)_{n+1} \\
+                  \nabla (\dot x_2)_{n+1} \\
+                  \vdots \\
+                  \nabla (\dot x_k)_{n+1} \\
+                 \end{pmatrix} \quad.\end{split}\end{aligned}\end{align} \]</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>We avoid using superscript notation here because that will be
+reserved for identifying iterates in Newton’s method, which we discuss
+in <a class="reference internal" href="examples.html#examples"><span class="std std-ref">Example Applications</span></a>.</p>
+<p class="last"><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> can also support systems with a different number of
+equations than variables, i.e. non-square Jacobians. See <a class="reference internal" href="howtouse.html#diii"><span class="std std-ref">Demo III: Vector function with vector input</span></a>.</p>
+</div>
+<p>Accurately computing the elements of the Jacobian can be numerically expensive,
+so a method to quickly and accurately compute derivatives would be extremely
+useful. <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> provides this capability by computing the Jacobian quickly
+and accurately via
+<a class="reference internal" href="#automatic-differentiation-a-brief-overview">automatic differentiation</a>,
+which can be used to solve a wide class of problems that depend on implicit
+differentiation for numerically stable solutions.</p>
+<p>We walk through using
+<code class="docutils literal notranslate"><span class="pre">spacejam</span></code> to implement Newton’s method for the Backward Euler method and
+its slightly more sophisticated siblings, the <span class="math notranslate nohighlight">\(s=1\)</span> and <span class="math notranslate nohighlight">\(s=2\)</span>
+<a class="reference external" href="https://en.wikipedia.org/wiki/Linear_multistep_method#Adams%E2%80%93Moulton_methods">Adams-Moulton methods</a> in <a class="reference internal" href="examples.html#examples"><span class="std std-ref">Example Applications</span></a>. Note: <span class="math notranslate nohighlight">\(s=0\)</span> is just the
+original backward Euler method and <span class="math notranslate nohighlight">\(s=1\)</span> is also know as the famous
+trapezoid rule. To the best of our knowledge, there is not a cool name for the
+<span class="math notranslate nohighlight">\(s=2\)</span> method.</p>
+</div>
+<div class="section" id="automatic-differentiation-a-brief-overview">
+<span id="ad"></span><h2>Automatic Differentiation: A brief overview<a class="headerlink" href="#automatic-differentiation-a-brief-overview" title="Permalink to this headline">¶</a></h2>
+<p>This is a method to simultaneously compute a function and its derivative to
+machine precision. This can be done by introducing the dual number
+<span class="math notranslate nohighlight">\(\epsilon^2=0\)</span>, where <span class="math notranslate nohighlight">\(\epsilon\ne0\)</span>. If we transform some
+arbitrary function <span class="math notranslate nohighlight">\(f(x)\)</span> to <span class="math notranslate nohighlight">\(f(x+\epsilon)\)</span> and expand it, we
+have:</p>
+<div class="math notranslate nohighlight">
+\[f(x+\epsilon) = f(x) + \epsilon f'(x) + O(\epsilon^2)\quad.\]</div>
+<p>By the definition of <span class="math notranslate nohighlight">\(\epsilon\)</span>, all second order and higher terms in
+<span class="math notranslate nohighlight">\(\epsilon\)</span> vanish and we are left with <span class="math notranslate nohighlight">\(f(x+\epsilon) = f(x) +
+\epsilon f'(x)\)</span>, where the dual part, <span class="math notranslate nohighlight">\(f'(x)\)</span>, of this transformed
+function is the derivative of our original function <span class="math notranslate nohighlight">\(f(x)\)</span>. If we adhere
+to the new system of math introduced by dual numbers, we are able to compute
+derivatives of functions exactly.</p>
+<p>For example, multiplying two dual numbers <span class="math notranslate nohighlight">\(z_1 = a_r + \epsilon a_d\)</span> and
+<span class="math notranslate nohighlight">\(z_2 = b_r + \epsilon b_d\)</span> would behave like:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}z_1 \times z_2 &amp;= (a_r + \epsilon a_d) \times (b_r + \epsilon b_d)
+= a_rb_r + \epsilon(a_rb_d + a_db_r) + \epsilon^2 a_db_d \\
+&amp;= \boxed{a_rb_r + \epsilon(a_rb_d + a_db_r)}\quad.\end{split}\]</div>
+<p>A function like <span class="math notranslate nohighlight">\(f(x) = x^2\)</span> could then be automatically differentiated
+to give:</p>
+<div class="math notranslate nohighlight">
+\[f(x) \longrightarrow f(x+\epsilon)
+= (x + \epsilon) \times (x + \epsilon)
+= x^2 + \epsilon (x\cdot 1 + 1\cdot x) = x^2 + \epsilon\ 2x \quad,\]</div>
+<p>where <span class="math notranslate nohighlight">\(f(x) + \epsilon f'(x)\)</span> is returned as expected.  Operations like
+this can be redefined via <strong>operator overloading</strong>, which we implement in
+<a class="reference internal" href="implementation.html#api"><span class="std std-ref">Implementation Details</span></a>. This method is also easily extended to multivariable functions with
+the introduction of “dual number basis vectors”
+<span class="math notranslate nohighlight">\(\b p_i = i + \epsilon_i 1\)</span>, where <span class="math notranslate nohighlight">\(i\)</span> takes on any of the
+components of <span class="math notranslate nohighlight">\(\b X_{n}\)</span>. For example, the multivariable function
+<span class="math notranslate nohighlight">\(f(x, y) = xy\)</span> would transform like:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\require{cancel}
+x \quad\longrightarrow\quad&amp; \b p_x = x + \epsilon_x + \epsilon_y\ 0 \\
+y \quad\longrightarrow\quad&amp; \b p_y = y + \epsilon_x\ 0 + \epsilon_y \\
+f(x, y) \quad\longrightarrow\quad&amp; f(\b p) = (x + \epsilon_x + \epsilon_y\ 0)
+\times (y + \epsilon_x\ 0 + \epsilon_y) \\
+&amp;= xy + \epsilon_y x + \epsilon_x y +
+\cancel{\epsilon_x\epsilon_y} \\
+&amp;= xy + \epsilon_x y + \epsilon_y x \quad,\end{split}\]</div>
+<p>where we now have:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}f(x+\epsilon_x, y+\epsilon_y)
+&amp;= f(x, y) + \epsilon_x\pd{f}{x} + \epsilon_y\pd{f}{y}
+= f(x, y) + \epsilon \left[\pd{f}{x},\ \pd{f}{y}\right] \\
+&amp;= f(x, y) + \epsilon \nabla f(x, y)\quad.\end{split}\]</div>
+<p>This is accomplished internally in <code class="docutils literal notranslate"><span class="pre">spacejam.autodiff.Autodiff._ad</span></code> with:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="k">def</span> <span class="nf">_ad</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">p</span><span class="p">,</span> <span class="n">kwargs</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot; Internally computes `func(p)` and its derivative(s).</span>
+<span class="sd">        </span>
+<span class="sd">        Notes</span>
+<span class="sd">        -----</span>
+<span class="sd">        `_ad` returns a nested 1D `numpy.ndarray` to be formatted internally</span>
+<span class="sd">        accordingly in :any:`spacejam.autodiff.AutoDiff.__init__`  .</span>
+
+<span class="sd">        Parameters</span>
+<span class="sd">        ----------</span>
+<span class="sd">        func : numpy.ndarray</span>
+<span class="sd">            function(s) specified by user.</span>
+<span class="sd">        p : numpy.ndarray</span>
+<span class="sd">            point(s) specified by user.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span> <span class="c1"># scalar p</span>
+            <span class="n">p_mult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">dual</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="n">p</span><span class="p">)])</span> 
+
+        <span class="k">else</span><span class="p">:</span><span class="c1"># vector p</span>
+            <span class="n">p_mult</span> <span class="o">=</span> <span class="p">[</span><span class="n">dual</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="n">pi</span><span class="p">,</span> <span class="n">idx</span><span class="o">=</span><span class="n">i</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">pi</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">p</span><span class="p">)]</span>
+            <span class="n">p_mult</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">p_mult</span><span class="p">)</span> <span class="c1"># convert list to numpy array</span>
+
+        <span class="c1"># perform AD with specified function(s)</span>
+        <span class="k">if</span> <span class="n">kwargs</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">p_mult</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> 
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="n">func</span><span class="p">(</span><span class="o">*</span><span class="n">p_mult</span><span class="p">)</span> 
+        <span class="k">return</span> <span class="n">result</span>
+</pre></div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">x</span></code> argument in the <code class="docutils literal notranslate"><span class="pre">spacejam.dual.Dual</span></code> class above sets the length of
+the <span class="math notranslate nohighlight">\(\ p\)</span> dual basis vector and the <code class="docutils literal notranslate"><span class="pre">idx</span></code> argument sets the proper
+index to 1 (with the rest being zero).</p>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="organization.html" class="btn btn-neutral float-right" title="Software Organization" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="howtouse.html" class="btn btn-neutral" title="How to use" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Ian Weaver, Sherif Gerges, Lauren Yoo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

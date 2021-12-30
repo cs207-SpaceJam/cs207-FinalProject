@@ -1,0 +1,279 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Software Organization &mdash; spacejam 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Implementation Details" href="implementation.html" />
+    <link rel="prev" title="Background" href="background.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> spacejam
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howtouse.html">How to use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Software Organization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#overview-of-main-modules">Overview of main modules</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#installation">Installation</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#virtual-environment">Virtual Environment</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#tests">Tests</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">spacejam</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Software Organization</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/organization.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="software-organization">
+<h1>Software Organization<a class="headerlink" href="#software-organization" title="Permalink to this headline">¶</a></h1>
+<p>Cool tree cartoon of main files:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>spacejam
+├── LICENSE.txt
+├── MANIFEST.in¶
+├── README.md
+├── requirements.txt
+├── setup.cfg
+├── setup.py
+└── spacejam
+    ├── __init__.py
+    ├── autodiff.py
+    ├── dual.py
+    ├── integrators.py
+    └── test
+        ├── __init__.py
+        ├── test_autodiff.py
+        ├── test_dual.py
+        └── test_integrators.py
+</pre></div>
+</div>
+<div class="section" id="overview-of-main-modules">
+<h2>Overview of main modules<a class="headerlink" href="#overview-of-main-modules" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><a class="reference internal" href="implementation.html#module-spacejam.autodiff" title="spacejam.autodiff"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">spacejam.autodiff</span></code></a>: Performs automatic differentiation of user-specified
+functions by following dual number rules provided by <a class="reference internal" href="implementation.html#module-spacejam.dual" title="spacejam.dual"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">spacejam.dual</span></code></a></li>
+<li><a class="reference internal" href="implementation.html#module-spacejam.dual" title="spacejam.dual"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">spacejam.dual</span></code></a>: Overloads basic math operations and returns an
+automatic differentiation <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> object</li>
+<li><a class="reference internal" href="implementation.html#module-spacejam.integrators" title="spacejam.integrators"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">spacejam.integrators</span></code></a>: Suite of implicit integration schemes</li>
+</ul>
+</div>
+<div class="section" id="installation">
+<span id="install"></span><h2>Installation<a class="headerlink" href="#installation" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="virtual-environment">
+<h3>Virtual Environment<a class="headerlink" href="#virtual-environment" title="Permalink to this headline">¶</a></h3>
+<p>For development, or just to have a self contained enviroment to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code>
+in, run the following commands anywhere on your computer:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>python -m venv venv
+source venv/bin/activate
+pip install spacejam
+</pre></div>
+</div>
+<p>Optional: If you prefer working in a Jupyter notebook, you can also</p>
+</div>
+<div class="section" id="tests">
+<h3>Tests<a class="headerlink" href="#tests" title="Permalink to this headline">¶</a></h3>
+<p>Unit tests are stored in <code class="docutils literal notranslate"><span class="pre">spacejam/tests</span></code> and each module mentioned above
+has its own doctests. TravisCI and Coveralls integration is also provided. You
+can run these tests and coverage reports yourself by doing the following:</p>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>cd venv/lib/python3.7/site-packages/spacejam
+pytest --doctest-modules --cov=. --cov-report term-missing
+</pre></div>
+</div>
+<p>Check out <a class="reference internal" href="howtouse.html#howto"><span class="std std-ref">How to use</span></a> for a quickstart tutorial.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="implementation.html" class="btn btn-neutral float-right" title="Implementation Details" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="background.html" class="btn btn-neutral" title="Background" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Ian Weaver, Sherif Gerges, Lauren Yoo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

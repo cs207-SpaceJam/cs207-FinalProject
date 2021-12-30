@@ -1,0 +1,431 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>How to use &mdash; spacejam 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Background" href="background.html" />
+    <link rel="prev" title="Introduction" href="introduction.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> spacejam
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">How to use</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#demo-i-scalar-function-scalar-input">Demo I: Scalar function, scalar input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#demo-ii-scalar-function-with-vector-input">Demo II: Scalar function with vector input</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#demo-iii-vector-function-with-vector-input">Demo III: Vector function with vector input</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organization.html">Software Organization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="implementation.html">Implementation Details</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">spacejam</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>How to use</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/howtouse.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="how-to-use">
+<span id="howto"></span><h1>How to use<a class="headerlink" href="#how-to-use" title="Permalink to this headline">¶</a></h1>
+<p>The following series of demos will step through how to differentiate a wide
+variety of functions with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code>. Check out <a class="reference internal" href="organization.html#install"><span class="std std-ref">Installation</span></a> to get
+started.</p>
+<div class="section" id="demo-i-scalar-function-scalar-input">
+<h2>Demo I: Scalar function, scalar input<a class="headerlink" href="#demo-i-scalar-function-scalar-input" title="Permalink to this headline">¶</a></h2>
+<p>This is the simplest case, where the function you provide takes in a single
+scalar argument <span class="math notranslate nohighlight">\((x=a)\)</span> and outputs a single scalar value <span class="math notranslate nohighlight">\(f(a)\)</span>.</p>
+<p>For example, let’s take a look at the function <span class="math notranslate nohighlight">\(f(x) = x^3\)</span>, which you
+can define below as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">x</span><span class="o">**</span><span class="mi">3</span><span class="p">])</span>
+</pre></div>
+</div>
+<p>All <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> needs now is for you to specify a point <span class="math notranslate nohighlight">\(\mathbf p\)</span>
+where you would like to evaluate your function at:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">])</span>  <span class="c1"># evaluation point</span>
+</pre></div>
+</div>
+<p>Now, evaluating your function and simultaneously computing the
+derivative with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> at this point is as easy as:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">spacejam</span> <span class="kn">as</span> <span class="nn">sj</span>
+
+<span class="n">ad</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The real part of <code class="docutils literal notranslate"><span class="pre">ad</span></code> is now <span class="math notranslate nohighlight">\(f(x=5) = 125\)</span> and the dual part is
+<span class="math notranslate nohighlight">\(\left.\frac{\mathrm d f}{\mathrm d x}\right|_{x=5} = 75\)</span> .</p>
+<p>Theses real and dual parts are conveniently stored, respectively, as the <code class="docutils literal notranslate"><span class="pre">r</span></code> and <code class="docutils literal notranslate"><span class="pre">d</span></code>
+attributes in <code class="docutils literal notranslate"><span class="pre">ad</span></code> and can easily be printed to examine:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;f(x) evaluated at p:</span><span class="se">\n</span><span class="s1">{ad.r}</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+      <span class="n">f</span><span class="s1">&#39;derivative of f(x) evaluated at p:</span><span class="se">\n</span><span class="s1">{ad.d}&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>f(x) evaluated at p:
+[125.00]
+
+derivative of f(x) evaluated at p:
+[75.00]
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p class="last"><code class="docutils literal notranslate"><span class="pre">numpy</span></code> arrays are used when defining your function and returning
+results because <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> can also operate on multivariable functions and
+parameters, which we outline in <a class="reference internal" href="#demo-ii-scalar-function-with-vector-input">Demo II: Scalar function with vector input</a>.
+and <a class="reference internal" href="#demo-iii-vector-function-with-vector-input">Demo III: Vector function with vector input</a>.</p>
+</div>
+</div>
+<div class="section" id="demo-ii-scalar-function-with-vector-input">
+<h2>Demo II: Scalar function with vector input<a class="headerlink" href="#demo-ii-scalar-function-with-vector-input" title="Permalink to this headline">¶</a></h2>
+<p>This next demo explores the case where a new example function <span class="math notranslate nohighlight">\(f\)</span> can
+accept vector input, for example <span class="math notranslate nohighlight">\(\mathbf p = (x_1, x_2) = (5, 2)\)</span> and
+return a single scalar value
+<span class="math notranslate nohighlight">\(f(\mathbf p) = f(x_1, x_2) = 3x_1x_2 - 2x_2^3/x_1\)</span></p>
+<p>The dual number objects are created in much the same way as in
+<a class="reference internal" href="#demo-i-scalar-function-scalar-input">Demo I</a>, where:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\begin{align*}
+p_{x_1} &amp;= f(x_1, x_2) + \epsilon_{x_1} \frac{\partial f}{\partial x_1}
+- \epsilon_{x_2} 0\\
+p_{x_2} &amp;= f(x_1, x_2) + \epsilon_{x_1} 0
+- \epsilon_{x_2} \frac{\partial f}{\partial x_2}
+\end{align*}\quad,\end{split}\]</div>
+<p>as described in <a class="reference internal" href="background.html#ad"><span class="std std-ref">Automatic Differentiation: A brief overview</span></a>. Internally, this is accomplished with the <code class="docutils literal notranslate"><span class="pre">idx</span></code>
+and <code class="docutils literal notranslate"><span class="pre">x</span></code> argument in <code class="docutils literal notranslate"><span class="pre">spacejam.dual</span></code> so that it knows which dual parts need
+to be set to zero in the modified dual numbers above. <code class="docutils literal notranslate"><span class="pre">spacejam.autodiff</span></code>
+then performs the following internally:</p>
+<div class="math notranslate nohighlight">
+\[\begin{align*}
+f(\mathbf p) + \epsilon_{x_1}\frac{\partial f}{\partial x_1}
+- \epsilon_{x_2}\frac{\partial f}{\partial x_2}
+\equiv f(\mathbf p) + \epsilon \left[\frac{\partial f}{\partial x_1},
+\frac{\partial f}{\partial x_2}\right] = f(\mathbf p) + \epsilon\nabla f
+\end{align*}\quad.\]</div>
+<p><strong>tl;dr:</strong> all that needs to be done is:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="kn">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">spacejam</span> <span class="kn">as</span> <span class="nn">sj</span>
+
+<span class="k">def</span> <span class="nf">f</span><span class="p">(</span><span class="n">x_1</span><span class="p">,</span> <span class="n">x_2</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span><span class="o">*</span><span class="n">x_1</span><span class="o">*</span><span class="n">x_2</span> <span class="o">-</span> <span class="mi">2</span><span class="o">*</span><span class="n">x_2</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="n">x_1</span><span class="p">])</span>
+
+<span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span> <span class="c1"># evaluation point (x_1, x_2) = (5, 2)</span>
+
+<span class="n">ad</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span> <span class="c1"># create spacejam object</span>
+
+<span class="c1"># check out the results</span>
+<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;f(x) evaluated p:</span><span class="se">\n</span><span class="s1">{ad.r}</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+      <span class="n">f</span><span class="s1">&#39;grad of f(x) evaluated at p:</span><span class="se">\n</span><span class="s1">{ad.d}&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>f(x) evaluated p:
+[26.80]
+
+grad of f(x) evaluated at p:
+[6.64 10.20]
+</pre></div>
+</div>
+</div>
+<div class="section" id="demo-iii-vector-function-with-vector-input">
+<span id="diii"></span><h2>Demo III: Vector function with vector input<a class="headerlink" href="#demo-iii-vector-function-with-vector-input" title="Permalink to this headline">¶</a></h2>
+<p>This final demo shows how to use <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> to simultaneously evaluate the
+example vector function:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf{F} = \begin{bmatrix}f_1(x_1, x_2)\\f_2(x_1, x_2)
+\\f_{3}(x_1, x_2)\end{bmatrix}
+= \begin{bmatrix}
+x_1^2 + x_1x_2 + 2 \\ x_1x_2^3 + x_1^2 \\ x_2^3/x_1 + x_1 + x_1^2x_2^2 + x_2^4
+\end{bmatrix}\end{split}\]</div>
+<p>and its Jacobian:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}\mathbf J = \begin{bmatrix}
+\nabla f_1(x_1, x_2) \\ \nabla f_2(x_1, x_2) \\ \nabla f_3(x_1, x_2)
+\end{bmatrix}\quad.\end{split}\]</div>
+<p>at the point <span class="math notranslate nohighlight">\(\mathbf{p} = (x_1, x_2) = (1, 2)\)</span> .</p>
+<p>The interface with <code class="docutils literal notranslate"><span class="pre">spacejam</span></code> happens to be exactly the same as in the
+previous two demos, only now your <span class="math notranslate nohighlight">\(F(x)\)</span> will return a 1D <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array
+of functions <span class="math notranslate nohighlight">\((f_1, f_2, f_3)\)</span>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># your (m) system of equations:</span>
+<span class="c1"># F(x_1, x_2, ..., x_m) = (f1, f2, ..., f_n)</span>
+<span class="k">def</span> <span class="nf">F</span><span class="p">(</span><span class="n">x_1</span><span class="p">,</span> <span class="n">x_2</span><span class="p">):</span>
+        <span class="n">f_1</span> <span class="o">=</span> <span class="n">x_1</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x_1</span><span class="o">*</span><span class="n">x_2</span> <span class="o">+</span> <span class="mi">2</span>
+        <span class="n">f_2</span> <span class="o">=</span> <span class="n">x_1</span><span class="o">*</span><span class="n">x_2</span><span class="o">**</span><span class="mi">3</span> <span class="o">+</span> <span class="n">x_1</span><span class="o">**</span><span class="mi">2</span>
+        <span class="n">f_3</span> <span class="o">=</span> <span class="n">x_1</span> <span class="o">+</span> <span class="n">x_1</span><span class="o">**</span><span class="mi">2</span><span class="o">*</span><span class="n">x_2</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">x_2</span><span class="o">**</span><span class="mi">3</span><span class="o">/</span><span class="n">x_1</span> <span class="o">+</span> <span class="n">x_2</span><span class="o">**</span><span class="mi">4</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">f_1</span><span class="p">,</span> <span class="n">f_2</span><span class="p">,</span> <span class="n">f_3</span><span class="p">])</span>
+
+<span class="c1"># where you want them evaluated at:</span>
+<span class="c1"># p = (x_1, x_2, ..., x_m)</span>
+<span class="n">p</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+
+<span class="c1"># auto differentiate!</span>
+<span class="n">ad</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">AutoDiff</span><span class="p">(</span><span class="n">F</span><span class="p">,</span> <span class="n">p</span><span class="p">)</span>
+
+<span class="c1"># check out the results</span>
+<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;F(x) evaluated at p:</span><span class="se">\n</span><span class="s1">{ad.r}</span><span class="se">\n\n</span><span class="s1">&#39;</span>
+      <span class="n">f</span><span class="s1">&#39;Jacobian of F(x) evaluated at p:</span><span class="se">\n</span><span class="s1">{ad.d}&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>F(x) evaluated at p:
+[[5.00]
+ [9.00]
+ [29.00]]
+
+Jacobian of F(x) evaluated at p:
+[[4.00 1.00]
+ [10.00 12.00]
+ [1.00 48.00]]
+</pre></div>
+</div>
+<p>Internally, for each <span class="math notranslate nohighlight">\(i\)</span> th entry, in the 1D <code class="docutils literal notranslate"><span class="pre">numpy</span></code> array
+<code class="docutils literal notranslate"><span class="pre">ad._full</span></code>, the real part is the <span class="math notranslate nohighlight">\(i\)</span> th component of
+<span class="math notranslate nohighlight">\(\mathbf{F}(\mathbf{p})\)</span> and the dual part is the corresponding row in
+the Jacobian <span class="math notranslate nohighlight">\(\mathbf J\)</span> evaluated at
+<span class="math notranslate nohighlight">\(\mathbf p = (x_1, x_2) = (1,2)\)</span> .</p>
+<p>This is done in <a class="reference internal" href="implementation.html#spacejam.autodiff.AutoDiff._matrix" title="spacejam.autodiff.AutoDiff._matrix"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">spacejam.autodiff.AutoDiff._matrix</span></code></a> for you with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">Fs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">F</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span> <span class="c1"># initialze empty F(p)</span>
+<span class="n">jac</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">((</span><span class="n">F</span><span class="p">(</span><span class="o">*</span><span class="n">p</span><span class="p">)</span><span class="o">.</span><span class="n">size</span><span class="p">,</span> <span class="n">p</span><span class="o">.</span><span class="n">size</span><span class="p">))</span> <span class="c1"># initialize empty J F(p)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">f</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">_full</span><span class="p">):</span> <span class="c1"># fill in each row of each</span>
+    <span class="n">Fs</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">r</span>
+    <span class="n">jac</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">f</span><span class="o">.</span><span class="n">d</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">f</span><span class="s1">&#39;formated F(p):</span><span class="se">\n</span><span class="s1">{Fs}</span><span class="se">\n\n</span><span class="s1">formated J F(p):</span><span class="se">\n</span><span class="s1">{jac}&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>formated F(p):
+[[5.00]
+ [9.00]
+ [29.00]]
+
+formated J F(p):
+[[4.00 1.00]
+ [10.00 12.00]
+ [1.00 48.00]]
+</pre></div>
+</div>
+<p>where <code class="docutils literal notranslate"><span class="pre">ad._full</span></code> looks like:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">print</span><span class="p">(</span><span class="n">ad</span><span class="o">.</span><span class="n">_full</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>[5.00 + eps [4.00 1.00] 9.00 + eps [10.00 12.00] 29.00 + eps [1.00 48.00]]
+</pre></div>
+</div>
+<div class="admonition note">
+<p class="first admonition-title">Note</p>
+<p>You are also free to make your own dual numbers (for example
+<span class="math notranslate nohighlight">\(z = 3 + \epsilon\ 4\)</span>) by doing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">z</span> <span class="o">=</span> <span class="n">sj</span><span class="o">.</span><span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+
+<span class="k">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>3.00 + eps 4.00
+</pre></div>
+</div>
+<p>We also use <code class="docutils literal notranslate"><span class="pre">numpy</span></code> to overload basic trig functions, exponential,
+and natural log, which are not builtins in python. This is accessed by
+doing:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="k">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>-0.99 - eps 0.56
+</pre></div>
+</div>
+<p class="last"><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> formats all numbers to two decimal places but internally
+the whole number is stored.</p>
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="background.html" class="btn btn-neutral float-right" title="Background" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="introduction.html" class="btn btn-neutral" title="Introduction" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Ian Weaver, Sherif Gerges, Lauren Yoo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

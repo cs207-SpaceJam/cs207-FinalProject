@@ -1,0 +1,942 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>Implementation Details &mdash; spacejam 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  
+    
+
+  
+
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Example Applications" href="examples.html" />
+    <link rel="prev" title="Software Organization" href="organization.html" /> 
+
+  
+  <script src="_static/js/modernizr.min.js"></script>
+
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search">
+          
+
+          
+            <a href="index.html" class="icon icon-home"> spacejam
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="howtouse.html">How to use</a></li>
+<li class="toctree-l1"><a class="reference internal" href="background.html">Background</a></li>
+<li class="toctree-l1"><a class="reference internal" href="organization.html">Software Organization</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Implementation Details</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#data-structures">Data Structures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">API</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#module-spacejam.autodiff"><code class="docutils literal notranslate"><span class="pre">spacejam.autodiff</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-spacejam.dual"><code class="docutils literal notranslate"><span class="pre">spacejam.dual</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-spacejam.integrators"><code class="docutils literal notranslate"><span class="pre">spacejam.integrators</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples.html">Example Applications</a></li>
+<li class="toctree-l1"><a class="reference internal" href="future.html">Future</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">spacejam</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+      <li>Implementation Details</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/implementation.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="implementation-details">
+<span id="api"></span><h1>Implementation Details<a class="headerlink" href="#implementation-details" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="data-structures">
+<h2>Data Structures<a class="headerlink" href="#data-structures" title="Permalink to this headline">¶</a></h2>
+<ul class="simple">
+<li><code class="docutils literal notranslate"><span class="pre">spacejam</span></code> uses 1D <code class="docutils literal notranslate"><span class="pre">numpy.ndarrays</span></code> to return partial derivatives, where
+the <span class="math notranslate nohighlight">\(j\)</span> th entry contains <span class="math notranslate nohighlight">\(\frac{\partial f_i}{\partial x_j}\)</span> for
+<span class="math notranslate nohighlight">\(i = 1, ... m\)</span> and <span class="math notranslate nohighlight">\(j = 1, ... k\)</span>. In general, this is for
+<span class="math notranslate nohighlight">\(m\)</span> different functions that are a function of <span class="math notranslate nohighlight">\(k\)</span> different
+variables.</li>
+<li>The internal convenience function <a class="reference internal" href="#spacejam.autodiff.AutoDiff._matrix" title="spacejam.autodiff.AutoDiff._matrix"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">spacejam.autodiff.AutoDiff._matrix</span></code></a>
+stacks these 1D arrays into an <span class="math notranslate nohighlight">\(m\times k\)</span> <code class="docutils literal notranslate"><span class="pre">numpy.ndarray</span></code> Jacobian
+matrix for ease of viewing, as described in <a class="reference internal" href="howtouse.html#diii"><span class="std std-ref">Demo III: Vector function with vector input</span></a>.</li>
+</ul>
+</div>
+<div class="section" id="id1">
+<h2>API<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-spacejam.autodiff">
+<span id="spacejam-autodiff"></span><h3><code class="docutils literal notranslate"><span class="pre">spacejam.autodiff</span></code><a class="headerlink" href="#module-spacejam.autodiff" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="spacejam.autodiff.AutoDiff">
+<em class="property">class </em><code class="descclassname">spacejam.autodiff.</code><code class="descname">AutoDiff</code><span class="sig-paren">(</span><em>func</em>, <em>p</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/autodiff.html#AutoDiff"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.autodiff.AutoDiff" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs automatic differentiation (AD) on functions input by user.</p>
+<p>AD if performed by transforming <cite>f(x1, x2, …)</cite> to <cite>f(p_x1, p_x2, …)</cite>,
+where <cite>p_xi</cite> is returned from <a class="reference internal" href="#spacejam.dual.Dual" title="spacejam.dual.Dual"><code class="xref any py py-class docutils literal notranslate"><span class="pre">spacejam.dual.Dual</span></code></a> .
+The final result is then returned in a series of 1D <cite>numpy.ndarray</cite> or
+formatted matrices depending on if the user specified functions F are
+multivariable or not.</p>
+<dl class="attribute">
+<dt id="spacejam.autodiff.AutoDiff.r">
+<code class="descname">r</code><a class="headerlink" href="#spacejam.autodiff.AutoDiff.r" title="Permalink to this definition">¶</a></dt>
+<dd><p>User defined function(s) <cite>F</cite> evaluated at <cite>p</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">numpy.ndarray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spacejam.autodiff.AutoDiff.d">
+<code class="descname">d</code><a class="headerlink" href="#spacejam.autodiff.AutoDiff.d" title="Permalink to this definition">¶</a></dt>
+<dd><p>Corresponding derivative, gradient, or Jacobian of user defined
+functions(s).</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">numpy.ndarray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.autodiff.AutoDiff.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>func</em>, <em>p</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/autodiff.html#AutoDiff.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.autodiff.AutoDiff.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>func</strong> (<em>numpy.ndarray</em>) – user defined function(s).</li>
+<li><strong>p</strong> (<em>numpy.ndarray</em>) – user defined point(s) to evaluate derivative/gradient/Jacobian at.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.autodiff.AutoDiff._ad">
+<code class="descname">_ad</code><span class="sig-paren">(</span><em>func</em>, <em>p</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/autodiff.html#AutoDiff._ad"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.autodiff.AutoDiff._ad" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internally computes <cite>func(p)</cite> and its derivative(s).</p>
+<p class="rubric">Notes</p>
+<p><cite>_ad</cite> returns a nested 1D <cite>numpy.ndarray</cite> to be formatted internally
+accordingly in <a class="reference internal" href="#spacejam.autodiff.AutoDiff.__init__" title="spacejam.autodiff.AutoDiff.__init__"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">spacejam.autodiff.AutoDiff.__init__</span></code></a>  .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>func</strong> (<em>numpy.ndarray</em>) – function(s) specified by user.</li>
+<li><strong>p</strong> (<em>numpy.ndarray</em>) – point(s) specified by user.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.autodiff.AutoDiff._matrix">
+<code class="descname">_matrix</code><span class="sig-paren">(</span><em>F</em>, <em>p</em>, <em>result</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/autodiff.html#AutoDiff._matrix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.autodiff.AutoDiff._matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Internally formats <cite>result</cite> returned by
+<a class="reference internal" href="#spacejam.autodiff.AutoDiff._ad" title="spacejam.autodiff.AutoDiff._ad"><code class="xref any py py-meth docutils literal notranslate"><span class="pre">spacejam.autodiff.AutoDiff._ad</span></code></a> into matrices.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>F</strong> (<em>numpy.ndarray</em>) – functionss specified by user.</li>
+<li><strong>p</strong> (<em>numpy.ndarray</em>) – point(s) specified by user.</li>
+<li><strong>result</strong> (<em>numpy.ndarray</em>) – Nested 1D numpy.ndarray to be formatted into matrices.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><ul class="simple">
+<li><strong>Fs</strong> (<em>numpy.ndarray</em>) – Column matrix of functions evaluated at points(s).</li>
+<li><strong>jac</strong> (<em>numpy.ndarray</em>) – Corresponding Jacobian matrix.</li>
+</ul>
+</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spacejam.dual">
+<span id="spacejam-dual"></span><h3><code class="docutils literal notranslate"><span class="pre">spacejam.dual</span></code><a class="headerlink" href="#module-spacejam.dual" title="Permalink to this headline">¶</a></h3>
+<dl class="class">
+<dt id="spacejam.dual.Dual">
+<em class="property">class </em><code class="descclassname">spacejam.dual.</code><code class="descname">Dual</code><span class="sig-paren">(</span><em>real</em>, <em>dual=None</em>, <em>idx=None</em>, <em>x=array(1)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual" title="Permalink to this definition">¶</a></dt>
+<dd><p>Creates dual numbers and defines dual number math.</p>
+<p>A real number <cite>a</cite> is taken in and its dual counterpart <cite>a + eps [1.00]</cite> is
+returned to facilitate automatic differentiation in
+<a class="reference internal" href="#module-spacejam.autodiff" title="spacejam.autodiff"><code class="xref any py py-mod docutils literal notranslate"><span class="pre">spacejam.autodiff</span></code></a> .</p>
+<p class="rubric">Notes</p>
+<p>The dual part can optionally be returned as a “dual basis vector”
+[0 1 0] if the user function <cite>f</cite> is multivariable and the partial
+derivative <span class="math notranslate nohighlight">\(\partial f / \partial x_2\)</span> is desired, for example.</p>
+<dl class="attribute">
+<dt id="spacejam.dual.Dual.r">
+<code class="descname">r</code><a class="headerlink" href="#spacejam.dual.Dual.r" title="Permalink to this definition">¶</a></dt>
+<dd><p>real part of <a class="reference internal" href="#spacejam.dual.Dual" title="spacejam.dual.Dual"><code class="xref any py py-class docutils literal notranslate"><span class="pre">spacejam.dual.Dual</span></code></a> .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">float</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="attribute">
+<dt id="spacejam.dual.Dual.d">
+<code class="descname">d</code><a class="headerlink" href="#spacejam.dual.Dual.d" title="Permalink to this definition">¶</a></dt>
+<dd><p>dual part of <a class="reference internal" href="#spacejam.dual.Dual" title="spacejam.dual.Dual"><code class="xref any py py-class docutils literal notranslate"><span class="pre">spacejam.dual.Dual</span></code></a> .</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Type:</th><td class="field-body">numpy.ndarray</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.__add__">
+<code class="descname">__add__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.__add__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.__add__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the addition of self and other</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>Dual object</em>) – </li>
+<li><strong>other</strong> (<em>Dual object</em><em>, </em><em>float</em><em>, or </em><em>int</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Dual object that is the sum of self and other</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">4.00 + eps 6.00</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">3.00 + eps 2.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.__init__">
+<code class="descname">__init__</code><span class="sig-paren">(</span><em>real</em>, <em>dual=None</em>, <em>idx=None</em>, <em>x=array(1)</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.__init__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.__init__" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>real</strong> (<em>int/float</em>) – real part of <a class="reference internal" href="#spacejam.dual.Dual" title="spacejam.dual.Dual"><code class="xref any py py-class docutils literal notranslate"><span class="pre">spacejam.dual.Dual</span></code></a> .</li>
+<li><strong>dual</strong> (<em>float</em>) – dual part of <a class="reference internal" href="#spacejam.dual.Dual" title="spacejam.dual.Dual"><code class="xref any py py-class docutils literal notranslate"><span class="pre">spacejam.dual.Dual</span></code></a> (default 1.00) .</li>
+<li><strong>idx</strong> (<em>int</em><em> (</em><em>default None</em><em>)</em>) – index in dual part of dual basis vector.</li>
+<li><strong>x</strong> (<em>numpy.ndarray</em><em> (</em><em>default</em><em> [</em><em>1</em><em>]</em><em>)</em>) – set size of pre-allocated array for dual basis vector.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.__mul__">
+<code class="descname">__mul__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.__mul__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.__mul__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the product of self and other</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>Dual object</em>) – </li>
+<li><strong>other</strong> (<em>Dual object</em><em>, </em><em>float</em><em>, or </em><em>int</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Dual object that is the product of self and other</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">3.00 + eps 10.00</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">2.00 + eps 4.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.__neg__">
+<code class="descname">__neg__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.__neg__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.__neg__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns negation of self</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="o">-</span><span class="n">z</span><span class="p">)</span>
+<span class="go">-1.00 - eps 2.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.__pos__">
+<code class="descname">__pos__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.__pos__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.__pos__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns self</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="o">+</span><span class="n">z</span><span class="p">)</span>
+<span class="go">1.00 + eps 2.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.__pow__">
+<code class="descname">__pow__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.__pow__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.__pow__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs (self.r + eps self.d) ** (other.r + eps other.d)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>Dual object</em>) – </li>
+<li><strong>other</strong> (<em>Dual object</em><em>, </em><em>float</em><em>, or </em><em>int</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Dual object that is self raised to the other power</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">1.00 + eps 6.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.__radd__">
+<code class="descname">__radd__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#spacejam.dual.Dual.__radd__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the addition of self and other</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>Dual object</em>) – </li>
+<li><strong>other</strong> (<em>Dual object</em><em>, </em><em>float</em><em>, or </em><em>int</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Dual object that is the sum of self and other</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">4.00 + eps 6.00</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">+</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">3.00 + eps 2.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.__repr__">
+<code class="descname">__repr__</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.__repr__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.__repr__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prints self in the form a_r + eps a_d, where self = Dual(a_r, a_d),
+a_r and a_d are the real and dual part of self, respectively,
+and both terms are automatically rounded to two decimal places</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
+</tr>
+<tr class="field-even field"><th class="field-name">Return type:</th><td class="field-body">Dual object that is the product of self and other</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">1.00 + eps 2.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.__rmul__">
+<code class="descname">__rmul__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="headerlink" href="#spacejam.dual.Dual.__rmul__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the product of self and other</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>Dual object</em>) – </li>
+<li><strong>other</strong> (<em>Dual object</em><em>, </em><em>float</em><em>, or </em><em>int</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Dual object that is the product of self and other</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">3.00 + eps 10.00</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">2.00 + eps 4.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.__rsub__">
+<code class="descname">__rsub__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.__rsub__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.__rsub__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the subtraction of other from self</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>Dual object</em>) – </li>
+<li><strong>other</strong> (<em>Dual object</em><em>, </em><em>float</em><em>, or </em><em>int</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong> – difference of other and self</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Dual object</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">-</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">1.00 - eps 2.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.__rtruediv__">
+<code class="descname">__rtruediv__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.__rtruediv__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.__rtruediv__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the quotient of other and self</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>Dual object</em>) – </li>
+<li><strong>other</strong> (<em>Dual object</em><em>, </em><em>float</em><em>, or </em><em>int</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Dual object that is the product of self and other</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">/</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">2.00 - eps 4.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.__sub__">
+<code class="descname">__sub__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.__sub__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.__sub__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the subtraction of self and other</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>Dual object</em>) – </li>
+<li><strong>other</strong> (<em>Dual object</em><em>, </em><em>float</em><em>, or </em><em>int</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong> – difference of self and other</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Dual object</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Notes</p>
+<p>Subtraction does not commute in general.
+A specialized __rsub__ is required.</p>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">-2.00 - eps 2.00</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">-1.00 + eps 2.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.__truediv__">
+<code class="descname">__truediv__</code><span class="sig-paren">(</span><em>other</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.__truediv__"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.__truediv__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the quotient of self and other</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>self</strong> (<em>Dual object</em>) – </li>
+<li><strong>other</strong> (<em>Dual object</em><em>, </em><em>float</em><em>, or </em><em>int</em>) – </li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>z</strong></p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">Dual object that is the quotient of self and other</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">0.50 + eps 1.00</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span> <span class="o">/</span> <span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">3.00 - eps 2.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.cos">
+<code class="descname">cos</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.cos"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.cos" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the cosine of a</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Dual object</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">cosine of self</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">Dual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">1.00 + eps -0.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.exp">
+<code class="descname">exp</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.exp"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.exp" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns e**self</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Dual object</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">e**self</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="n">Dual</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">2.72 + eps 5.44</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.sin">
+<code class="descname">sin</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.sin"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.sin" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the sine of a</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Dual object</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">sine of self</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">Dual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">0.00 + eps 1.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="method">
+<dt id="spacejam.dual.Dual.tan">
+<code class="descname">tan</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/dual.html#Dual.tan"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.dual.Dual.tan" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns the tangent of a</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>self</strong> (<em>Dual object</em>) – </td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><strong>z</strong></td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body">tangent of self</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">tan</span><span class="p">(</span><span class="n">Dual</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">1</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="n">z</span><span class="p">)</span>
+<span class="go">0.00 + eps 1.00</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-spacejam.integrators">
+<span id="spacejam-integrators"></span><span id="integrators"></span><h3><code class="docutils literal notranslate"><span class="pre">spacejam.integrators</span></code><a class="headerlink" href="#module-spacejam.integrators" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="spacejam.integrators.amsi">
+<code class="descclassname">spacejam.integrators.</code><code class="descname">amsi</code><span class="sig-paren">(</span><em>func</em>, <em>X_old</em>, <em>h=0.001</em>, <em>X_tol=0.1</em>, <em>i_tol=100.0</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/integrators.html#amsi"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.integrators.amsi" title="Permalink to this definition">¶</a></dt>
+<dd><p>First order Adams-Moulton method (AKA Trapezoid)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>func</strong> (<em>function</em>) – User defined function to be integrated.</li>
+<li><strong>X_old</strong> (<em>numpy.ndarray</em>) – Initial input to user function</li>
+<li><strong>h</strong> (<em>float</em><em> (</em><em>default 1E-3</em><em>)</em>) – Timestep</li>
+<li><strong>X_tol</strong> (<em>float</em><em> (</em><em>default 1E-1</em><em>)</em>) – Minimum difference between Newton-Raphson iterates to terminate on.</li>
+<li><strong>i_tol</strong> (<em>int</em><em> (</em><em>default 1E2</em><em>)</em>) – Maximum number of Newton-Raphson iterations. Entire simulation
+terminates if this number is exceeded.</li>
+<li><strong>kwargs</strong> (<em>dict</em><em> (</em><em>default None</em><em>)</em>) – optional arguments to be supplied to user defined function.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X_new</strong> – Final X_n+1 found from root finding of implicit method</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="spacejam.integrators.amsii">
+<code class="descclassname">spacejam.integrators.</code><code class="descname">amsii</code><span class="sig-paren">(</span><em>func</em>, <em>X_n</em>, <em>X_nn</em>, <em>h=0.001</em>, <em>X_tol=0.1</em>, <em>i_tol=100.0</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/integrators.html#amsii"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.integrators.amsii" title="Permalink to this definition">¶</a></dt>
+<dd><p>Second order Adams-Moulton method</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>func</strong> (<em>function</em>) – User defined function to be integrated.</li>
+<li><strong>X_n</strong> (<em>numpy.ndarray</em>) – X_n</li>
+<li><strong>X_nn</strong> (<em>numpy.ndarray</em>) – X_n-1</li>
+<li><strong>h</strong> (<em>float</em><em> (</em><em>default 1E-3</em><em>)</em>) – Timestep</li>
+<li><strong>X_tol</strong> (<em>float</em><em> (</em><em>default 1E-1</em><em>)</em>) – Minimum difference between Newton-Raphson iterates to terminate on.</li>
+<li><strong>i_tol</strong> (<em>int</em><em> (</em><em>default 1E2</em><em>)</em>) – Maximum number of Newton-Raphson iterations. Entire simulation
+terminates if this number is exceeded.</li>
+<li><strong>kwargs</strong> (<em>dict</em><em> (</em><em>default None</em><em>)</em>) – optional arguments to be supplied to user defined function.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X_new</strong> – Final X_n+1 found from root finding of implicit method</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt id="spacejam.integrators.amso">
+<code class="descclassname">spacejam.integrators.</code><code class="descname">amso</code><span class="sig-paren">(</span><em>func</em>, <em>X_old</em>, <em>h=0.001</em>, <em>X_tol=0.1</em>, <em>i_tol=100.0</em>, <em>kwargs=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/spacejam/integrators.html#amso"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#spacejam.integrators.amso" title="Permalink to this definition">¶</a></dt>
+<dd><p>Zeroth order Adams-Moulton method (AKA Backward Euler)</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>func</strong> (<em>function</em>) – User defined function to be integrated.</li>
+<li><strong>X_old</strong> (<em>numpy.ndarray</em>) – Initial input to user function</li>
+<li><strong>h</strong> (<em>float</em><em> (</em><em>default 1E-3</em><em>)</em>) – Timestep</li>
+<li><strong>X_tol</strong> (<em>float</em><em> (</em><em>default 1E-1</em><em>)</em>) – Minimum difference between Newton-Raphson iterates to terminate on.</li>
+<li><strong>i_tol</strong> (<em>int</em><em> (</em><em>default 1E2</em><em>)</em>) – Maximum number of Newton-Raphson iterations. Entire simulation
+terminates if this number is exceeded.</li>
+<li><strong>kwargs</strong> (<em>dict</em><em> (</em><em>default None</em><em>)</em>) – optional arguments to be supplied to user defined function.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><strong>X_new</strong> – Final X_n+1 found from root finding of implicit method</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last">numpy.ndarray</p>
+</td>
+</tr>
+</tbody>
+</table>
+<p class="rubric">Examples</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="go">&gt;&gt;&gt;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="examples.html" class="btn btn-neutral float-right" title="Example Applications" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="organization.html" class="btn btn-neutral" title="Software Organization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2018, Ian Weaver, Sherif Gerges, Lauren Yoo
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  
+
+    
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script type="text/javascript" src="_static/jquery.js"></script>
+        <script type="text/javascript" src="_static/underscore.js"></script>
+        <script type="text/javascript" src="_static/doctools.js"></script>
+        <script async="async" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    
+
+  
+
+  <script type="text/javascript" src="_static/js/theme.js"></script>
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
